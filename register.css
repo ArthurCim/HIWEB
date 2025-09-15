@@ -15,6 +15,44 @@ body {
   min-height: 100vh;
 }
 
+ /* Minimal styling untuk tombol mata di dalam input */
+    .pw-wrap {
+      position: relative;
+    }
+
+    .pw-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      padding: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pw-toggle:focus {
+      outline: 2px solid rgba(79,70,229,0.25);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    .pw-toggle svg {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+
+    /* Pastikan input punya padding kanan agar teks tidak tertutup ikon */
+    .input-group input[type="password"],
+    .input-group input[type="text"],
+    .input-group input[type="email"] {
+      padding-right: 44px; /* sesuaikan jika ikon menutupi teks */
+    }
+    
 /* Left side */
 .left-side {
   flex: 1;

@@ -1,0 +1,192 @@
+/* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .pw-wrap {
+      position: relative;
+    }
+
+    /* Tombol toggle mata */
+    .pw-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      z-index: 2;
+    }
+
+    .pw-toggle:focus {
+      outline: 2px solid rgba(79, 70, 229, 0.25);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    .pw-toggle svg {
+      width: 20px;
+      height: 20px;
+      display: block;
+      pointer-events: none;
+    }
+
+    .input-group input[type="password"],
+    .input-group input[type="text"],
+    .input-group input[type="email"] {
+      padding-right: 40px;
+    }
+
+    /* Kiri */
+    .left-side {
+      flex: 1;
+      background: linear-gradient(135deg, #4e73df, #6f42c1);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .left-side h1 {
+      font-weight: bold;
+      font-size: 28px;
+    }
+
+    .left-side img {
+      max-width: 80%;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+
+    /* Kanan */
+    .right-side {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login-box h1 {
+      font-size: 32px;
+      color: #4e73df;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .login-box h1 span {
+      color: #6f42c1;
+    }
+
+    .icon img {
+      width: 80px;
+      margin-bottom: 20px;
+    }
+
+    /* Input group */
+    .input-group {
+      position: relative;
+      margin: 20px 0;
+      width: 100%;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px 0;
+      border: none;
+      border-bottom: 2px solid #ccc;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      pointer-events: none;
+      color: #888;
+      font-size: 14px;
+      transition: 0.3s ease;
+    }
+
+    /* Efek label naik saat input aktif */
+    .input-group input:focus ~ label,
+    .input-group input:valid ~ label {
+      top: -12px;
+      font-size: 12px;
+      color: #4e73df;
+    }
+
+    .forgot {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .forgot a {
+      font-size: 12px;
+      color: #6f42c1;
+      text-decoration: none;
+    }
+
+    .forgot a:hover {
+      text-decoration: underline;
+    }
+
+    /* Tombol submit */
+    button[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #4e73df, #6f42c1);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      opacity: 0.9;
+    }
+
+    /* Link register */
+    .register-link {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .register-link a {
+      color: #4e73df;
+      text-decoration: none;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
