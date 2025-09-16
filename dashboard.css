@@ -1,4 +1,4 @@
-/* ========== Variables (simple) ========== */
+
 :root{
   --bg: #f5f7fb;
   --panel: #ffffff;
@@ -13,7 +13,6 @@
   --glass: rgba(255,255,255,0.6);
 }
 
-/* ========== Base ========== */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -27,7 +26,6 @@ body{
   padding-top:72px; /* space for fixed navbar */
 }
 
-/* ========== Navbar ========== */
 .navbar{
   position:fixed;
   top:0;
@@ -60,14 +58,12 @@ body{
   padding:4px;
 }
 
-/* right side links */
 .navbar .nav-actions{
   display:flex;
   align-items:center;
   gap:14px;
 }
 
-/* logout link */
 .navbar a.logout{
   color:#fff;
   text-decoration:none;
@@ -78,17 +74,15 @@ body{
 }
 .navbar a.logout:hover{opacity:0.95}
 
-/* ========== Page container ========== */
 .container{
   max-width:var(--max-width);
   margin: 20px auto;
   padding: 0 20px;
   display:grid;
-  grid-template-columns: 240px 1fr; /* sidebar + main */
+  grid-template-columns: 240px 1fr;
   gap: var(--gap);
 }
 
-/* ========== Sidebar (optional) ========== */
 .sidebar{
   background:var(--panel);
   border-radius:var(--radius);
@@ -121,19 +115,16 @@ body{
 }
 .nav-list a:hover{background:#f3f4f6}
 
-/* active */
 .nav-list a.active{
   background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
   color:#fff;
   box-shadow: 0 6px 18px rgba(78,115,223,0.12);
 }
 
-/* ========== Main content ========== */
 .main{
   min-height:60vh;
 }
 
-/* top stats grid */
 .stats{
   display:grid;
   grid-template-columns: repeat(3,1fr);
@@ -141,7 +132,6 @@ body{
   margin-bottom: var(--gap);
 }
 
-/* card */
 .card{
   background:var(--panel);
   border-radius:12px;
@@ -155,14 +145,12 @@ body{
 .card .value{font-size:20px;font-weight:700;color:#111827}
 .card .meta{font-size:13px;color:var(--muted)}
 
-/* activity / content area */
 .content{
   display:grid;
   grid-template-columns: 1fr 360px;
   gap: var(--gap);
 }
 
-/* table panel */
 .table-panel{
   overflow:auto;
   background:var(--panel);
@@ -187,7 +175,6 @@ body{
   letter-spacing:0.6px;
 }
 
-/* right column widgets */
 .widget{
   background:var(--panel);
   border-radius:12px;
@@ -195,14 +182,12 @@ body{
   box-shadow:0 6px 18px rgba(16,24,40,0.04);
 }
 
-/* small helpers */
 .kv {display:flex;justify-content:space-between;align-items:center}
 .badge {display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px}
 .badge.success{background:rgba(16,185,129,0.12);color:var(--success)}
 .badge.warn{background:rgba(245,158,11,0.12);color:#f59e0b}
 .badge.danger{background:rgba(239,68,68,0.08);color:var(--danger)}
 
-/* responsiveness */
 @media (max-width:1000px){
   .container{grid-template-columns: 1fr; padding: 0 16px}
   .stats{grid-template-columns: repeat(2,1fr)}
