@@ -1,4 +1,4 @@
-/* Reset */
+/* === RESET & BASE === */
 * {
   margin: 0;
   padding: 0;
@@ -15,45 +15,7 @@ body {
   min-height: 100vh;
 }
 
- /* Minimal styling untuk tombol mata di dalam input */
-    .pw-wrap {
-      position: relative;
-    }
-
-    .pw-toggle {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      padding: 6px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .pw-toggle:focus {
-      outline: 2px solid rgba(79,70,229,0.25);
-      outline-offset: 2px;
-      border-radius: 6px;
-    }
-
-    .pw-toggle svg {
-      width: 20px;
-      height: 20px;
-      display: block;
-    }
-
-    /* Pastikan input punya padding kanan agar teks tidak tertutup ikon */
-    .input-group input[type="password"],
-    .input-group input[type="text"],
-    .input-group input[type="email"] {
-      padding-right: 44px; /* sesuaikan jika ikon menutupi teks */
-    }
-    
-/* Left side */
+/* === LEFT SIDE === */
 .left-side {
   flex: 1;
   background: linear-gradient(135deg, #4f46e5, #9333ea);
@@ -65,14 +27,13 @@ body {
   text-align: center;
   padding: 40px;
 }
-
 .left-side img {
   max-width: 80%;
   margin-top: 20px;
   border-radius: 10px;
 }
 
-/* Right side */
+/* === RIGHT SIDE === */
 .right-side {
   flex: 1;
   display: flex;
@@ -81,30 +42,27 @@ body {
   background: #f9f9f9;
 }
 
-/* Box form */
+/* === FORM BOX === */
 .form-box {
   width: 100%;
   max-width: 400px;
   text-align: center;
 }
-
 .icon img {
   width: 80px;
   margin-bottom: 20px;
 }
-
 .form-box h2 {
   margin-bottom: 20px;
   color: #333;
 }
 
-/* Input underline */
+/* === INPUT === */
 .input-group {
   position: relative;
   margin: 20px 0;
   width: 100%;
 }
-
 .input-group input {
   width: 100%;
   padding: 10px 5px;
@@ -112,8 +70,8 @@ body {
   border-bottom: 2px solid #ccc;
   outline: none;
   background: transparent;
+  padding-right: 44px; /* ruang untuk icon mata */
 }
-
 .input-group label {
   position: absolute;
   left: 5px;
@@ -122,7 +80,6 @@ body {
   font-size: 14px;
   transition: 0.3s;
 }
-
 .input-group input:focus ~ label,
 .input-group input:valid ~ label {
   top: -10px;
@@ -130,7 +87,35 @@ body {
   color: #4f46e5;
 }
 
-/* Button */
+/* === PASSWORD TOGGLE === */
+.pw-wrap {
+  position: relative;
+}
+.pw-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.pw-toggle:focus {
+  outline: 2px solid rgba(79,70,229,0.25);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.pw-toggle svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* === BUTTON === */
 .btn {
   width: 100%;
   padding: 10px;
@@ -143,20 +128,63 @@ body {
   margin-top: 15px;
   transition: 0.3s;
 }
-
 .btn:hover {
   opacity: 0.9;
 }
 
-/* Switch text */
+/* === SWITCH LINK === */
 .switch {
   margin-top: 15px;
   font-size: 14px;
   color: #555;
 }
-
 .switch a {
   color: #4f46e5;
   text-decoration: none;
   font-weight: bold;
+}
+
+/* ============================= */
+/*          RESPONSIVE           */
+/* ============================= */
+
+/* Tablet dan layar sedang (≤ 992px) */
+@media (max-width: 992px) {
+  body {
+    flex-direction: column;      /* kiri & kanan jadi vertikal */
+  }
+  .left-side, .right-side {
+    flex: none;
+    width: 100%;
+  }
+  .left-side {
+    padding: 30px 20px;
+  }
+  .form-box {
+    max-width: 90%;
+    padding: 20px;
+  }
+}
+
+/* Mobile kecil (≤ 600px) */
+@media (max-width: 600px) {
+  .left-side h1 {
+    font-size: 24px;
+  }
+  .left-side p {
+    font-size: 14px;
+  }
+  .left-side img {
+    max-width: 60%;
+  }
+  .form-box h2 {
+    font-size: 24px;
+  }
+  .input-group input {
+    font-size: 16px;
+  }
+  .btn {
+    font-size: 15px;
+    padding: 10px;
+  }
 }

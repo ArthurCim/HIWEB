@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
-  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="index.css" />
 </head>
 <body>
   <div class="left-side">
     <h1>Welcome Back</h1>
-    <img src="assets/logo putih.svg" alt="Illustration">
+    <img src="assets/logo putih.svg" alt="Illustration" />
   </div>
 
   <div class="right-side">
     <div class="login-box">
       <div class="icon">
-        <img src="assets/ikonakunlogin.svg" alt="Logo">
+        <img src="assets/ikonakunlogin.svg" alt="Logo" />
       </div>
       <h1>Login <span>Form</span></h1>
       <form action="dashboard.html" method="get">
         <div class="input-group">
-          <input type="email" id="email" required>
+          <input type="email" id="email" required />
           <label for="email">Email</label>
         </div>
 
         <div class="input-group pw-wrap">
-          <input type="password" id="password" required>
+          <input type="password" id="password" required />
           <label for="password">Password</label>
           <button type="button" class="pw-toggle" data-target="password">
-            <!-- Ikon mata (eye) -->
+            <!-- Eye open -->
             <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
               <circle cx="12" cy="12" r="3"/>
             </svg>
-            <!-- Ikon mata tertutup (eye-off) -->
+            <!-- Eye off -->
             <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none">
               <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.65 21.65 0 0 1 5.1-6.36M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.65 21.65 0 0 1-4.21 5.64"/>
               <line x1="1" y1="1" x2="23" y2="23"/>
@@ -55,14 +55,11 @@
   </div>
 
   <script>
-    // Script toggle show/hide password + ganti ikon
     document.querySelectorAll('.pw-toggle').forEach(btn => {
       btn.addEventListener('click', () => {
-        const targetId = btn.getAttribute('data-target');
-        const input = document.getElementById(targetId);
+        const input = document.getElementById(btn.dataset.target);
         const eye = btn.querySelector('.eye-icon');
         const eyeOff = btn.querySelector('.eye-off-icon');
-
         if (input.type === 'password') {
           input.type = 'text';
           eye.style.display = 'none';
