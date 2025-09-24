@@ -21,9 +21,9 @@
     <aside class="sidebar">
       <h3>Menu</h3>
       <ul class="nav-list">
-        <li><a href="#" class="active">🏠 Dashboard</a></li>
-        <li><a href="#">📊 Laporan</a></li>
-        <li><a href="#">⚙️ Pengaturan</a></li>
+        <li><a href="#" class="active">Dashboard</a></li>
+        <li><a href="#">Laporan</a></li>
+        <li><a href="#">Pengaturan</a></li>
       </ul>
     </aside>
 

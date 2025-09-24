@@ -8,8 +8,11 @@
 </head>
 <body>
   <div class="left-side">
-    <h1>Welcome Back</h1>
-    <img src="assets/logo putih.svg" alt="Illustration" />
+    <img class= "bg-left-side"src="assets/Group 103 (1).png" alt="Illustration" />
+    <img class= "icon-left-side" src="assets/logo putih.svg">
+    <div class="left-caption">
+    <p>© 2025 Hijauteam - All Rights Reserved</p>
+    </div>
   </div>
 
   <div class="right-side">
@@ -17,8 +20,8 @@
       <div class="icon">
         <img src="assets/ikonakunlogin.svg" alt="Logo" />
       </div>
-      <h1>Login <span>Form</span></h1>
-      <form action="dashboard.html" method="get">
+      <h1>Login Your Account</h1>
+      <form action="Back/index.php" method="get">
         <div class="input-group">
           <input type="email" id="email" required />
           <label for="email">Email</label>
@@ -48,7 +51,7 @@
         <button type="submit">Login</button>
 
         <div class="register-link">
-          Don't have an account? <a href="register.html">Register</a>
+          Don't have an account? <a href="Register.php">Register</a>
         </div>
       </form>
     </div>
