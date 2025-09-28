@@ -1,3 +1,12 @@
+<?php
+// register.php
+session_start();
+// kalau sudah login, langsung ke index
+if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
+    header('Location: index.php');
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +14,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register</title>
   <link rel="stylesheet" href="register.css">
-
 </head>
 <body>
   <!-- Bagian kiri -->
@@ -23,66 +31,39 @@
       </div>
       <h2>Register</h2>
 
-      <form action="#">
+      <?php if (isset($_GET['error'])): ?>
+        <p style="color:red"><?= htmlspecialchars($_GET['error']) ?></p>
+      <?php endif; ?>
+
+      <form action="register_process.php" method="post">
         <div class="input-group">
-          <input type="text" required>
-          <label>Username</label>
-        </div>
-        <div class="input-group">
-          <input type="email" required>
-          <label>Email</label>
+          <input type="text" id="username" name="username" required>
+          <label for="username">Username</label>
         </div>
 
-        <!-- Password pertama -->
+        <div class="input-group">
+          <input type="email" id="email" name="email" required>
+          <label for="email">Email</label>
+        </div>
+
+        <!-- Password -->
         <div class="input-group pw-wrap">
-          <input id="password" type="password" required>
+          <input id="password" name="password" type="password" required>
           <label for="password">Password</label>
-
-          <button type="button"
-                  class="pw-toggle"
-                  aria-label="Tampilkan password"
-                  data-target="password"
-                  title="Tampilkan password">
-            <!-- eye icon (visible when password hidden) -->
-            <svg class="icon-eye" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <!-- eye-off (hidden by default) -->
-            <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
-              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a19.77 19.77 0 0 1 5.14-4.95" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M1 1l22 22" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M9.88 9.88A3 3 0 0 0 14.12 14.12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
+          <button type="button" class="pw-toggle" data-target="password">👁</button>
         </div>
 
         <!-- Confirm Password -->
         <div class="input-group pw-wrap">
-          <input id="confirm-password" type="password" required>
-          <label for="confirm-password">Confirm Password</label>
-
-          <button type="button"
-                  class="pw-toggle"
-                  aria-label="Tampilkan password"
-                  data-target="confirm-password"
-                  title="Tampilkan password">
-            <svg class="icon-eye" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
-              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a19.77 19.77 0 0 1 5.14-4.95" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M1 1l22 22" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M9.88 9.88A3 3 0 0 0 14.12 14.12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
+          <input id="confirm_password" name="confirm_password" type="password" required>
+          <label for="confirm_password">Confirm Password</label>
+          <button type="button" class="pw-toggle" data-target="confirm_password">👁</button>
         </div>
 
-        <button class="btn">Register</button>
+        <button type="submit" class="btn">Register</button>
       </form>
 
-      <p class="switch">Sudah punya akun? <a href="index.html">Login</a></p>
+      <p class="switch">Sudah punya akun? <a href="login.php">Login</a></p>
     </div>
   </div>
 
@@ -92,22 +73,7 @@
       button.addEventListener('click', () => {
         const targetId = button.getAttribute('data-target');
         const input = document.getElementById(targetId);
-        const iconEye = button.querySelector('.icon-eye');
-        const iconEyeOff = button.querySelector('.icon-eye-off');
-
-        if (input.type === 'password') {
-          input.type = 'text';
-          iconEye.style.display = 'none';
-          iconEyeOff.style.display = 'block';
-          button.setAttribute('aria-label', 'Sembunyikan password');
-          button.setAttribute('title', 'Sembunyikan password');
-        } else {
-          input.type = 'password';
-          iconEye.style.display = 'block';
-          iconEyeOff.style.display = 'none';
-          button.setAttribute('aria-label', 'Tampilkan password');
-          button.setAttribute('title', 'Tampilkan password');
-        }
+        input.type = input.type === 'password' ? 'text' : 'password';
       });
     });
   </script>

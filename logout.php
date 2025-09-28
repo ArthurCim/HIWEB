@@ -9,7 +9,7 @@
 <body>
   <div class="form-container">
     <h2>Anda sudah logout!</h2>
-    <a href="index.html" class="btn">Kembali ke Login</a>
+    <a href="login.php" class="btn">Kembali ke Login</a>
   </div>
 </body>
 </html>

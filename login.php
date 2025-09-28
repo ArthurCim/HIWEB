@@ -21,7 +21,7 @@
         <img src="assets/ikonakunlogin.svg" alt="Logo" />
       </div>
       <h1>Login Your Account</h1>
-      <form action="Back/login_process.php" method="post">
+      <form action="login_process.php" method="post">
         <div class="input-group">
           <input type="email" id="email" name="email" required />
           <label for="email">Email</label>
