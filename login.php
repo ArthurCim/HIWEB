@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
-  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="login.css" />
 </head>
 <body>
   <div class="left-side">
@@ -21,14 +21,14 @@
         <img src="assets/ikonakunlogin.svg" alt="Logo" />
       </div>
       <h1>Login Your Account</h1>
-      <form action="Back/index.php" method="get">
+      <form action="Back/login_process.php" method="post">
         <div class="input-group">
-          <input type="email" id="email" required />
+          <input type="email" id="email" name="email" required />
           <label for="email">Email</label>
         </div>
 
         <div class="input-group pw-wrap">
-          <input type="password" id="password" required />
+          <input type="password" id="password" name="password" required />
           <label for="password">Password</label>
           <button type="button" class="pw-toggle" data-target="password">
             <!-- Eye open -->

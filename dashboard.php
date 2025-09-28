@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +15,7 @@
       <h1>Dashboard</h1>
     </div>
     <div class="nav-actions">
-      <a href="logout.html" class="logout">Logout</a>
+      <a href="logout.php" class="logout">Logout</a>
     </div>
   </nav>
 
