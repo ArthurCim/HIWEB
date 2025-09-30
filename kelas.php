@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Data Kelas</title>
-  <link rel="stylesheet" href="assets/dashboard.css">
+  <link rel="stylesheet" href="assets/kelas.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
@@ -22,8 +22,8 @@
     <aside class="sidebar">
       <h3>Menu</h3>
       <ul class="nav-list">
-        <li><a href="dashboard.php"  class="active" >Dashboard</a></li>
-        <li><a href="kelas.php" >Data Kelas</a></li>
+        <li><a href="dashboard.php" >Dashboard</a></li>
+        <li><a href="kelas.php" class="active" >Data Kelas</a></li>
         <li><a href="#">Pengaturan</a></li>
       </ul>
     </aside>

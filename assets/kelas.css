@@ -84,7 +84,6 @@ body{
   gap: var(--gap);
 }
 
-
 .sidebar{
   background:var(--panel);
   border-radius:var(--radius);

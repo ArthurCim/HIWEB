@@ -13,6 +13,7 @@ html, body {
 body {
   display: flex;
   min-height: 100vh;
+  background: #f9f9f9;
 }
 
 /* === LEFT SIDE === */
@@ -36,10 +37,10 @@ body {
 }
 
 .icon-left-side {
-  position: center;
   z-index: 1;         
-  width: 300px;
-  height: 300px;       
+  width: 250px;
+  max-width: 70%;
+  height: auto;       
 }
 
 .left-caption {
@@ -51,7 +52,7 @@ body {
   color: #3D4B98;        
   font-size: 14px;
   text-align: center;
-  padding: 10px 20px;
+  padding: 6px 12px;
   border-radius: 6px;
 }
 
@@ -61,6 +62,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 40px 20px;
   background: #f9f9f9;
 }
 
@@ -69,9 +71,13 @@ body {
   width: 100%;
   max-width: 400px;
   text-align: center;
+  background: #fff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 .icon img {
-  width: 80px;
+  width: 70px;
   margin-bottom: 20px;
 }
 .form-box h2 {
@@ -87,17 +93,18 @@ body {
 }
 .input-group input {
   width: 100%;
-  padding: 10px 5px;
+  padding: 12px 10px;
   border: none;
   border-bottom: 2px solid #ccc;
   outline: none;
   background: transparent;
+  font-size: 16px;
   padding-right: 44px; /* ruang untuk icon mata */
 }
 .input-group label {
   position: absolute;
-  left: 5px;
-  top: 10px;
+  left: 10px;
+  top: 12px;
   color: #aaa;
   font-size: 14px;
   transition: 0.3s;
@@ -140,7 +147,7 @@ body {
 /* === BUTTON === */
 .btn {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: none;
   background: linear-gradient(135deg, #4f46e5, #9333ea);
   color: #fff;
@@ -173,40 +180,43 @@ body {
 /* Tablet dan layar sedang (≤ 992px) */
 @media (max-width: 992px) {
   body {
-    flex-direction: column;      /* kiri & kanan jadi vertikal */
+    flex-direction: column; /* kiri & kanan jadi vertikal */
   }
   .left-side, .right-side {
     flex: none;
     width: 100%;
+    height: auto;
   }
   .left-side {
-    padding: 30px 20px;
+    min-height: 250px;
   }
   .form-box {
-    max-width: 90%;
-    padding: 20px;
+    max-width: 500px;
+    margin: 20px auto;
   }
 }
 
 /* Mobile kecil (≤ 600px) */
 @media (max-width: 600px) {
-  .left-side h1 {
-    font-size: 24px;
-  }
-  .left-side p {
-    font-size: 14px;
-  }
-  .left-side img {
-    max-width: 60%;
+  .form-box {
+    padding: 20px 15px;
   }
   .form-box h2 {
-    font-size: 24px;
+    font-size: 22px;
   }
   .input-group input {
-    font-size: 16px;
+    font-size: 15px;
+    padding: 10px;
   }
   .btn {
     font-size: 15px;
     padding: 10px;
+  }
+  .left-caption {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  .icon img {
+    width: 60px;
   }
 }
