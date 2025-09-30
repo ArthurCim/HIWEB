@@ -16,14 +16,14 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
   <link rel="stylesheet" href="assets/register.css">
 </head>
 <body>
-  <!-- Bagian kiri -->
   <div class="left-side">
-    <h1>Welcome!</h1>
-    <p>Daftar untuk mulai belanja</p>
-    <img src="../assets/logo putih.svg" alt="Ilustrasi">
+    <img class= "bg-left-side"src="../assets/Group 103 (1).png" alt="Illustration" />
+    <img class= "icon-left-side" src="../assets/logo putih.svg">
+    <div class="left-caption">
+    <p>© 2025 Hijauteam - All Rights Reserved</p>
+    </div>
   </div>
 
-  <!-- Bagian kanan -->
   <div class="right-side">
     <div class="form-box">
       <div class="icon">
