@@ -23,7 +23,8 @@
       <h3>Menu</h3>
       <ul class="nav-list">
         <li><a href="dashboard.php"  class="active" >Dashboard</a></li>
-        <li><a href="kelas.php" >Data Kelas</a></li>
+        <li><a href="course.php" >Data Course</a></li>
+        <li><a href="management_user.php">Management User</a></li>
         <li><a href="#">Pengaturan</a></li>
       </ul>
     </aside>

@@ -84,6 +84,39 @@ body{
   gap: var(--gap);
 }
 
+.mimo-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.2s;
+  border: none;
+}
+
+.mimo-btn-primary {
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  color: #fff;
+}
+.mimo-btn-primary:hover { opacity: 0.9; }
+
+.mimo-btn-sm {
+  padding: 6px 10px;
+  font-size: 13px;
+  background: #e5e7eb;
+  color: #111827;
+}
+.mimo-btn-sm:hover { background: #d1d5db; }
+
+.mimo-btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.mimo-btn-danger:hover { opacity: 0.9; }
+
+
 .sidebar{
   background:var(--panel);
   border-radius:var(--radius);
