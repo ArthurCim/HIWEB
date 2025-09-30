@@ -1,7 +1,7 @@
 <?php
 // register_process.php
 session_start();
-include 'db.php';
+include '../db.php';
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: register.php");

@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
-  <link rel="stylesheet" href="login.css" />
+  <link rel="stylesheet" href="assets/login.css" />
 </head>
 <body>
   <div class="left-side">
-    <img class= "bg-left-side"src="assets/Group 103 (1).png" alt="Illustration" />
-    <img class= "icon-left-side" src="assets/logo putih.svg">
+    <img class= "bg-left-side"src="../assets/Group 103 (1).png" alt="Illustration" />
+    <img class= "icon-left-side" src="../assets/logo putih.svg">
     <div class="left-caption">
     <p>© 2025 Hijauteam - All Rights Reserved</p>
     </div>
@@ -18,7 +18,7 @@
   <div class="right-side">
     <div class="login-box">
       <div class="icon">
-        <img src="assets/ikonakunlogin.svg" alt="Logo" />
+        <img src="../assets/ikonakunlogin.svg" alt="Logo" />
       </div>
       <h1>Login Your Account</h1>
       <form action="login_process.php" method="post">

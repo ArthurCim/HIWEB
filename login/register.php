@@ -13,21 +13,21 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register</title>
-  <link rel="stylesheet" href="register.css">
+  <link rel="stylesheet" href="assets/register.css">
 </head>
 <body>
   <!-- Bagian kiri -->
   <div class="left-side">
     <h1>Welcome!</h1>
     <p>Daftar untuk mulai belanja</p>
-    <img src="assets/logo putih.svg" alt="Ilustrasi">
+    <img src="../assets/logo putih.svg" alt="Ilustrasi">
   </div>
 
   <!-- Bagian kanan -->
   <div class="right-side">
     <div class="form-box">
       <div class="icon">
-        <img src="assets/ikonakunlogin.svg" alt="user-icon">
+        <img src="../assets/ikonakunlogin.svg" alt="user-icon">
       </div>
       <h2>Register</h2>
 

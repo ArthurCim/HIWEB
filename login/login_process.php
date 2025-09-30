@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db.php';
+include '../db.php';
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: login.php");
@@ -33,7 +33,7 @@ if ($result && $result->num_rows === 1) {
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['user_nama'] = $user['nama'];
 
-        header("Location: index.php");
+        header("Location: ../index.php");
         exit();
     }
 }

@@ -1,12 +1,11 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
-  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="assets/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
   <nav class="navbar">
@@ -15,7 +14,8 @@
       <h1>Dashboard</h1>
     </div>
     <div class="nav-actions">
-      <a href="logout.php" class="logout">Logout</a>
+      <!-- ubah href jadi # agar tidak langsung keluar -->
+      <a href="#" id="logoutBtn" class="logout">Logout</a>
     </div>
   </nav>
 
@@ -99,5 +99,25 @@
       </div>
     </main>
   </div>
+
+  <script>
+    document.getElementById("logoutBtn").addEventListener("click", function(e) {
+      e.preventDefault(); // cegah langsung logout
+      Swal.fire({
+        title: 'Yakin ingin logout?',
+        text: "Anda akan keluar dari sesi ini.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, logout!',
+        cancelButtonText: 'Batal'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "login/logout.php";
+        }
+      });
+    });
+  </script>
 </body>
 </html>
