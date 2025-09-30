@@ -14,13 +14,15 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register</title>
   <link rel="stylesheet" href="assets/register.css">
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
   <div class="left-side">
-    <img class= "bg-left-side"src="../assets/Group 103 (1).png" alt="Illustration" />
+    <img class= "bg-left-side" src="../assets/Group 103 (1).png" alt="Illustration" />
     <img class= "icon-left-side" src="../assets/logo putih.svg">
     <div class="left-caption">
-    <p>© 2025 Hijauteam - All Rights Reserved</p>
+      <p>© 2025 Hijauteam - All Rights Reserved</p>
     </div>
   </div>
 
@@ -30,10 +32,6 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
         <img src="../assets/ikonakunlogin.svg" alt="user-icon">
       </div>
       <h2>Register</h2>
-
-      <?php if (isset($_GET['error'])): ?>
-        <p style="color:red"><?= htmlspecialchars($_GET['error']) ?></p>
-      <?php endif; ?>
 
       <form action="register_process.php" method="post">
         <div class="input-group">
@@ -67,6 +65,18 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
     </div>
   </div>
 
+  <?php if (isset($_SESSION['register_error'])): ?>
+    <script>
+      Swal.fire({
+        icon: 'error',
+        title: 'Registrasi Gagal',
+        text: '<?php echo $_SESSION['register_error']; ?>',
+        confirmButtonColor: '#d33'
+      });
+    </script>
+    <?php unset($_SESSION['register_error']); ?>
+  <?php endif; ?>
+
   <script>
     // Toggle password visibility
     document.querySelectorAll('.pw-toggle').forEach(button => {
@@ -79,3 +89,4 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
   </script>
 </body>
 </html>
+    

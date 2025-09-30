@@ -1,3 +1,6 @@
+<?php
+session_start(); // WAJIB supaya bisa baca $_SESSION
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,13 +8,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
   <link rel="stylesheet" href="assets/login.css" />
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
   <div class="left-side">
-    <img class= "bg-left-side"src="../assets/Group 103 (1).png" alt="Illustration" />
-    <img class= "icon-left-side" src="../assets/logo putih.svg">
+    <img class="bg-left-side" src="../assets/Group 103 (1).png" alt="Illustration" />
+    <img class="icon-left-side" src="../assets/logo putih.svg">
     <div class="left-caption">
-    <p>© 2025 Hijauteam - All Rights Reserved</p>
+      <p>© 2025 Hijauteam - All Rights Reserved</p>
     </div>
   </div>
 
@@ -56,6 +61,18 @@
       </form>
     </div>
   </div>
+
+  <?php if (isset($_SESSION['login_error'])): ?>
+    <script>
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Gagal',
+        text: '<?php echo $_SESSION['login_error']; ?>',
+        confirmButtonColor: '#d33'
+      });
+    </script>
+    <?php unset($_SESSION['login_error']); ?>
+  <?php endif; ?>
 
   <script>
     document.querySelectorAll('.pw-toggle').forEach(btn => {

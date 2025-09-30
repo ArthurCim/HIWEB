@@ -11,13 +11,15 @@ $email = isset($_POST['email']) ? trim($_POST['email']) : '';
 $password = isset($_POST['password']) ? $_POST['password'] : '';
 
 if ($email === '' || $password === '') {
-    header("Location: login.php?error=1");
+    $_SESSION['login_error'] = "Email dan Password wajib diisi!";
+    header("Location: login.php");
     exit();
 }
 
 $stmt = $conn->prepare("SELECT id, email, password, nama FROM users WHERE email = ?");
 if (!$stmt) {
-    header("Location: login.php?error=1");
+    $_SESSION['login_error'] = "Terjadi kesalahan pada server!";
+    header("Location: login.php");
     exit();
 }
 $stmt->bind_param("s", $email);
@@ -38,5 +40,7 @@ if ($result && $result->num_rows === 1) {
     }
 }
 
-header("Location: login.php?error=1");
+// jika gagal login
+$_SESSION['login_error'] = "Email atau password salah!";
+header("Location: login.php");
 exit();
