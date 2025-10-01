@@ -2,11 +2,29 @@
 include "../db.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id    = intval($_POST['id']);
-    $nama  = mysqli_real_escape_string($conn, $_POST['nama']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $id     = mysqli_real_escape_string($conn, $_POST['id_users']);
+    $nama   = mysqli_real_escape_string($conn, $_POST['nama']);
+    $email  = mysqli_real_escape_string($conn, $_POST['email']);
+    $pass   = $_POST['password'] ?? '';
+    $confirm= $_POST['confirm_password'] ?? '';
 
-    $query = "UPDATE users SET nama='$nama', email='$email' WHERE id=$id";
+    if ($nama === '' || $email === '') {
+        echo "error: nama & email wajib diisi";
+        exit();
+    }
+
+    if ($pass !== '' && $pass !== $confirm) {
+        echo "error: password tidak sama";
+        exit();
+    }
+
+    if ($pass !== '') {
+        $hashedPassword = password_hash($pass, PASSWORD_DEFAULT);
+        $query = "UPDATE users SET nama='$nama', email='$email', password='$hashedPassword' WHERE id_users='$id'";
+    } else {
+        $query = "UPDATE users SET nama='$nama', email='$email' WHERE id_users='$id'";
+    }
+
     if (mysqli_query($conn, $query)) {
         echo "success";
     } else {

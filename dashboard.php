@@ -1,35 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Data Kelas</title>
-  <link rel="stylesheet" href="assets/dashboard.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
-  <nav class="navbar">
-    <div class="brand">
-      <img src="assets/logo putih.svg" alt="Logo">
-      <h1>MIMO</h1>
-    </div>
-    <div class="nav-actions">
-      <a href="#" id="logoutBtn" class="logout">Logout</a>
-    </div>
-  </nav>
+<?php
+$page_title = "Dashboard";
+$page_css   = "dashboard.css";  // otomatis load CSS ini
+include "includes/header.php";
+include "includes/navbar.php";
+?>
+<div class="container-fluid">
+  <div class="row">
+    <?php include "includes/sidebar.php"; ?>
 
-  <div class="container">
-    <aside class="sidebar">
-      <h3>Menu</h3>
-      <ul class="nav-list">
-        <li><a href="dashboard.php"  class="active" >Dashboard</a></li>
-        <li><a href="course.php" >Data Course</a></li>
-        <li><a href="management_user.php">Management User</a></li>
-        <li><a href="#">Pengaturan</a></li>
-      </ul>
-    </aside>
-
-    <main class="main">
+    <main class="main col">
       <h2>Selamat datang di kelas!</h2>
       <p>Halo rek!</p>
 
@@ -99,25 +78,27 @@
       </div>
     </main>
   </div>
+</div>
 
-  <script>
-    document.getElementById("logoutBtn").addEventListener("click", function(e) {
-      e.preventDefault(); // cegah langsung logout
-      Swal.fire({
-        title: 'Yakin ingin logout?',
-        text: "Anda akan keluar dari sesi ini.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya, logout!',
-        cancelButtonText: 'Batal'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = "login/logout.php";
-        }
-      });
-    });
-  </script>
-</body>
-</html>
+<?php include "includes/footer.php"; ?>
+
+<!-- Script khusus dashboard -->
+<script>
+document.getElementById("logoutBtn").addEventListener("click", function(e) {
+  e.preventDefault();
+  Swal.fire({
+    title: 'Yakin ingin logout?',
+    text: "Anda akan keluar dari sesi ini.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Ya, logout!',
+    cancelButtonText: 'Batal'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = "login/logout.php";
+    }
+  });
+});
+</script>

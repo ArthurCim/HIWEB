@@ -13,7 +13,6 @@ $email = trim($_POST['email'] ?? '');
 $password = $_POST['password'] ?? '';
 $confirm = $_POST['confirm_password'] ?? '';
 
-// validasi sederhana
 if ($username === '' || $email === '' || $password === '' || $confirm === '') {
     $_SESSION['register_error'] = "Semua field harus diisi";
     header("Location: register.php");
@@ -26,7 +25,8 @@ if ($password !== $confirm) {
     exit();
 }
 
-$stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+// cek email sudah dipakai atau belum
+$stmt = $conn->prepare("SELECT id_users FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $stmt->store_result();
@@ -39,10 +39,22 @@ if ($stmt->num_rows > 0) {
 }
 $stmt->close();
 
+// === generate id users baru ===
+$result = $conn->query("SELECT id FROM users ORDER BY id DESC LIMIT 1");
+$lastId = $result->fetch_assoc();
+
+if ($lastId) {
+    $num = (int) substr($lastId['id'], 6); // ambil angka dari users_001
+    $num++;
+    $newId = "users_" . str_pad($num, 3, "0", STR_PAD_LEFT);
+} else {
+    $newId = "users_001";
+}
+
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-$stmt = $conn->prepare("INSERT INTO users (nama, email, password) VALUES (?, ?, ?)");
-$stmt->bind_param("sss", $username, $email, $hashedPassword);
+$stmt = $conn->prepare("INSERT INTO users (id_users, nama, email, password) VALUES (?, ?, ?, ?)");
+$stmt->bind_param("ssss", $newId, $username, $email, $hashedPassword);
 
 if ($stmt->execute()) {
     $_SESSION['register_success'] = "Registrasi berhasil, silakan login!";
