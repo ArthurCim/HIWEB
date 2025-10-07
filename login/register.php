@@ -1,7 +1,5 @@
 <?php
-// register.php
 session_start();
-// kalau sudah login, langsung ke index
 if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
     header('Location: index.php');
     exit();
@@ -48,14 +46,36 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
         <div class="input-group pw-wrap">
           <input id="password" name="password" type="password" required>
           <label for="password">Password</label>
-          <button type="button" class="pw-toggle" data-target="password">👁</button>
+          <button type="button" class="pw-toggle" data-target="password">
+            <!-- Eye open -->
+            <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <!-- Eye off -->
+            <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none">
+              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.65 21.65 0 0 1 5.1-6.36M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.65 21.65 0 0 1-4.21 5.64"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
         </div>
 
         <!-- Confirm Password -->
         <div class="input-group pw-wrap">
           <input id="confirm_password" name="confirm_password" type="password" required>
           <label for="confirm_password">Confirm Password</label>
-          <button type="button" class="pw-toggle" data-target="confirm_password">👁</button>
+          <button type="button" class="pw-toggle" data-target="confirm_password">
+            <!-- Eye open -->
+            <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <!-- Eye off -->
+            <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none">
+              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.65 21.65 0 0 1 5.1-6.36M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.65 21.65 0 0 1-4.21 5.64"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
         </div>
 
         <button type="submit" class="btn">Register</button>

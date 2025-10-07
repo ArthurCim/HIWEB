@@ -1,5 +1,5 @@
 <?php
-session_start(); // WAJIB supaya bisa baca $_SESSION
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +21,7 @@ session_start(); // WAJIB supaya bisa baca $_SESSION
   </div>
 
   <div class="right-side">
-    <div class="login-box">
+    <div class="form-box">
       <div class="icon">
         <img src="../assets/ikonakunlogin.svg" alt="Logo" />
       </div>

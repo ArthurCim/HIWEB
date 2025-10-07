@@ -12,6 +12,7 @@ html, body {
 body {
   display: flex;
   min-height: 100vh;
+  background: #f9f9f9;
 }
 
 .left-side {
@@ -49,7 +50,7 @@ body {
   color: #3D4B98;        
   font-size: 14px;
   text-align: center;
-  padding: 10px 20px;
+  padding: 6px 12px;
   border-radius: 6px;
 }
 
@@ -58,29 +59,28 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 40px 20px;
   background: #fff;
 }
 
-.login-box {
+.form-box {
   width: 100%;
   max-width: 400px;
   text-align: center;
-}
-
-.login-box h1 {
-  font-size: 25px;
-   background: linear-gradient(90deg, #1A2A80, #5B5FB1, #7A85C1);
-  -webkit-background-clip: text;   
-  -webkit-text-fill-color: transparent;
-  background-clip: text;          
-  color: transparent;   
-  margin-bottom: 25px;
-  font-weight: bold;
+  background: #fff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .icon img {
-  width: 80px;
+  width: 70px;
   margin-bottom: 20px;
+}
+
+.form-box h1 {
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .input-group {
@@ -94,14 +94,13 @@ body {
   border: none;
   border-bottom: 2px solid #ccc;
   outline: none;
-  font-size: 14px;
-  padding-right: 40px;
+  font-size: 16px;
+  padding-right: 44px;
 }
 .input-group label {
   position: absolute;
-  top: 10px;
-  left: 0;
-  pointer-events: none;
+  top: 12px;
+  left: 10px;
   color: #888;
   font-size: 14px;
   transition: 0.3s ease;
@@ -113,7 +112,9 @@ body {
   color: #4e73df;
 }
 
-.pw-wrap { position: relative; }
+.pw-wrap { 
+  position: relative; 
+}
 .pw-toggle {
   position: absolute;
   right: 10px;
@@ -121,12 +122,11 @@ body {
   transform: translateY(-50%);
   background: transparent;
   border: none;
+  padding: 6px;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #666;
-  z-index: 2;
 }
 .pw-toggle:focus {
   outline: 2px solid rgba(79, 70, 229, 0.25);

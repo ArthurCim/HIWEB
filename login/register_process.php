@@ -1,5 +1,4 @@
 <?php
-// register_process.php
 session_start();
 include '../db.php';
 
@@ -25,7 +24,6 @@ if ($password !== $confirm) {
     exit();
 }
 
-// cek email sudah dipakai atau belum
 $stmt = $conn->prepare("SELECT id_users FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
@@ -39,12 +37,11 @@ if ($stmt->num_rows > 0) {
 }
 $stmt->close();
 
-// === generate id users baru ===
 $result = $conn->query("SELECT id FROM users ORDER BY id DESC LIMIT 1");
 $lastId = $result->fetch_assoc();
 
 if ($lastId) {
-    $num = (int) substr($lastId['id'], 6); // ambil angka dari users_001
+    $num = (int) substr($lastId['id'], 6);
     $num++;
     $newId = "users_" . str_pad($num, 3, "0", STR_PAD_LEFT);
 } else {

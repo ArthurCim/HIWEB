@@ -16,7 +16,6 @@ if ($email === '' || $password === '') {
     exit();
 }
 
-// gunakan id_users (varchar) bukan id (int)
 $stmt = $conn->prepare("SELECT id_users, email, password, nama FROM users WHERE email = ?");
 if (!$stmt) {
     $_SESSION['login_error'] = "Terjadi kesalahan pada server!";
@@ -32,7 +31,7 @@ if ($result && $result->num_rows === 1) {
 
     if (password_verify($password, $user['password'])) {
         $_SESSION['login'] = true;
-        $_SESSION['user_id'] = $user['id_users'];   // simpan id_users
+        $_SESSION['user_id'] = $user['id_users'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['user_nama'] = $user['nama'];
 
@@ -41,7 +40,6 @@ if ($result && $result->num_rows === 1) {
     }
 }
 
-// jika gagal login
 $_SESSION['login_error'] = "Email atau password salah!";
 header("Location: login.php");
 exit();
