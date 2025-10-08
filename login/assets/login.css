@@ -37,7 +37,7 @@ body {
 .icon-left-side {
   position: center;
   z-index: 1;         
-  width: 300px;
+  width: 3000px;
   height: 300px;       
 }
 
@@ -60,7 +60,7 @@ body {
   justify-content: center;
   align-items: center;
   padding: 40px 20px;
-  background: #fff;
+  background: #f9f9f9;
 }
 
 .form-box {

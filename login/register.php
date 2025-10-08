@@ -98,12 +98,20 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
   <?php endif; ?>
 
   <script>
-    // Toggle password visibility
-    document.querySelectorAll('.pw-toggle').forEach(button => {
-      button.addEventListener('click', () => {
-        const targetId = button.getAttribute('data-target');
-        const input = document.getElementById(targetId);
-        input.type = input.type === 'password' ? 'text' : 'password';
+    document.querySelectorAll('.pw-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = document.getElementById(btn.dataset.target);
+        const eye = btn.querySelector('.eye-icon');
+        const eyeOff = btn.querySelector('.eye-off-icon');
+        if (input.type === 'password') {
+          input.type = 'text';
+          eye.style.display = 'none';
+          eyeOff.style.display = 'block';
+        } else {
+          input.type = 'password';
+          eye.style.display = 'block';
+          eyeOff.style.display = 'none';
+        }
       });
     });
   </script>
