@@ -1,8 +1,21 @@
 <aside class="sidebar col-2">
     <h3>Menu</h3>
     <ul class="nav-list">
+        <?php
+        // Ambil nama file yang sedang aktif (tanpa folder)
+        $currentPage = basename($_SERVER['PHP_SELF']);
+
+        // Daftar halaman dalam folder master
+        $masterPages = ['management_user.php', 'course.php', 'lesson.php'];
+
+        // Cek apakah halaman sekarang berasal dari folder master
+        $isMasterActive = in_array($currentPage, $masterPages);
+        ?>
+
+        <!-- Dashboard -->
         <li>
-            <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>">
+            <a href="<?php echo (basename(dirname($_SERVER['PHP_SELF'])) == 'master') ? '../dashboard.php' : 'dashboard.php'; ?>"
+               class="<?php echo $currentPage == 'dashboard.php' ? 'active' : ''; ?>">
                 Dashboard
             </a>
         </li>
@@ -10,23 +23,26 @@
         <!-- Dropdown Master -->
         <li>
             <a href="#masterMenu" data-bs-toggle="collapse" role="button"
-                aria-expanded="<?php echo in_array(basename($_SERVER['PHP_SELF']), ['management_user.php', 'course.php', 'lesson.php']) ? 'true' : 'false'; ?>"
-                aria-controls="masterMenu">
+               aria-expanded="<?php echo $isMasterActive ? 'true' : 'false'; ?>"
+               aria-controls="masterMenu">
                 Master ▾
             </a>
-            <ul class="collapse <?php echo in_array(basename($_SERVER['PHP_SELF']), ['management_user.php', 'course.php', 'lesson.php']) ? 'show' : ''; ?>" id="masterMenu">
+            <ul class="collapse <?php echo $isMasterActive ? 'show' : ''; ?>" id="masterMenu">
                 <li>
-                    <a href="management_user.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'management_user.php' ? 'active' : ''; ?>">
+                    <a href="<?php echo (basename(dirname($_SERVER['PHP_SELF'])) == 'master') ? 'management_user.php' : 'master/management_user.php'; ?>"
+                       class="<?php echo $currentPage == 'management_user.php' ? 'active' : ''; ?>">
                         Management User
                     </a>
                 </li>
                 <li>
-                    <a href="course.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'course.php' ? 'active' : ''; ?>">
+                    <a href="<?php echo (basename(dirname($_SERVER['PHP_SELF'])) == 'master') ? 'course.php' : 'master/course.php'; ?>"
+                       class="<?php echo $currentPage == 'course.php' ? 'active' : ''; ?>">
                         Data Course
                     </a>
                 </li>
                 <li>
-                    <a href="lesson.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'lesson.php' ? 'active' : ''; ?>">
+                    <a href="<?php echo (basename(dirname($_SERVER['PHP_SELF'])) == 'master') ? 'lesson.php' : 'master/lesson.php'; ?>"
+                       class="<?php echo $currentPage == 'lesson.php' ? 'active' : ''; ?>">
                         Data Lesson
                     </a>
                 </li>

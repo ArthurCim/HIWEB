@@ -1,5 +1,5 @@
 <?php
-include "db.php";
+include "../db.php";
 $page_title = "Data Lesson";
 $result = mysqli_query($conn, "
     SELECT lesson.*, courses.nama_courses 
@@ -12,12 +12,12 @@ $result = mysqli_query($conn, "
 $courses = mysqli_query($conn, "SELECT * FROM courses ORDER BY nama_courses ASC");
 
 // include template
-include "includes/header.php";
-include "includes/navbar.php";
+include "../includes/header.php";
+include "../includes/navbar.php";
 ?>
 <div class="container-fluid">
     <div class="row">
-        <?php include "includes/sidebar.php"; ?>
+        <?php include "../includes/sidebar.php"; ?>
 
         <main class="main col">
             <div class="page-header d-flex justify-content-between align-items-center">
@@ -140,7 +140,7 @@ include "includes/navbar.php";
     </div>
 </div>
 
-<?php include "includes/footer.php"; ?>
+<?php include "../includes/footer.php"; ?>
 
 <script>
     $(document).ready(function() {

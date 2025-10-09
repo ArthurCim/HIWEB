@@ -1,14 +1,14 @@
 <?php
-include "db.php";
+include "../db.php";
 $page_title = "Management User";
 $result = mysqli_query($conn, "SELECT * FROM users ORDER BY id_users ASC");
 
-include "includes/header.php";
-include "includes/navbar.php";
+include "../includes/header.php";
+include "../includes/navbar.php";
 ?>
 <div class="container-fluid">
     <div class="row">
-        <?php include "includes/sidebar.php"; ?>
+        <?php include "../includes/sidebar.php"; ?>
 
         <main class="main col">
             <div class="page-header d-flex justify-content-between align-items-center">
@@ -120,7 +120,7 @@ include "includes/navbar.php";
         </div>
     </div>
 
-    <?php include 'includes/footer.php'; ?>
+    <?php include '../includes/footer.php'; ?>
 
     <script>
         $(document).ready(function() {
