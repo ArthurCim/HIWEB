@@ -35,10 +35,11 @@ body {
 }
 
 .icon-left-side {
-  position: center;
-  z-index: 1;         
-  width: 3000px;
-  height: 300px;       
+  position: relative;
+  z-index: 1;
+  width: 300px;
+  height: 300px;
+  object-fit: contain;       
 }
 
 .left-caption {
@@ -156,12 +157,17 @@ button[type="submit"] {
   padding: 12px;
   border: none;
   border-radius: 6px;
-  background: linear-gradient(90deg, #1A2A80, #5B5FB1, #7A85C1);
+  background: linear-gradient(90deg,  #4f46e5, #9333ea);
   color: #fff;
   font-size: 16px;
   cursor: pointer;
+  border-radius: 25px;
+  margin-top: 15px;
+  transition: 0.3s;
 }
-button[type="submit"]:hover { opacity: 0.9; }
+button[type="submit"]:hover { 
+  opacity: 0.9; 
+}
 
 .register-link {
   margin-top: 15px;
@@ -174,3 +180,44 @@ button[type="submit"]:hover { opacity: 0.9; }
 }
 .register-link a:hover { text-decoration: underline; }
 
+@media (max-width: 992px) {
+  body {
+    flex-direction: column;
+  }
+  .left-side, .right-side {
+    flex: none;
+    width: 100%;
+    height: auto;
+  }
+  .left-side {
+    min-height: 250px;
+  }
+  .form-box {
+    max-width: 500px;
+    margin: 20px auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-box {
+    padding: 20px 15px;
+  }
+  .form-box h1 {
+    font-size: 22px;
+  }
+  .input-group input {
+    font-size: 15px;
+    padding: 10px;
+  }
+  .btn {
+    font-size: 15px;
+    padding: 10px;
+  }
+  .left-caption {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  .icon img {
+    width: 60px;
+  }
+}

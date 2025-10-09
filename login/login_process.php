@@ -16,7 +16,7 @@ if ($email === '' || $password === '') {
     exit();
 }
 
-$stmt = $conn->prepare("SELECT id_users, email, password, nama FROM users WHERE email = ?");
+$stmt = $conn->prepare("SELECT id_user, email, PASSWORD, nama FROM users WHERE email = ?");
 if (!$stmt) {
     $_SESSION['login_error'] = "Terjadi kesalahan pada server!";
     header("Location: login.php");

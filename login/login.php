@@ -56,7 +56,7 @@ session_start();
         <button type="submit">Login</button>
 
         <div class="register-link">
-          Don't have an account? <a href="Register.php">Register</a>
+          Don't have an account? <a href="register.php">Register</a>
         </div>
       </form>
     </div>

@@ -24,7 +24,7 @@ if ($password !== $confirm) {
     exit();
 }
 
-$stmt = $conn->prepare("SELECT id_users FROM users WHERE email = ?");
+$stmt = $conn->prepare("SELECT id_user FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $stmt->store_result();
@@ -37,7 +37,7 @@ if ($stmt->num_rows > 0) {
 }
 $stmt->close();
 
-$result = $conn->query("SELECT id FROM users ORDER BY id DESC LIMIT 1");
+$result = $conn->query("SELECT id_user FROM users ORDER BY id_user DESC LIMIT 1");
 $lastId = $result->fetch_assoc();
 
 if ($lastId) {
@@ -50,7 +50,7 @@ if ($lastId) {
 
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-$stmt = $conn->prepare("INSERT INTO users (id_users, nama, email, password) VALUES (?, ?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO users (id_user, nama, email, PASSWORD) VALUES (?, ?, ?, ?)");
 $stmt->bind_param("ssss", $newId, $username, $email, $hashedPassword);
 
 if ($stmt->execute()) {
