@@ -2,8 +2,17 @@
 $page_title = "Dashboard";
 $page_css   = "dashboard.css";  // otomatis load CSS ini
 include "includes/header.php";
-include "includes/navbar.php";
 ?>
+<nav class="navbar">
+    <div class="brand">
+        <img src="assets/logo putih.svg" alt="Logo">
+        <h1>MIMO</h1>
+    </div>
+    <div class="nav-actions">
+        <a href="#" id="logoutBtn" class="logout">Logout</a>
+    </div>
+</nav>
+
 <div class="container-fluid">
   <div class="row">
     <?php include "includes/sidebar.php"; ?>

@@ -1,5 +1,5 @@
 <?php
-include "../db.php";
+include "../../db.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id        = mysqli_real_escape_string($conn, $_POST['id_courses']); // sekarang varchar

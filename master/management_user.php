@@ -1,7 +1,7 @@
 <?php
 include "../db.php";
 $page_title = "Management User";
-$result = mysqli_query($conn, "SELECT * FROM users ORDER BY id_users ASC");
+$result = mysqli_query($conn, "SELECT * FROM users ORDER BY id_user ASC");
 
 include "../includes/header.php";
 include "../includes/navbar.php";
@@ -36,11 +36,11 @@ include "../includes/navbar.php";
                                 <td>" . htmlspecialchars($row['email']) . "</td>
                                 <td>
                                   <button class='mimo-btn mimo-btn-secondary edit-btn' 
-                                    data-id='" . $row['id_users'] . "' 
+                                    data-id='" . $row['id_user'] . "' 
                                     data-nama='" . htmlspecialchars($row['nama']) . "' 
                                     data-email='" . htmlspecialchars($row['email']) . "' 
                                     data-bs-toggle='modal' data-bs-target='#editUserModal'>Edit</button>
-                                  <button class='mimo-btn mimo-btn-danger delete-btn' data-id='" . $row['id_users'] . "'>Hapus</button>
+                                  <button class='mimo-btn mimo-btn-danger delete-btn' data-id='" . $row['id_user'] . "'>Hapus</button>
                                 </td>
                               </tr>";
                         }

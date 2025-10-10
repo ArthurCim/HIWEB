@@ -1,5 +1,5 @@
 <?php
-include "../db.php";
+include "../../db.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama     = mysqli_real_escape_string($conn, $_POST['nama']);
@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // cek email unik
-    $check = $conn->prepare("SELECT id_users FROM users WHERE email = ?");
+    $check = $conn->prepare("SELECT id_user FROM users WHERE email = ?");
     $check->bind_param("s", $email);
     $check->execute();
     $check->store_result();
@@ -24,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $check->close();
 
     // ambil id terakhir
-    $result = $conn->query("SELECT id_users FROM users ORDER BY id_users DESC LIMIT 1");
+    $result = $conn->query("SELECT id_user FROM users ORDER BY id_user DESC LIMIT 1");
     $lastId = $result->fetch_assoc();
 
     if ($lastId) {
-        $num = (int) substr($lastId['id_users'], 6); // ambil angka setelah "users_"
+        $num = (int) substr($lastId['id_user'], 6); // ambil angka setelah "users_"
         $num++;
         $newId = "users_" . str_pad($num, 3, "0", STR_PAD_LEFT);
     } else {
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // hash password
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare("INSERT INTO users (id_users, nama, email, password) VALUES (?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO users (id_user, nama, email, password) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("ssss", $newId, $nama, $email, $hashedPassword);
 
     if ($stmt->execute()) {

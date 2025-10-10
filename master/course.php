@@ -167,11 +167,26 @@ include "../includes/navbar.php";
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $.post('proses/course_delete.php', {
-                        id_courses: id
-                    }, function() {
-                        Swal.fire('Dihapus!', 'Course telah dihapus.', 'success').then(() => location.reload());
+                    $.post({
+                        url: 'proses/course_delete.php',
+                        data: {
+                            id_courses: id
+                        },
+                        dataType: 'json',
+                        success: function(res) {
+                            if (res.status === 'success') {
+                                Swal.fire('Berhasil!', 'Course telah dihapus.', 'success')
+                                    .then(() => location.reload());
+                            } else {
+                                Swal.fire('Gagal!', res.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            Swal.fire('Error!', 'Terjadi kesalahan pada server.', 'error');
+                        }
                     });
+
+
                 }
             });
         });

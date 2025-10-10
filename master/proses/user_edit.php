@@ -1,5 +1,5 @@
 <?php
-include "../db.php";
+include "../../db.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id     = mysqli_real_escape_string($conn, $_POST['id_users']);
@@ -20,9 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($pass !== '') {
         $hashedPassword = password_hash($pass, PASSWORD_DEFAULT);
-        $query = "UPDATE users SET nama='$nama', email='$email', password='$hashedPassword' WHERE id_users='$id'";
+        $query = "UPDATE users SET nama='$nama', email='$email', password='$hashedPassword' WHERE id_user='$id'";
     } else {
-        $query = "UPDATE users SET nama='$nama', email='$email' WHERE id_users='$id'";
+        $query = "UPDATE users SET nama='$nama', email='$email' WHERE id_user='$id'";
     }
 
     if (mysqli_query($conn, $query)) {
