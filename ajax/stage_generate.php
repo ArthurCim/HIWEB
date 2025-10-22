@@ -5,10 +5,10 @@ header('Content-Type: application/json; charset=utf-8');
 // Input
 $id_lesson = isset($_POST['id_lesson']) ? trim($_POST['id_lesson']) : '';
 $count = isset($_POST['count']) ? intval($_POST['count']) : 0;
-$default_type = isset($_POST['default_type']) && in_array($_POST['default_type'], ['materi','quiz']) ? $_POST['default_type'] : 'materi';
+$default_type = isset($_POST['default_type']) && in_array($_POST['default_type'], ['materi', 'quiz']) ? $_POST['default_type'] : 'materi';
 
 if (!$id_lesson || $count <= 0) {
-    echo json_encode(['status'=>'error','message'=>'Lesson dan jumlah stage wajib diisi valid']); 
+    echo json_encode(['status' => 'error', 'message' => 'Lesson dan jumlah stage wajib diisi valid']);
     exit;
 }
 
@@ -27,7 +27,7 @@ try {
         $id_stage = 'stage_' . str_pad($next_num, 3, '0', STR_PAD_LEFT);
         $name = "Stage " . $next_num;
         $desc = "Materi untuk " . $name;
-        $stmt->bind_param("ssssi", $id_stage, $name, $desc, $default_type, $id_lesson);
+        $stmt->bind_param("sssss", $id_stage, $name, $desc, $default_type, $id_lesson);
 
         if (!$stmt->execute()) {
             throw new Exception("Gagal insert: " . $stmt->error);
@@ -35,9 +35,8 @@ try {
     }
 
     $conn->commit();
-    echo json_encode(['status'=>'success','message'=>"Berhasil generate {$count} stage baru."]);
-
+    echo json_encode(['status' => 'success', 'message' => "Berhasil generate {$count} stage baru."]);
 } catch (Exception $e) {
     $conn->rollback();
-    echo json_encode(['status'=>'error','message'=>'Error: '.$e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'Error: ' . $e->getMessage()]);
 }

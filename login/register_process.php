@@ -24,6 +24,7 @@ if ($password !== $confirm) {
     exit();
 }
 
+// Cek apakah email sudah digunakan
 $stmt = $conn->prepare("SELECT id_user FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
@@ -37,11 +38,13 @@ if ($stmt->num_rows > 0) {
 }
 $stmt->close();
 
+// Ambil ID terakhir
 $result = $conn->query("SELECT id_user FROM users ORDER BY id_user DESC LIMIT 1");
 $lastId = $result->fetch_assoc();
 
 if ($lastId) {
-    $num = (int) substr($lastId['id'], 6);
+    // ✅ gunakan 'id_user' bukan 'id'
+    $num = (int) substr($lastId['id_user'], 6);
     $num++;
     $newId = "users_" . str_pad($num, 3, "0", STR_PAD_LEFT);
 } else {
@@ -58,7 +61,7 @@ if ($stmt->execute()) {
     header("Location: login.php");
     exit();
 } else {
-    $_SESSION['register_error'] = "Gagal menyimpan data";
+    $_SESSION['register_error'] = "Gagal menyimpan data: " . $stmt->error;
     header("Location: register.php");
     exit();
 }
