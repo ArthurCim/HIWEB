@@ -1,5 +1,10 @@
 <?php
 include "../db.php";
+session_start();
+if (!isset($_SESSION['login'])) {
+    header('Location:../login/login.php');
+    exit();
+}
 $page_title = "Management User";
 $result = mysqli_query($conn, "SELECT * FROM users ORDER BY id_user ASC");
 

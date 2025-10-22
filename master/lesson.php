@@ -1,5 +1,10 @@
 <?php
 include "../db.php";
+session_start();
+if (!isset($_SESSION['login'])) {
+    header('Location:../login/login.php');
+    exit();
+}
 $page_title = "Data Lesson";
 $result = mysqli_query($conn, "
     SELECT lesson.*, courses.nama_courses 

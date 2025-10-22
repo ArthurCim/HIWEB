@@ -6,7 +6,7 @@
         $currentPage = basename($_SERVER['PHP_SELF']);
 
         // Daftar halaman dalam folder master
-        $masterPages = ['management_user.php', 'course.php', 'lesson.php'];
+        $masterPages = ['management_user.php', 'course.php', 'lesson.php', 'stage.php'];
 
         // Cek apakah halaman sekarang berasal dari folder master
         $isMasterActive = in_array($currentPage, $masterPages);
@@ -44,6 +44,12 @@
                     <a href="<?php echo (basename(dirname($_SERVER['PHP_SELF'])) == 'master') ? 'lesson.php' : 'master/lesson.php'; ?>"
                        class="<?php echo $currentPage == 'lesson.php' ? 'active' : ''; ?>">
                         Data Lesson
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo (basename(dirname($_SERVER['PHP_SELF'])) == 'master') ? 'stage.php' : 'master/stage.php'; ?>"
+                       class="<?php echo $currentPage == 'stage.php' ? 'active' : ''; ?>">
+                        Data Stage
                     </a>
                 </li>
             </ul>

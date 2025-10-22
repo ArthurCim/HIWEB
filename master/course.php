@@ -1,5 +1,11 @@
 <?php
 include "../db.php";
+session_start();
+if (!isset($_SESSION['login'])) {
+    header('Location:../login/login.php');
+    exit();
+}
+
 $page_title = "Data Course";
 $result = mysqli_query($conn, "SELECT * FROM courses ORDER BY id_courses ASC");
 
@@ -140,10 +146,18 @@ include "../includes/navbar.php";
         // Tambah course
         $('#addCourseForm').on('submit', function(e) {
             e.preventDefault();
-            $.post('proses/course_add.php', $(this).serialize(), function() {
-                Swal.fire('Berhasil', 'Course berhasil ditambahkan!', 'success').then(() => location.reload());
+            $.post('proses/course_add.php', $(this).serialize(), function(response) {
+                console.log(response); // lihat hasil dari PHP di console browser
+
+                if (response.trim() === "success") {
+                    Swal.fire('Berhasil', 'Course berhasil ditambahkan!', 'success')
+                        .then(() => location.reload());
+                } else {
+                    Swal.fire('Gagal!', 'Terjadi kesalahan: ' + response, 'error');
+                }
             });
         });
+
 
         // Edit course
         $('#editCourseForm').on('submit', function(e) {
