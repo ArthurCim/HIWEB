@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../db.php';
+include __DIR__ . '/../db.php';
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: login.php");
@@ -29,8 +29,6 @@ $result = $stmt->get_result();
 
 if ($result && $result->num_rows === 1) {
     $user = $result->fetch_assoc();
-
-    // Gunakan kolom 'PASSWORD' sesuai nama di database
     if (password_verify($password, $user['PASSWORD'])) {
         $_SESSION['login'] = true;
         $_SESSION['user_id'] = $user['id_user'];

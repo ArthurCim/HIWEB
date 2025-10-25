@@ -1,15 +1,26 @@
 <?php
+// ajax/stage_get.php
 include "../db.php";
 header('Content-Type: application/json; charset=utf-8');
+session_start();
+if (!isset($_SESSION['login'])) {
+    echo json_encode(['status' => 'error', 'message' => 'Not authenticated']);
+    exit;
+}
+$id_stage = isset($_GET['id_stage']) ? $_GET['id_stage'] : '';
+if ($id_stage === '') {
+    echo json_encode(['status' => 'error', 'message' => 'Parameter invalid']);
+    exit;
+}
 
-$id_stage = isset($_GET['id_stage']) ? intval($_GET['id_stage']) : 0;
-if (!$id_stage) { echo json_encode(['status'=>'error','message'=>'ID kosong']); exit; }
-
-$stmt = $conn->prepare("SELECT s.id_stage, s.nama_stage, s.deskripsi, s.type, s.id_lesson, l.id_courses
-                        FROM stage s LEFT JOIN lesson l ON s.id_lesson = l.id_lesson
-                        WHERE s.id_stage = ? LIMIT 1");
-$stmt->bind_param("i", $id_stage);
+$stmt = $conn->prepare("SELECT id_stage, id_lesson, nama_stage, deskripsi, type FROM stage WHERE id_stage = ? LIMIT 1");
+$stmt->bind_param('s', $id_stage);
 $stmt->execute();
-$res = $stmt->get_result()->fetch_assoc();
-if (!$res) { echo json_encode(['status'=>'error','message'=>'Tidak ditemukan']); exit; }
-echo json_encode(['status'=>'success','data'=>$res]);
+$res = $stmt->get_result();
+if ($res && $res->num_rows) {
+    $row = $res->fetch_assoc();
+    echo json_encode(['status' => 'success', 'data' => $row]);
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Data tidak ditemukan']);
+}
+$stmt->close();
