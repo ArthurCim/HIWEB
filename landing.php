@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Coverflow - One Page Portfolio</title>
-    <link href="templatemo-3d-coverflow.css" rel="stylesheet">
+    <title>Codeplay</title>
+    <link href="landing.css" rel="stylesheet">
 
 </head>
 <body>
@@ -12,27 +12,16 @@
     <header class="header" id="header">
         <a href="#home" class="logo-container">
             <div class="logo">
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <rect x="10" y="25" width="15" height="50" fill="url(#grad1)" transform="rotate(-15 17.5 50)" />
-                    <rect x="35" y="15" width="15" height="70" fill="url(#grad1)" />
-                    <rect x="60" y="25" width="15" height="50" fill="url(#grad1)" transform="rotate(15 67.5 50)" />
-                    <circle cx="50" cy="50" r="45" fill="none" stroke="url(#grad1)" stroke-width="2" opacity="0.5" />
-                </svg>
+                <img src="assets/20251008_144747 2.svg" alt="Logo CodePlay" width="100" height="100">
             </div>
-            <div class="logo-text">3D Coverflow</div>
+            <div class="logo-text">CodePlay</div>
         </a>
         
         <nav class="main-menu" id="mainMenu">
             <a href="#home" class="menu-item active">Home</a>
             <a href="#about" class="menu-item">About</a>
             <a href="#contact" class="menu-item">Contact</a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="menu-item external">GitHub</a>
+            <a href="login/login.php" target="_blank" rel="noopener noreferrer" class="menu-item external">Login</a>
         </nav>
         
         <div class="menu-toggle" id="menuToggle">
@@ -46,51 +35,39 @@
     <section id="home" class="section">
         <div class="coverflow-wrapper">
             <div class="info">
-                <h2 id="current-title">Mountain Landscape</h2>
-                <p id="current-description">Majestic peaks covered in snow during golden hour</p>
+                <h2 id="current-title">PHP</h2>
+                <p id="current-description">A popular general-purpose scripting language that is especially suited to web development</p>
             </div>
 
             <div class="coverflow-container" tabindex="0">
                 <div class="coverflow" id="coverflow">
                     <div class="coverflow-item" data-index="0">
                         <div class="cover image-loading">
-                            <img src="images/mountain-landscape.jpg" alt="Mountain Landscape" loading="lazy">
+                            <img src="images/php.png" alt="PHP" loading="lazy">
                         </div>
                         <div class="reflection"></div>
                     </div>
                     <div class="coverflow-item" data-index="1">
                         <div class="cover image-loading">
-                            <img src="images/forest-path.jpg" alt="Forest Path" loading="lazy">
+                            <img src="images/Kotlin.png" alt="Kotlin" loading="lazy">
                         </div>
                         <div class="reflection"></div>
                     </div>
                     <div class="coverflow-item" data-index="2">
                         <div class="cover image-loading">
-                            <img src="images/serene-water-mirroring.jpg" alt="Lake Reflection" loading="lazy">
+                            <img src="images/coding.png" alt="Coding" loading="lazy">
                         </div>
                         <div class="reflection"></div>
                     </div>
                     <div class="coverflow-item" data-index="3">
                         <div class="cover image-loading">
-                            <img src="images/ocean-sunset-golden-hour.jpg" alt="Ocean Sunset" loading="lazy">
+                            <img src="images/css-3.png" alt="CSS" loading="lazy">
                         </div>
                         <div class="reflection"></div>
                     </div>
                     <div class="coverflow-item" data-index="4">
                         <div class="cover image-loading">
-                            <img src="images/rolling-sand-dunes.jpg" alt="Desert Dunes" loading="lazy">
-                        </div>
-                        <div class="reflection"></div>
-                    </div>
-                    <div class="coverflow-item" data-index="5">
-                        <div class="cover image-loading">
-                            <img src="images/starry-night.jpg" alt="Starry Night" loading="lazy">
-                        </div>
-                        <div class="reflection"></div>
-                    </div>
-                    <div class="coverflow-item" data-index="6">
-                        <div class="cover image-loading">
-                            <img src="images/cascading-waterfall.jpg" alt="Waterfall" loading="lazy">
+                            <img src="images/java.png" alt="Java" loading="lazy">
                         </div>
                         <div class="reflection"></div>
                     </div>
@@ -114,8 +91,8 @@
     <section id="about" class="section">
         <div class="about-content">
             <div class="about-header">
-                <h2>Discover 3D Coverflow</h2>
-                <p>A revolutionary way to showcase your visual content with stunning 3D effects and seamless interactions</p>
+                <h2>CodePlay</h2>
+                <p>A platform that transforms the way you interact with code through immersive experiences</p>
             </div>
             
             <div class="about-main">
@@ -126,16 +103,11 @@
                             <div class="corner-decoration bottom-right"></div>
                             
                             <div class="showcase-logo">
-                                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="10" y="25" width="15" height="50" fill="white" transform="rotate(-15 17.5 50)" opacity="0.9" />
-                                    <rect x="35" y="15" width="15" height="70" fill="white" />
-                                    <rect x="60" y="25" width="15" height="50" fill="white" transform="rotate(15 67.5 50)" opacity="0.9" />
-                                    <circle cx="50" cy="50" r="45" fill="none" stroke="white" stroke-width="2" opacity="0.3" />
-                                </svg>
+                                <img src="assets/20251008_144747 2.svg" alt="Logo CodePlay" width="100" height="100">
                             </div>
                             
-                            <h3 class="showcase-title">3D Coverflow</h3>
-                            <p class="showcase-subtitle">Transform your image galleries into immersive 3D experiences</p>
+                            <h3 class="showcase-title">CodePlay</h3>
+                            <p class="showcase-subtitle">Transform your coding experience with interactive learning</p>
                             
                             <div class="showcase-badges">
                                 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" rel="noopener noreferrer" class="badge">HTML5</a>
@@ -148,16 +120,16 @@
                 </div>
                 
                 <div class="about-info">
-                    <h3>Elevate Your Gallery Experience</h3>
-                    <p>3D Coverflow is brought to you by TemplateMo. Transform the way you present images with our cutting-edge 3D coverflow technology. Create immersive, interactive galleries that captivate your audience and leave a lasting impression.</p>
-                    <p>Whether you're showcasing portfolio pieces, product images, or creating an interactive story, our 3D coverflow brings your content to life with fluid animations and intuitive controls.</p>
+                    <h3>About CodePlay</h3>
+                    <p>CodePlay is brought to you by TemplateMo. Transform the way you present images with our cutting-edge 3D coverflow technology. Create immersive, interactive galleries that captivate your audience and leave a lasting impression.</p>
+                    <p>Whenever you encounter learning that you find difficult and confusing, Codeplay is here to provide answers to those difficulties by presenting an application interface that is enjoyable and easy to understand.</p>
                     
                     <ul class="feature-list">
-                        <li>Smooth 3D transitions with hardware acceleration</li>
-                        <li>Touch-enabled navigation for mobile devices</li>
-                        <li>Customizable autoplay and timing controls</li>
-                        <li>Keyboard navigation support</li>
-                        <li>Reflection effects for added depth</li>
+                        <li>Interactive coding challenges and quizzes</li>
+                        <li>Real-time code collaboration tools</li>
+                        <li>Intuitive code editor with syntax highlighting</li>
+                        <li>Built-in code snippets and templates</li>
+                        <li>Comprehensive documentation and tutorials</li>
                     </ul>
                     
                     <a href="#contact" class="cta-button">
@@ -171,20 +143,20 @@
             
             <div class="stats-section">
                 <div class="stat-item">
-                    <div class="stat-number">60fps</div>
-                    <div class="stat-label">Smooth Performance</div>
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Instructors</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">100%</div>
-                    <div class="stat-label">Responsive Design</div>
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">courses</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">3D</div>
-                    <div class="stat-label">Visual Effects</div>
+                    <div class="stat-number">16M+</div>
+                    <div class="stat-label">Users</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number">∞</div>
-                    <div class="stat-label">Customization</div>
+                    <div class="stat-label">Things to Learn</div>
                 </div>
             </div>
         </div>
@@ -195,13 +167,13 @@
         <div class="contact-content">
             <div class="contact-header">
                 <h2>Get In Touch</h2>
-                <p>Have a project in mind? Let's create something amazing together.</p>
+                <p>Got a burning passion? Let's ignite it together.</p>
             </div>
             
             <div class="contact-container">
                 <div class="contact-info-section">
                     <h3>Let's Connect</h3>
-                    <p>We're here to help bring your vision to life. Whether you need a stunning gallery, a complete website redesign, or custom development work, we'd love to hear from you.</p>
+                    <p>We're just a message away!</p>
                     
                     <div class="contact-details">
                         <div class="contact-item">
@@ -212,7 +184,7 @@
                             </div>
                             <div class="contact-text">
                                 <h4>Email</h4>
-                                <p>hello@3dcoverflow.com</p>
+                                <p>Codeplay@example.com</p>
                             </div>
                         </div>
                         
@@ -236,7 +208,7 @@
                             </div>
                             <div class="contact-text">
                                 <h4>Address</h4>
-                                <p>123 Design Street, San Francisco, CA 94102</p>
+                                <p>Land Of Narnia</p>
                             </div>
                         </div>
                         
@@ -309,7 +281,7 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-copyright">
-                © 2025 3D Coverflow. All rights reserved. | Designed by <a href="https://templatemo.com" target="_blank" rel="noopener noreferrer">TemplateMo</a>
+                © 2025 CodePlay. All rights reserved. | Designed by Team <a href="https://youtu.be/vxEzEsMydHQ?si=4HWLxHW6XhAC7_gt" target="_blank" rel="noopener noreferrer">OurTeam</a>
             </div>
             <div class="footer-links">
                 <a href="#privacy" onclick="event.preventDefault(); alert('Privacy Policy page would go here');">Privacy Policy</a>
@@ -323,7 +295,7 @@
         <span>↑</span>
     </div>
 
-<script src="templatemo-3d-coverflow-scripts.js"></script>
+<script src="landing.js"></script>
 
 </body>
 </html>

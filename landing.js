@@ -1,14 +1,3 @@
-/*
-
-TemplateMo 595 3d coverflow
-
-https://templatemo.com/tm-595-3d-coverflow
-
-*/
-
-// JavaScript Document
-
-        // Coverflow functionality
         const items = document.querySelectorAll('.coverflow-item');
         const dotsContainer = document.getElementById('dots');
         const currentTitle = document.getElementById('current-title');
@@ -19,13 +8,11 @@ https://templatemo.com/tm-595-3d-coverflow
         let currentIndex = 3;
         let isAnimating = false;
 
-        // Mobile menu toggle
         menuToggle.addEventListener('click', () => {
             menuToggle.classList.toggle('active');
             mainMenu.classList.toggle('active');
         });
 
-        // Close mobile menu when clicking on menu items (except external links)
         document.querySelectorAll('.menu-item:not(.external)').forEach(item => {
             item.addEventListener('click', (e) => {
                 menuToggle.classList.remove('active');
@@ -33,7 +20,6 @@ https://templatemo.com/tm-595-3d-coverflow
             });
         });
 
-        // Close mobile menu when clicking outside
         document.addEventListener('click', (e) => {
             if (!menuToggle.contains(e.target) && !mainMenu.contains(e.target)) {
                 menuToggle.classList.remove('active');
@@ -41,36 +27,27 @@ https://templatemo.com/tm-595-3d-coverflow
             }
         });
 
-        // Image data with titles and descriptions
         const imageData = [
             {
-                title: "Mountain Landscape",
-                description: "Majestic peaks covered in snow during golden hour"
+                title: "PHP",
+                description: "A popular general-purpose scripting language that is especially suited to web development"
             },
             {
-                title: "Forest Path",
-                description: "A winding trail through ancient woodland"
+                title: "Kotlin",
+                description: "A modern programming language that makes coding more enjoyable"
             },
             {
-                title: "Lake Reflection",
-                description: "Serene waters mirroring the surrounding landscape"
+                title: "Coding",
+                description: "the art of turning ideas into reality through programming"
             },
             {
-                title: "Ocean Sunset",
-                description: "Golden hour over endless ocean waves"
+                title: "CSS",
+                description: "A style sheet language used for describing the presentation of a document written in HTML"
             },
             {
-                title: "Desert Dunes",
-                description: "Rolling sand dunes under vast blue skies"
+                title: "JAVA",
+                description: "A high-level, class-based, object-oriented programming language"
             },
-            {
-                title: "Starry Night",
-                description: "Countless stars illuminating the dark sky"
-            },
-            {
-                title: "Waterfall",
-                description: "Cascading water through lush green forest"
-            }
         ];
 
         // Create dots
