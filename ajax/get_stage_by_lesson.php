@@ -9,14 +9,21 @@ if (!$id_lesson) {
     exit;
 }
 
-$stmt = $conn->prepare("SELECT id_stage, nama_stage, deskripsi, type, id_lesson, id_materi FROM stage WHERE id_lesson = ?");
+// Select stages ordered by their numeric part in nama_stage
+$stmt = $conn->prepare("SELECT id_stage, nama_stage, deskripsi, type, id_lesson, id_materi 
+                       FROM stage 
+                       WHERE id_lesson = ? 
+                       ORDER BY CAST(REGEXP_REPLACE(nama_stage, '[^0-9]', '') AS UNSIGNED)");
 $stmt->bind_param('s', $id_lesson);
 $stmt->execute();
 $res = $stmt->get_result();
 
 $stages = [];
+$counter = 1;
 while ($r = $res->fetch_assoc()) {
     $stage = $r;
+    // Ensure stage names are sequential
+    $stage['nama_stage'] = "Stage " . $counter++;
     $stage['details'] = [];
 
     // Get materi details if type is materi

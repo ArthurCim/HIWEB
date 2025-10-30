@@ -10,3 +10,261 @@ FILES: Array
 )
 
 --------------------------------------------------------------------------------
+2025-10-26 06:22:56 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 06:22:59 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 06:23:03 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 06:28:47 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 06:28:53 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 06:28:57 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 07:10:44 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 08:31:10 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 08:34:32 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 08:37:20 RECONSTRUCT FAIL
+POST KEYS: id_lesson
+RECONSTRUCTED: Array
+(
+    [id_lesson] => lesson_001
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 08:37:20 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 08:37:26 RECONSTRUCT FAIL
+POST KEYS: id_lesson
+RECONSTRUCTED: Array
+(
+    [id_lesson] => lesson_001
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 08:37:26 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 08:41:58 RECONSTRUCT FAIL
+POST KEYS: id_lesson, stages_json
+RECONSTRUCTED: Array
+(
+    [id_lesson] => lesson_001
+    [stages_json] => []
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 08:41:58 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+    [stages_json] => []
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 10:07:21 RECONSTRUCT FAIL
+POST KEYS: id_lesson, stages_json
+RECONSTRUCTED: Array
+(
+    [id_lesson] => lesson_001
+    [stages_json] => []
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 10:07:21 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+    [stages_json] => []
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 10:07:33 RECONSTRUCT FAIL
+POST KEYS: id_lesson, stages_json
+RECONSTRUCTED: Array
+(
+    [id_lesson] => lesson_001
+    [stages_json] => []
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 10:07:33 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+    [stages_json] => []
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 10:09:46 RECONSTRUCT FAIL
+POST KEYS: id_lesson, stages_json
+RECONSTRUCTED: Array
+(
+    [id_lesson] => lesson_001
+    [stages_json] => []
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 10:09:46 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+    [stages_json] => []
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 10:17:37 RECONSTRUCT FAIL
+POST KEYS: id_lesson, stages_json
+RECONSTRUCTED: Array
+(
+    [id_lesson] => lesson_001
+    [stages_json] => []
+)
+
+--------------------------------------------------------------------------------
+2025-10-26 10:22:45 RECONSTRUCT FAIL
+POST KEYS: id_lesson, stages_json
+RECONSTRUCTED: Array
+(
+    [id_lesson] => lesson_001
+    [stages_json] => []
+)
+
+--------------------------------------------------------------------------------
+2025-10-30 11:23:39 ERROR:
+Message: Cannot delete or update a parent row: a foreign key constraint fails (`mimo`.`stage`, CONSTRAINT `stage_ibfk_2` FOREIGN KEY (`id_materi`) REFERENCES `materi` (`id_materi`) ON DELETE RESTRICT ON UPDATE RESTRICT)
+Line: 90
+--------------------------------------------------------------------------------

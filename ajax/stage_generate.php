@@ -4,18 +4,21 @@ include "../db.php";
 header('Content-Type: application/json; charset=utf-8');
 session_start();
 if (!isset($_SESSION['login'])) {
-    echo json_encode(['status'=>'error','message'=>'Not authenticated']); exit;
+    echo json_encode(['status' => 'error', 'message' => 'Not authenticated']);
+    exit;
 }
 
 $id_lesson = isset($_POST['id_lesson']) ? intval($_POST['id_lesson']) : 0;
 $count = isset($_POST['count']) ? intval($_POST['count']) : 0;
-$default_type = isset($_POST['default_type']) && in_array($_POST['default_type'], ['materi','quiz']) ? $_POST['default_type'] : 'materi';
+$default_type = isset($_POST['default_type']) && in_array($_POST['default_type'], ['materi', 'quiz']) ? $_POST['default_type'] : 'materi';
 
 if (!$id_lesson || $count <= 0) {
-    echo json_encode(['status'=>'error','message'=>'Parameter invalid']); exit;
+    echo json_encode(['status' => 'error', 'message' => 'Parameter invalid']);
+    exit;
 }
 if ($count > 200) {
-    echo json_encode(['status'=>'error','message'=>'Count terlalu besar (max 200)']); exit;
+    echo json_encode(['status' => 'error', 'message' => 'Count terlalu besar (max 200)']);
+    exit;
 }
 
 // cek lesson exist
@@ -24,28 +27,23 @@ $stmt->bind_param('i', $id_lesson);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows === 0) {
-    echo json_encode(['status'=>'error','message'=>'Lesson tidak ditemukan']); exit;
+    echo json_encode(['status' => 'error', 'message' => 'Lesson tidak ditemukan']);
+    exit;
 }
 $stmt->close();
 
 // mulai transaction
 $conn->begin_transaction();
 try {
-    // cari nomor terakhir jika nama_stage mengandung angka di akhir, agar tidak duplikat
-    $stmt = $conn->prepare("SELECT nama_stage FROM stage WHERE id_lesson = ? ORDER BY id_stage DESC LIMIT 1");
+    // Hitung jumlah stage yang sudah ada
+    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM stage WHERE id_lesson = ?");
     $stmt->bind_param('i', $id_lesson);
     $stmt->execute();
     $res = $stmt->get_result();
     $start = 1;
     if ($res && $res->num_rows) {
         $row = $res->fetch_assoc();
-        if (preg_match('/(\d+)$/', $row['nama_stage'], $m)) {
-            $start = intval($m[1]) + 1;
-        } else {
-            // jika format tidak berangka, cari count existing + 1
-            $countExisting = $conn->query("SELECT COUNT(*) as c FROM stage WHERE id_lesson = {$id_lesson}")->fetch_assoc()['c'];
-            $start = $countExisting + 1;
-        }
+        $start = $row['total'] + 1; // Mulai dari nomor setelah stage terakhir
     }
     $stmt->close();
 
@@ -60,8 +58,8 @@ try {
     }
     $ins->close();
     $conn->commit();
-    echo json_encode(['status'=>'success','message'=> "Berhasil membuat {$count} stage untuk lesson."]);
+    echo json_encode(['status' => 'success', 'message' => "Berhasil membuat {$count} stage untuk lesson."]);
 } catch (Exception $e) {
     $conn->rollback();
-    echo json_encode(['status'=>'error','message'=>'Gagal membuat stage: '.$e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'Gagal membuat stage: ' . $e->getMessage()]);
 }
