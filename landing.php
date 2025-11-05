@@ -21,7 +21,7 @@
             <a href="#home" class="menu-item active">Home</a>
             <a href="#about" class="menu-item">About</a>
             <a href="#contact" class="menu-item">Contact</a>
-            <a href="login/login.php" target="_blank" rel="noopener noreferrer" class="menu-item external">Login</a>
+            <a href="login/login.php" rel="noopener noreferrer" class="menu-item external">Login</a>
         </nav>
         
         <div class="menu-toggle" id="menuToggle">

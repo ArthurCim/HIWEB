@@ -9,8 +9,8 @@ if (!$id_lesson) {
     exit;
 }
 
-// Select stages ordered by their numeric part in nama_stage
-$stmt = $conn->prepare("SELECT id_stage, nama_stage, deskripsi, type, id_lesson, id_materi 
+// ✅ Select stages WITH id_question for quiz lookup
+$stmt = $conn->prepare("SELECT id_stage, nama_stage, deskripsi, type, id_lesson, id_materi, id_question 
                        FROM stage 
                        WHERE id_lesson = ? 
                        ORDER BY CAST(REGEXP_REPLACE(nama_stage, '[^0-9]', '') AS UNSIGNED)");
@@ -20,6 +20,7 @@ $res = $stmt->get_result();
 
 $stages = [];
 $counter = 1;
+
 while ($r = $res->fetch_assoc()) {
     $stage = $r;
     // Ensure stage names are sequential
@@ -31,7 +32,7 @@ while ($r = $res->fetch_assoc()) {
         try {
             // Newer flow: stage stores id_materi (single combined materi record)
             if (!empty($r['id_materi'])) {
-                $materi_stmt = $conn->prepare("SELECT id_materi, konten as isi, file_url, created_at, id_materi FROM materi WHERE id_materi = ? LIMIT 1");
+                $materi_stmt = $conn->prepare("SELECT id_materi, konten as isi, file_url, created_at FROM materi WHERE id_materi = ? LIMIT 1");
                 if ($materi_stmt) {
                     $materi_stmt->bind_param('s', $r['id_materi']);
                     $materi_stmt->execute();
@@ -40,8 +41,8 @@ while ($r = $res->fetch_assoc()) {
                         $stage['details'][] = [
                             'id_detail' => $m['id_materi'],
                             'judul' => '',
-                            'isi' => $m['isi'],
-                            'media' => $m['file_url']
+                            'isi' => $m['isi'] ?? '',
+                            'media' => $m['file_url'] ?? ''
                         ];
                     }
                     $materi_stmt->close();
@@ -56,9 +57,9 @@ while ($r = $res->fetch_assoc()) {
                     while ($m = $materi_res->fetch_assoc()) {
                         $stage['details'][] = [
                             'id_detail' => $m['id_materi'],
-                            'judul' => $m['judul'],
-                            'isi' => $m['isi'],
-                            'media' => $m['file_url']
+                            'judul' => $m['judul'] ?? '',
+                            'isi' => $m['isi'] ?? '',
+                            'media' => $m['file_url'] ?? ''
                         ];
                     }
                     $materi_stmt->close();
@@ -69,50 +70,73 @@ while ($r = $res->fetch_assoc()) {
             error_log("Failed to get materi details: " . $e->getMessage());
         }
     }
-    // Get quiz details if type is quiz
-    else if ($r['type'] === 'quiz') {
+    // ✅ FIXED: Get quiz details if type is quiz
+    else if ($r['type'] === 'quiz' && !empty($r['id_question'])) {
         try {
+            // ✅ Query menggunakan stage.id_question, bukan q.id_stage
             $quiz_stmt = $conn->prepare("
-                SELECT q.id_question, q.content as question_text,
-                       q.id_stage, q.answer_type,
-                       qo.id_option, qo.option_text, qo.is_correct
+                SELECT 
+                    q.id_question, 
+                    q.content as question_text,
+                    qo.id_question_option, 
+                    qo.option_text, 
+                    qo.is_correct
                 FROM question q
                 LEFT JOIN question_option qo ON qo.id_question = q.id_question
-                WHERE q.id_stage = ?
+                WHERE q.id_question = ?
+                ORDER BY qo.id_question_option ASC
             ");
+            
             if ($quiz_stmt) {
-                $quiz_stmt->bind_param('s', $r['id_stage']);
+                $quiz_stmt->bind_param('s', $r['id_question']);
                 $quiz_stmt->execute();
                 $quiz_res = $quiz_stmt->get_result();
 
-                $quiz_details = [];
+                $quiz_data = null;
+                $options = [];
+
                 while ($q = $quiz_res->fetch_assoc()) {
-                    if (!isset($quiz_details[$q['id_question']])) {
-                        $quiz_details[$q['id_question']] = [
+                    // Build quiz data from first row
+                    if ($quiz_data === null) {
+                        $quiz_data = [
                             'id_detail' => $q['id_question'],
-                            'isi' => $q['question_text'],
-                            'quiz_type' => $q['answer_type'] ?? 'pilihan_ganda',
+                            'isi' => $q['question_text'] ?? '',
+                            'quiz_type' => 'pilihan_ganda', // Default to multiple choice
                             'options' => []
                         ];
                     }
-                    if ($q['id_option']) {
-                        $quiz_details[$q['id_question']]['options'][] = [
-                            'id' => $q['id_option'],
-                            'text' => $q['option_text'],
-                            'is_correct' => $q['is_correct']
+                    
+                    // Collect options
+                    if (!empty($q['id_question_option'])) {
+                        $options[] = [
+                            'id' => $q['id_question_option'],
+                            'text' => $q['option_text'] ?? '',
+                            'is_correct' => intval($q['is_correct'] ?? 0)
                         ];
                     }
                 }
-                $stage['details'] = array_values($quiz_details);
+
+                // Add options to quiz data
+                if ($quiz_data !== null) {
+                    $quiz_data['options'] = $options;
+                    $stage['details'][] = $quiz_data;
+                    
+                    // Debug log
+                    error_log("✅ Quiz loaded for stage {$stage['nama_stage']}: " . json_encode($quiz_data));
+                }
+
                 $quiz_stmt->close();
             }
         } catch (Exception $e) {
             // If query fails, we'll just return empty details
-            error_log("Failed to get quiz details: " . $e->getMessage());
+            error_log("❌ Failed to get quiz details: " . $e->getMessage());
         }
     }
 
     $stages[] = $stage;
 }
 
-echo json_encode($stages);
+// Debug log final output
+error_log("📦 Returning " . count($stages) . " stages for lesson {$id_lesson}");
+
+echo json_encode($stages, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);

@@ -268,3 +268,65 @@ RECONSTRUCTED: Array
 Message: Cannot delete or update a parent row: a foreign key constraint fails (`mimo`.`stage`, CONSTRAINT `stage_ibfk_2` FOREIGN KEY (`id_materi`) REFERENCES `materi` (`id_materi`) ON DELETE RESTRICT ON UPDATE RESTRICT)
 Line: 90
 --------------------------------------------------------------------------------
+2025-11-01 18:52:51 ERROR:
+Message: Cannot add or update a child row: a foreign key constraint fails (`mimo`.`stage`, CONSTRAINT `stage_ibfk_3` FOREIGN KEY (`id_question`) REFERENCES `question` (`id_question`) ON DELETE RESTRICT ON UPDATE RESTRICT)
+Line: 397
+Trace: #0 C:\laragon\www\Semester_3\HIWEB\ajax\stage_generate_full.php(397): mysqli_stmt->execute()
+#1 {main}
+--------------------------------------------------------------------------------
+2025-11-01 18:53:12 ERROR:
+Message: Cannot add or update a child row: a foreign key constraint fails (`mimo`.`stage`, CONSTRAINT `stage_ibfk_3` FOREIGN KEY (`id_question`) REFERENCES `question` (`id_question`) ON DELETE RESTRICT ON UPDATE RESTRICT)
+Line: 406
+Trace: #0 C:\laragon\www\Semester_3\HIWEB\ajax\stage_generate_full.php(406): mysqli_stmt->execute()
+#1 {main}
+--------------------------------------------------------------------------------
+2025-11-03 16:03:39 ERROR:
+Message: Unknown column 'updated_at' in 'field list'
+Line: 323
+Trace: #0 C:\laragon\www\Semester_3\HIWEB\ajax\stage_generate_full.php(323): mysqli->prepare('UPDATE materi S...')
+#1 C:\laragon\www\Semester_3\HIWEB\ajax\stage_generate_full.php(450): handleMateriOperations(Object(mysqli), Array, true, 'mt_98c816126a24', 'C:\\laragon\\www\\...')
+#2 {main}
+--------------------------------------------------------------------------------
+2025-11-03 16:05:46 ERROR:
+Message: Unknown column 'updated_at' in 'field list'
+Line: 323
+Trace: #0 C:\laragon\www\Semester_3\HIWEB\ajax\stage_generate_full.php(323): mysqli->prepare('UPDATE materi S...')
+#1 C:\laragon\www\Semester_3\HIWEB\ajax\stage_generate_full.php(450): handleMateriOperations(Object(mysqli), Array, true, 'mt_98c816126a24', 'C:\\laragon\\www\\...')
+#2 {main}
+--------------------------------------------------------------------------------
+2025-11-03 16:12:12 ERROR:
+Message: Quiz harus memiliki minimal 1 jawaban benar!
+Line: 195
+Trace: #0 C:\laragon\www\Semester_3\HIWEB\ajax\stage_generate_full.php(459): handleQuizOperations(Object(mysqli), Array, 'st_fne7m3y', true, NULL)
+#1 {main}
+--------------------------------------------------------------------------------
+2025-11-03 16:12:19 ERROR:
+Message: Pertanyaan quiz tidak boleh kosong!
+Line: 178
+Trace: #0 C:\laragon\www\Semester_3\HIWEB\ajax\stage_generate_full.php(459): handleQuizOperations(Object(mysqli), Array, 'st_0q0oyg5', true, NULL)
+#1 {main}
+--------------------------------------------------------------------------------
+2025-11-03 16:12:28 ERROR:
+Message: Pertanyaan quiz tidak boleh kosong!
+Line: 178
+Trace: #0 C:\laragon\www\Semester_3\HIWEB\ajax\stage_generate_full.php(459): handleQuizOperations(Object(mysqli), Array, 'st_0q0oyg5', true, NULL)
+#1 {main}
+--------------------------------------------------------------------------------
+2025-11-03 16:14:26 ERROR:
+Message: Pertanyaan quiz tidak boleh kosong!
+Line: 178
+Trace: #0 C:\laragon\www\Semester_3\HIWEB\ajax\stage_generate_full.php(459): handleQuizOperations(Object(mysqli), Array, 'st_0q0oyg5', true, NULL)
+#1 {main}
+--------------------------------------------------------------------------------
+2025-11-03 16:14:30 ERROR:
+Message: Pertanyaan quiz tidak boleh kosong!
+Line: 178
+Trace: #0 C:\laragon\www\Semester_3\HIWEB\ajax\stage_generate_full.php(459): handleQuizOperations(Object(mysqli), Array, 'st_0q0oyg5', true, NULL)
+#1 {main}
+--------------------------------------------------------------------------------
+2025-11-03 16:14:43 ERROR:
+Message: Pertanyaan quiz tidak boleh kosong!
+Line: 178
+Trace: #0 C:\laragon\www\Semester_3\HIWEB\ajax\stage_generate_full.php(459): handleQuizOperations(Object(mysqli), Array, 'st_0q0oyg5', true, NULL)
+#1 {main}
+--------------------------------------------------------------------------------

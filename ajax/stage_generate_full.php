@@ -1,5 +1,5 @@
 <?php
-// stage_generate_full.php - FIXED WITH PROPER CASCADE DELETE
+// stage_generate_full.php - FIXED WITH PROPER QUIZ HANDLING
 error_reporting(0);
 ini_set('display_errors', 0);
 
@@ -30,7 +30,8 @@ function genid($prefix = 'id')
 }
 
 // 🔧 Strip HTML tags - pastikan hanya text yang disimpan
-function stripHtmlTags($html) {
+function stripHtmlTags($html)
+{
     // Remove all HTML tags
     $text = strip_tags($html);
     // Decode HTML entities
@@ -55,8 +56,57 @@ function handleFileUpload($file, $uploadDir)
     return null;
 }
 
+// 🔧 FUNGSI BARU: Hapus question dan semua data terkait
+function deleteQuestionWithRelatedData($conn, $questionId)
+{
+    if (empty($questionId)) return false;
+    
+    try {
+        // Hapus question_answer terlebih dahulu
+        $delAns = $conn->prepare("DELETE FROM question_answer WHERE id_question = ?");
+        $delAns->bind_param('s', $questionId);
+        $delAns->execute();
+        $delAns->close();
+
+        // Hapus question_option
+        $delOpt = $conn->prepare("DELETE FROM question_option WHERE id_question = ?");
+        $delOpt->bind_param('s', $questionId);
+        $delOpt->execute();
+        $delOpt->close();
+
+        // Hapus question
+        $delQ = $conn->prepare("DELETE FROM question WHERE id_question = ?");
+        $delQ->bind_param('s', $questionId);
+        $delQ->execute();
+        $delQ->close();
+
+        return true;
+    } catch (Exception $e) {
+        error_log("Error deleting question {$questionId}: " . $e->getMessage());
+        return false;
+    }
+}
+
+// 🔧 FUNGSI BARU: Hapus materi
+function deleteMateri($conn, $materiId)
+{
+    if (empty($materiId)) return false;
+    
+    try {
+        $delStmt = $conn->prepare("DELETE FROM materi WHERE id_materi = ?");
+        $delStmt->bind_param('s', $materiId);
+        $success = $delStmt->execute();
+        $delStmt->close();
+        return $success;
+    } catch (Exception $e) {
+        error_log("Error deleting materi {$materiId}: " . $e->getMessage());
+        return false;
+    }
+}
+
 // 🔧 Fungsi untuk hapus stage dengan validasi dan cascade delete
-function deleteStageWithValidation($conn, $stageId) {
+function deleteStageWithValidation($conn, $stageId)
+{
     if (empty($stageId)) {
         return ['success' => false, 'message' => 'Stage ID kosong'];
     }
@@ -67,7 +117,7 @@ function deleteStageWithValidation($conn, $stageId) {
         $checkStmt->bind_param('s', $stageId);
         $checkStmt->execute();
         $result = $checkStmt->get_result();
-        
+
         if (!$result || $result->num_rows === 0) {
             $checkStmt->close();
             return ['success' => false, 'message' => "Stage dengan ID $stageId tidak ditemukan"];
@@ -79,56 +129,19 @@ function deleteStageWithValidation($conn, $stageId) {
         $nama_stage = $stageData['nama_stage'];
         $checkStmt->close();
 
-        // 2️⃣ VALIDASI: Cek apakah ada user progress terkait (opsional, sesuaikan dengan table Anda)
-        // Uncomment jika ada table user_progress atau sejenisnya
-        /*
-        $progressStmt = $conn->prepare("SELECT COUNT(*) as total FROM user_progress WHERE id_stage = ?");
-        $progressStmt->bind_param('s', $stageId);
-        $progressStmt->execute();
-        $progressResult = $progressStmt->get_result();
-        $progressCount = $progressResult->fetch_assoc()['total'];
-        $progressStmt->close();
+        // 2️⃣ HAPUS DATA TERKAIT
 
-        if ($progressCount > 0) {
-            return [
-                'success' => false, 
-                'message' => "Stage '$nama_stage' tidak dapat dihapus karena sudah ada $progressCount user yang mengaksesnya"
-            ];
-        }
-        */
-
-        // 3️⃣ HAPUS CHILD RECORDS DULU (CASCADE DELETE MANUAL)
-        
-        // Hapus question options jika ada
+        // Hapus question dan data terkait jika ada
         if ($id_question) {
-            $delOptStmt = $conn->prepare("DELETE FROM question_option WHERE id_question = ?");
-            $delOptStmt->bind_param('s', $id_question);
-            $delOptStmt->execute();
-            $delOptStmt->close();
-
-            // Hapus question
-            $delQStmt = $conn->prepare("DELETE FROM question WHERE id_question = ?");
-            $delQStmt->bind_param('s', $id_question);
-            $delQStmt->execute();
-            $delQStmt->close();
+            deleteQuestionWithRelatedData($conn, $id_question);
         }
 
-        // 4️⃣ SET NULL FOREIGN KEY DULU sebelum hapus materi
-        // Ini menghindari foreign key constraint error
-        $nullifyStmt = $conn->prepare("UPDATE stage SET id_materi = NULL, id_question = NULL WHERE id_stage = ?");
-        $nullifyStmt->bind_param('s', $stageId);
-        $nullifyStmt->execute();
-        $nullifyStmt->close();
-
-        // 5️⃣ Hapus materi jika ada
+        // Hapus materi jika ada
         if ($id_materi) {
-            $delMateriStmt = $conn->prepare("DELETE FROM materi WHERE id_materi = ?");
-            $delMateriStmt->bind_param('s', $id_materi);
-            $delMateriStmt->execute();
-            $delMateriStmt->close();
+            deleteMateri($conn, $id_materi);
         }
 
-        // 6️⃣ TERAKHIR: Hapus stage
+        // 3️⃣ Hapus stage
         $delStageStmt = $conn->prepare("DELETE FROM stage WHERE id_stage = ?");
         $delStageStmt->bind_param('s', $stageId);
         $success = $delStageStmt->execute();
@@ -136,25 +149,191 @@ function deleteStageWithValidation($conn, $stageId) {
 
         if ($success) {
             return [
-                'success' => true, 
+                'success' => true,
                 'message' => "Stage '$nama_stage' berhasil dihapus beserta materi/quiz terkait"
             ];
         } else {
             return ['success' => false, 'message' => 'Gagal menghapus stage dari database'];
         }
-
     } catch (Exception $e) {
         return [
-            'success' => false, 
+            'success' => false,
             'message' => 'Error: ' . $e->getMessage()
         ];
     }
 }
 
+// 🔧 FUNGSI BARU: Handle quiz creation/update
+function handleQuizOperations($conn, $stageData, $id_stage, $isExisting, $old_id_question)
+{
+    $actions = [];
+    $id_question = null;
+
+    try {
+        $detail = $stageData['details'][0] ?? [];
+        $pertanyaan = stripHtmlTags($detail['isi'] ?? '');
+
+        // ⚠️ Validasi: Pertanyaan wajib ada
+        if (empty(trim($pertanyaan))) {
+            throw new Exception("Stage {$stageData['nama_stage']}: Pertanyaan quiz tidak boleh kosong!");
+        }
+
+        // ⚠️ Validasi: Harus ada minimal 2 opsi
+        if (empty($detail['options']) || !is_array($detail['options']) || count($detail['options']) < 2) {
+            throw new Exception("Stage {$stageData['nama_stage']}: Quiz harus memiliki minimal 2 opsi jawaban!");
+        }
+
+        // ⚠️ Validasi: Harus ada minimal 1 jawaban benar
+        $hasCorrect = false;
+        foreach ($detail['options'] as $opt) {
+            if (isset($opt['is_correct']) && ($opt['is_correct'] === 'on' || $opt['is_correct'] === '1' || $opt['is_correct'] === 1 || $opt['is_correct'] === true)) {
+                $hasCorrect = true;
+                break;
+            }
+        }
+        if (!$hasCorrect) {
+            throw new Exception("Stage {$stageData['nama_stage']}: Quiz harus memiliki minimal 1 jawaban benar!");
+        }
+
+        // 1️⃣ HAPUS OLD QUESTION JIKA ADA (untuk update atau perubahan type)
+        if ($isExisting && $old_id_question) {
+            deleteQuestionWithRelatedData($conn, $old_id_question);
+        }
+
+        // 2️⃣ CREATE NEW QUESTION
+        $id_question = genid('qz');
+        $stmt = $conn->prepare("INSERT INTO question (id_question, content) VALUES (?, ?)");
+        $stmt->bind_param("ss", $id_question, $pertanyaan);
+        $stmt->execute();
+        $stmt->close();
+
+        // 3️⃣ INSERT OPTIONS & COLLECT CORRECT ANSWER IDs
+        $correct_option_ids = [];
+        $option_count = 0;
+
+        foreach ($detail['options'] as $opt) {
+            $text = trim(stripHtmlTags($opt['text'] ?? ''));
+            if (empty($text)) continue; // Skip empty options
+
+            $id_option = genid('op');
+            $is_correct = (isset($opt['is_correct']) && ($opt['is_correct'] === 'on' || $opt['is_correct'] === '1' || $opt['is_correct'] === 1 || $opt['is_correct'] === true)) ? 1 : 0;
+
+            // Insert option
+            $stmt = $conn->prepare("INSERT INTO question_option (id_question_option, id_question, option_text, is_correct) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("sssi", $id_option, $id_question, $text, $is_correct);
+            $stmt->execute();
+            $stmt->close();
+
+            $option_count++;
+
+            // Collect correct answer IDs
+            if ($is_correct) {
+                $correct_option_ids[] = $id_option;
+            }
+        }
+
+        // ⚠️ Final validation: Pastikan ada opsi yang ter-insert
+        if ($option_count === 0) {
+            throw new Exception("Stage {$stageData['nama_stage']}: Tidak ada opsi valid yang bisa disimpan!");
+        }
+
+        // 4️⃣ INSERT QUESTION_ANSWER untuk setiap jawaban benar
+        foreach ($correct_option_ids as $correct_id) {
+            $id_answer = genid('ans');
+            $stmt = $conn->prepare("INSERT INTO question_answer (id_question_answer, id_question, correct_answer) VALUES (?, ?, ?)");
+            $stmt->bind_param("sss", $id_answer, $id_question, $correct_id);
+            $stmt->execute();
+            $stmt->close();
+        }
+
+        $actions = [
+            'id_question' => $id_question,
+            'options_count' => $option_count,
+            'correct_answers' => count($correct_option_ids)
+        ];
+
+    } catch (Exception $e) {
+        // Rollback question creation if any error
+        if ($id_question) {
+            deleteQuestionWithRelatedData($conn, $id_question);
+        }
+        throw $e;
+    }
+
+    return $actions;
+}
+
+// 🔧 FUNGSI BARU: Handle materi operations - FIXED COLUMN ISSUE
+function handleMateriOperations($conn, $stageData, $isExisting, $old_id_materi, $uploadDir)
+{
+    $id_materi = $old_id_materi;
+    
+    // Gabungkan semua detail materi menjadi satu konten TEKS BIASA
+    $all_content = '';
+    $first_media = null;
+
+    if (!empty($stageData['details']) && is_array($stageData['details'])) {
+        foreach ($stageData['details'] as $dIdx => $d) {
+            $isi = $d['isi'] ?? '';
+
+            // Strip HTML dari isi - simpan sebagai plain text
+            $isi = stripHtmlTags($isi);
+
+            // Gabungkan sebagai plain text dengan pemisah sederhana
+            if ($isi) {
+                $all_content .= $isi . "\n\n";
+                $all_content .= "---\n\n"; // Pemisah antar sub-materi
+            }
+
+            // Handle file upload jika ada
+            if ($first_media === null && isset($_FILES['stages'])) {
+                $possibleKeys = [
+                    "stages_{$stageData['index']}_details_{$dIdx}_media",
+                    "stage[{$stageData['index']}][details][{$dIdx}][media]"
+                ];
+
+                foreach ($possibleKeys as $fileKey) {
+                    if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
+                        $first_media = handleFileUpload($_FILES[$fileKey], $uploadDir);
+                        break 2;
+                    }
+                }
+            }
+        }
+    }
+
+    // Trim trailing separator
+    $all_content = rtrim($all_content, "\n-");
+
+    // UPDATE materi yang sudah ada - TANPA updated_at
+    if ($isExisting && $old_id_materi) {
+        if ($first_media) {
+            $stmt = $conn->prepare("UPDATE materi SET konten = ?, file_url = ? WHERE id_materi = ?");
+            $stmt->bind_param("sss", $all_content, $first_media, $id_materi);
+        } else {
+            $stmt = $conn->prepare("UPDATE materi SET konten = ? WHERE id_materi = ?");
+            $stmt->bind_param("ss", $all_content, $id_materi);
+        }
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        // Insert materi baru - TANPA updated_at
+        $id_materi = genid('mt');
+        $created_at = date('Y-m-d H:i:s');
+
+        $stmt = $conn->prepare("INSERT INTO materi (id_materi, konten, file_url, created_at) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $id_materi, $all_content, $first_media, $created_at);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    return $id_materi;
+}
+
 $conn->begin_transaction();
 
 try {
-    // 🗑️ FIX: PROSES DELETED STAGES DENGAN VALIDASI
+    // 🗑️ PROSES DELETED STAGES DENGAN VALIDASI
     $deletedStages = [];
     if (!empty($_POST['deleted_stages'])) {
         $decoded = json_decode($_POST['deleted_stages'], true);
@@ -172,7 +351,7 @@ try {
 
             // Gunakan fungsi validasi dan hapus
             $deleteResult = deleteStageWithValidation($conn, $stageId);
-            
+
             if ($deleteResult['success']) {
                 $deletedCount++;
                 $deletedMessages[] = "✓ " . $deleteResult['message'];
@@ -223,207 +402,110 @@ try {
     if (!empty($stages) && is_array($stages)) {
         foreach ($stages as $i => $s) {
             $id_stage = $s['id_stage'] ?? genid('st');
-            
+            $isExisting = ($s['isExisting'] ?? '0') === '1';
+
             // 🎯 AUTO-GENERATE NAMA STAGE berdasarkan urutan
             $nama_stage = 'Stage ' . $stageCounter;
             $stageCounter++;
-            
+
             $deskripsi = $s['deskripsi'] ?? '';
             $type = $s['type'] ?? 'materi';
-            $id_materi = null;
-            $id_question = null;
+            
+            // Tambahkan index untuk referensi file upload
+            $s['index'] = $i;
+            $s['nama_stage'] = $nama_stage;
 
-            // Check whether this stage already exists in DB
-            $isExisting = false;
+            // Check existing stage data
             $old_id_materi = null;
             $old_id_question = null;
-            
-            $chkStmt = $conn->prepare("SELECT id_stage, id_materi, id_question FROM stage WHERE id_stage = ? LIMIT 1");
-            $chkStmt->bind_param('s', $id_stage);
-            $chkStmt->execute();
-            $chkRes = $chkStmt->get_result();
-            if ($chkRes && $chkRes->num_rows) {
-                $rowChk = $chkRes->fetch_assoc();
-                $isExisting = true;
-                $old_id_materi = $rowChk['id_materi'];
-                $old_id_question = $rowChk['id_question'];
-            }
-            $chkStmt->close();
 
-            // 🧠 Kalau stage = materi → buat atau update materi
+            if ($isExisting) {
+                $chkStmt = $conn->prepare("SELECT id_stage, id_materi, id_question FROM stage WHERE id_stage = ? LIMIT 1");
+                $chkStmt->bind_param('s', $id_stage);
+                $chkStmt->execute();
+                $chkRes = $chkStmt->get_result();
+                if ($chkRes && $chkRes->num_rows) {
+                    $rowChk = $chkRes->fetch_assoc();
+                    $old_id_materi = $rowChk['id_materi'];
+                    $old_id_question = $rowChk['id_question'];
+                }
+                $chkStmt->close();
+            }
+
+            $id_materi = null;
+            $id_question = null;
+            $stageActions = [];
+
+            // 🧠 PROSES BERDASARKAN TYPE
             if ($type === 'materi') {
-                // Gabungkan semua detail materi menjadi satu konten TEKS BIASA
-                $all_content = '';
-                $first_media = null;
-
-                if (!empty($s['details']) && is_array($s['details'])) {
-                    foreach ($s['details'] as $dIdx => $d) {
-                        $judul = $d['judul'] ?? '';
-                        $isi = $d['isi'] ?? '';
-
-                        // Strip HTML dari judul dan isi - simpan sebagai plain text
-                        $judul = stripHtmlTags($judul);
-                        $isi = stripHtmlTags($isi);
-
-                        // Gabungkan sebagai plain text dengan pemisah sederhana
-                        if ($judul || $isi) {
-                            if ($judul) {
-                                $all_content .= $judul . "\n\n";
-                            }
-                            if ($isi) {
-                                $all_content .= $isi . "\n\n";
-                            }
-                            $all_content .= "---\n\n"; // Pemisah antar sub-materi
-                        }
-
-                        // Ambil file upload pertama yang ada
-                        if ($first_media === null && isset($_FILES['stages'])) {
-                            $possibleKeys = [
-                                "stages_{$i}_details_{$dIdx}_media",
-                                "stage[{$i}][details][{$dIdx}][media]"
-                            ];
-
-                            foreach ($possibleKeys as $fileKey) {
-                                if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
-                                    $first_media = handleFileUpload($_FILES[$fileKey], $uploadDir);
-                                    break 2;
-                                }
-                            }
-                        }
-                    }
+                // Handle materi operations
+                $id_materi = handleMateriOperations($conn, $s, $isExisting, $old_id_materi, $uploadDir);
+                
+                // Hapus old question jika ada (perubahan dari quiz ke materi)
+                if ($old_id_question) {
+                    deleteQuestionWithRelatedData($conn, $old_id_question);
                 }
+                
+                $stageActions['materi'] = $id_materi;
 
-                // Trim trailing separator
-                $all_content = rtrim($all_content, "\n-");
+            } else if ($type === 'quiz') {
+                // Handle quiz operations
+                $quizResult = handleQuizOperations($conn, $s, $id_stage, $isExisting, $old_id_question);
+                $id_question = $quizResult['id_question'];
+                $stageActions['quiz'] = $quizResult;
 
-                // UPDATE materi yang sudah ada, bukan buat baru
-                if ($isExisting && $old_id_materi) {
-                    $id_materi = $old_id_materi;
-                    $updated_at = date('Y-m-d H:i:s');
-                    
-                    if ($first_media) {
-                        $stmt = $conn->prepare("UPDATE materi SET konten = ?, file_url = ?, created_at = ? WHERE id_materi = ?");
-                        $stmt->bind_param("ssss", $all_content, $first_media, $updated_at, $id_materi);
-                    } else {
-                        $stmt = $conn->prepare("UPDATE materi SET konten = ?, created_at = ? WHERE id_materi = ?");
-                        $stmt->bind_param("sss", $all_content, $updated_at, $id_materi);
-                    }
-                    $stmt->execute();
-                    $stmt->close();
-                } else {
-                    // Insert materi baru
-                    $id_materi = genid('mt');
-                    $created_at = date('Y-m-d H:i:s');
-
-                    $stmt = $conn->prepare("INSERT INTO materi (id_materi, konten, file_url, created_at) VALUES (?, ?, ?, ?)");
-                    $stmt->bind_param("ssss", $id_materi, $all_content, $first_media, $created_at);
-                    $stmt->execute();
-                    $stmt->close();
+                // Hapus old materi jika ada (perubahan dari materi ke quiz)
+                if ($old_id_materi) {
+                    deleteMateri($conn, $old_id_materi);
                 }
             }
 
-            // 🧩 Insert or Update stage utama
+            // 🧩 INSERT OR UPDATE STAGE UTAMA
             if ($isExisting) {
                 $upStmt = $conn->prepare("UPDATE stage SET id_lesson = ?, nama_stage = ?, deskripsi = ?, type = ?, id_materi = ?, id_question = ? WHERE id_stage = ?");
                 $upStmt->bind_param("sssssss", $id_lesson, $nama_stage, $deskripsi, $type, $id_materi, $id_question, $id_stage);
                 $upStmt->execute();
                 $upStmt->close();
 
-                // HAPUS old_question jika ada dan berbeda
-                if ($old_id_question && $old_id_question !== $id_question) {
-                    $delOpt = $conn->prepare("DELETE FROM question_option WHERE id_question = ?");
-                    $delOpt->bind_param('s', $old_id_question);
-                    $delOpt->execute();
-                    $delOpt->close();
-
-                    $delQ = $conn->prepare("DELETE FROM question WHERE id_question = ?");
-                    $delQ->bind_param('s', $old_id_question);
-                    $delQ->execute();
-                    $delQ->close();
+                $actionType = 'updated';
+                if ($type === 'quiz') {
+                    $actionType = 'updated_quiz';
                 }
-
-                $actions[] = [
-                    'id_stage' => $id_stage,
-                    'action' => 'updated',
-                    'id_materi' => $id_materi
-                ];
             } else {
                 $stmt = $conn->prepare("INSERT INTO stage (id_stage, id_lesson, nama_stage, deskripsi, type, id_materi, id_question) VALUES (?, ?, ?, ?, ?, ?, ?)");
                 $stmt->bind_param("sssssss", $id_stage, $id_lesson, $nama_stage, $deskripsi, $type, $id_materi, $id_question);
                 $stmt->execute();
                 $stmt->close();
 
-                $actions[] = [
-                    'id_stage' => $id_stage,
-                    'action' => 'inserted',
-                    'id_materi' => $id_materi
-                ];
-            }
-
-            // 🧩 Kalau stage = quiz → simpan question & options
-            if ($type === 'quiz' && !empty($s['details']) && is_array($s['details'])) {
-                $detail = $s['details'][0] ?? [];
-                $pertanyaan = $detail['isi'] ?? '';
-                $quiz_type = $detail['quiz_type'] ?? 'pilihan_ganda';
-
-                // Strip HTML dari pertanyaan
-                $pertanyaan = stripHtmlTags($pertanyaan);
-
-                // UPDATE question yang sudah ada
-                if ($isExisting && $old_id_question) {
-                    $id_question = $old_id_question;
-                    
-                    $stmt = $conn->prepare("UPDATE question SET content = ?, answers_type = ? WHERE id_question = ?");
-                    $stmt->bind_param("sss", $pertanyaan, $quiz_type, $id_question);
-                    $stmt->execute();
-                    $stmt->close();
-                    
-                    $delOpt = $conn->prepare("DELETE FROM question_option WHERE id_question = ?");
-                    $delOpt->bind_param('s', $id_question);
-                    $delOpt->execute();
-                    $delOpt->close();
-                } else {
-                    $id_question = genid('qz');
-                    
-                    $stmt = $conn->prepare("INSERT INTO question (id_question, content, answers_type) VALUES (?, ?, ?)");
-                    $stmt->bind_param("sss", $id_question, $pertanyaan, $quiz_type);
-                    $stmt->execute();
-                    $stmt->close();
-                }
-
-                // Update stage with id_question
-                $stmt = $conn->prepare("UPDATE stage SET id_question = ? WHERE id_stage = ?");
-                $stmt->bind_param("ss", $id_question, $id_stage);
-                $stmt->execute();
-                $stmt->close();
-
-                // Insert new options
-                if ($quiz_type === 'pilihan_ganda' && !empty($detail['options']) && is_array($detail['options'])) {
-                    foreach ($detail['options'] as $opt) {
-                        $text = trim($opt['text'] ?? '');
-                        if (empty($text)) continue;
-
-                        // Strip HTML dari option text
-                        $text = stripHtmlTags($text);
-
-                        $id_option = genid('op');
-                        $is_correct = (isset($opt['is_correct']) && ($opt['is_correct'] === 'on' || $opt['is_correct'] === '1')) ? 1 : 0;
-
-                        $stmt = $conn->prepare("INSERT INTO question_option (id_question_option, id_question, option_text, is_correct) VALUES (?, ?, ?, ?)");
-                        $stmt->bind_param("sssi", $id_option, $id_question, $text, $is_correct);
-                        $stmt->execute();
-                        $stmt->close();
-                    }
+                $actionType = 'inserted';
+                if ($type === 'quiz') {
+                    $actionType = 'created_quiz';
                 }
             }
+
+            // Track perubahan type
+            if ($isExisting) {
+                if ($type === 'materi' && $old_id_question) {
+                    $stageActions['type_change'] = 'quiz_to_materi';
+                } else if ($type === 'quiz' && $old_id_materi) {
+                    $stageActions['type_change'] = 'materi_to_quiz';
+                }
+            }
+
+            $actions[] = [
+                'id_stage' => $id_stage,
+                'action' => $actionType,
+                'type' => $type,
+                'details' => $stageActions
+            ];
         }
     }
 
     $conn->commit();
-    
+
     $total = count($stages);
     $message = "Berhasil menyimpan {$total} stage!";
-    
+
     if ($deletedCount > 0) {
         $message = "Berhasil menghapus {$deletedCount} stage dan menyimpan {$total} stage!";
     }
@@ -435,7 +517,6 @@ try {
         'deleted_count' => $deletedCount,
         'deleted_details' => $deletedMessages
     ]);
-
 } catch (Exception $e) {
     $conn->rollback();
 

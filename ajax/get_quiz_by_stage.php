@@ -1,55 +1,107 @@
 <?php
+// ajax/get_quiz_by_stage.php
 include "../db.php";
 header('Content-Type: application/json; charset=utf-8');
 
 $id_stage = $_GET['id_stage'] ?? '';
 
 if (!$id_stage) {
-    echo json_encode([]);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'No stage ID provided'
+    ]);
     exit;
 }
 
 try {
-    $stmt = $conn->prepare("
-        SELECT s.id_detail, s.type,
-               q.id_question, q.content as question_text, q.answer_type,
-               qo.id_option, qo.option_text, qo.is_correct
-        FROM stage_detail s
-        LEFT JOIN question q ON q.id_question = s.id_question
-        LEFT JOIN question_option qo ON qo.id_question = q.id_question
-        WHERE s.id_stage = ? AND s.type = 'quiz'
-    ");
-    $stmt->bind_param('s', $id_stage);
-    $stmt->execute();
-    $res = $stmt->get_result();
-
-    $questions = [];
-    while ($q = $res->fetch_assoc()) {
-        if (!isset($questions[$q['id_question']])) {
-            $questions[$q['id_question']] = [
-                'id_detail' => $q['id_question'],  // tetap gunakan id_detail untuk kompatibilitas frontend
-                'isi' => $q['question_text'],
-                'quiz_type' => $q['answer_type'] ?? 'pilihan_ganda',
-                'options' => []
-            ];
-        }
-        if ($q['id_option']) {
-            $questions[$q['id_question']]['options'][] = [
-                'id' => $q['id_option'],
-                'text' => $q['option_text'],
-                'is_correct' => $q['is_correct']
-            ];
-        }
+    // Get stage info to find question
+    $stageStmt = $conn->prepare("SELECT id_stage, id_question, type FROM stage WHERE id_stage = ? LIMIT 1");
+    $stageStmt->bind_param('s', $id_stage);
+    $stageStmt->execute();
+    $stageResult = $stageStmt->get_result();
+    
+    if (!$stageResult || $stageResult->num_rows === 0) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Stage not found'
+        ]);
+        exit;
     }
-    $stmt->close();
-
+    
+    $stage = $stageResult->fetch_assoc();
+    $stageStmt->close();
+    
+    // Check if stage is quiz type
+    if ($stage['type'] !== 'quiz') {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Stage is not a quiz type'
+        ]);
+        exit;
+    }
+    
+    $id_question = $stage['id_question'];
+    
+    if (!$id_question) {
+        echo json_encode([
+            'status' => 'success',
+            'data' => []
+        ]);
+        exit;
+    }
+    
+    // Get question data
+    $qStmt = $conn->prepare("SELECT id_question, content FROM question WHERE id_question = ? LIMIT 1");
+    $qStmt->bind_param('s', $id_question);
+    $qStmt->execute();
+    $qResult = $qStmt->get_result();
+    
+    if (!$qResult || $qResult->num_rows === 0) {
+        echo json_encode([
+            'status' => 'success',
+            'data' => []
+        ]);
+        exit;
+    }
+    
+    $question = $qResult->fetch_assoc();
+    $qStmt->close();
+    
+    // Get question options
+    $options = [];
+    $optStmt = $conn->prepare("SELECT id_question_option, option_text, is_correct FROM question_option WHERE id_question = ? ORDER BY id_question_option ASC");
+    $optStmt->bind_param('s', $id_question);
+    $optStmt->execute();
+    $optResult = $optStmt->get_result();
+    
+    while ($opt = $optResult->fetch_assoc()) {
+        $options[] = [
+            'id' => $opt['id_question_option'],
+            'text' => $opt['option_text'],
+            'is_correct' => (int)$opt['is_correct']
+        ];
+    }
+    $optStmt->close();
+    
+    // Return data in expected format
+    $quizData = [
+        [
+            'id_detail' => $id_question,  // Using question ID as detail ID for compatibility
+            'isi' => $question['content'],
+            'options' => $options
+        ]
+    ];
+    
     echo json_encode([
         'status' => 'success',
-        'data' => array_values($questions)
+        'data' => $quizData
     ]);
+    
 } catch (Exception $e) {
     echo json_encode([
         'status' => 'error',
-        'message' => 'Gagal mengambil data quiz'
+        'message' => 'Failed to load quiz data',
+        'error' => $e->getMessage()
     ]);
 }
+?>
