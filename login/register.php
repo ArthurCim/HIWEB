@@ -16,14 +16,6 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-  <div class="left-side">
-    <img class= "bg-left-side" src="../assets/Group 103 (1).png" alt="Illustration" />
-    <img class= "icon-left-side" src="../assets/logo putih.svg">
-    <div class="left-caption">
-      <p>© 2025 Hijauteam - All Rights Reserved</p>
-    </div>
-  </div>
-
   <div class="right-side">
     <div class="form-box">
       <div class="icon">
@@ -33,19 +25,19 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
 
       <form action="register_process.php" method="post">
         <div class="input-group">
-          <input type="text" id="username" name="username" required>
-          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder=" " required>
+          <label for="username" class="floating-label">Username</label>
         </div>
 
         <div class="input-group">
-          <input type="email" id="email" name="email" required>
-          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder=" " required>
+          <label for="email" class="floating-label">Email</label>
         </div>
 
         <!-- Password -->
         <div class="input-group pw-wrap">
-          <input id="password" name="password" type="password" required>
-          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder=" " required>
+          <label for="password" class="floating-label">Password</label>
           <button type="button" class="pw-toggle" data-target="password">
             <!-- Eye open -->
             <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -62,8 +54,8 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
 
         <!-- Confirm Password -->
         <div class="input-group pw-wrap">
-          <input id="confirm_password" name="confirm_password" type="password" required>
-          <label for="confirm_password">Confirm Password</label>
+          <input id="confirm_password" name="confirm_password" type="password" placeholder=" " required>
+          <label for="confirm_password" class="floating-label">Confirm Password</label>
           <button type="button" class="pw-toggle" data-target="confirm_password">
             <!-- Eye open -->
             <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

@@ -12,14 +12,6 @@ session_start();
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-  <div class="left-side">
-    <img class="bg-left-side" src="../assets/Group 103 (1).png" alt="Illustration" />
-    <img class="icon-left-side" src="../assets/logo putih.svg">
-    <div class="left-caption">
-      <p>© 2025 Hijauteam - All Rights Reserved</p>
-    </div>
-  </div>
-
   <div class="right-side">
     <div class="form-box">
       <div class="icon">
@@ -28,13 +20,13 @@ session_start();
       <h1>Login Your Account</h1>
       <form action="login_process.php" method="post">
         <div class="input-group">
-          <input type="email" id="email" name="email" required />
-          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder=" " required />
+          <label for="email" class="floating-label">Email</label>
         </div>
 
-        <div class="input-group pw-wrap">
-          <input type="password" id="password" name="password" required />
-          <label for="password">Password</label>
+        <div class="input-group pw-wrap"> 
+        <input type="password" id="password" name="password" placeholder=" " required />
+        <label for="password" class="floating-label">Password</label> 
           <button type="button" class="pw-toggle" data-target="password">
             <!-- Eye open -->
             <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

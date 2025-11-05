@@ -12,7 +12,7 @@
     <header class="header" id="header">
         <a href="#home" class="logo-container">
             <div class="logo">
-                <img src="assets/20251008_144747 2.svg" alt="Logo CodePlay" width="100" height="100">
+                <img src="assets/locoput.svg" alt="Logo CodePlay" width="100" height="100">
             </div>
             <div class="logo-text">CodePlay</div>
         </a>
