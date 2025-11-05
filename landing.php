@@ -12,7 +12,7 @@
     <header class="header" id="header">
         <a href="#home" class="logo-container">
             <div class="logo">
-                <img src="assets/20251008_144747 2.svg" alt="Logo CodePlay" width="100" height="100">
+                <img src="assets/locoput.svg" alt="Logo CodePlay" width="100" height="100">
             </div>
             <div class="logo-text">CodePlay</div>
         </a>
@@ -21,7 +21,7 @@
             <a href="#home" class="menu-item active">Home</a>
             <a href="#about" class="menu-item">About</a>
             <a href="#contact" class="menu-item">Contact</a>
-            <a href="login/login.php" target="_blank" rel="noopener noreferrer" class="menu-item external">Login</a>
+            <a href="login/login.php" rel="noopener noreferrer" class="menu-item external">Login</a>
         </nav>
         
         <div class="menu-toggle" id="menuToggle">
