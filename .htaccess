@@ -1,0 +1,7 @@
+# Lindungi file sensitif
+<FilesMatch "(\.env|db\.php|\.pem|\.crt|\.key)$">
+    Require all denied
+</FilesMatch>
+
+# Nonaktifkan daftar isi folder
+Options -Indexes
