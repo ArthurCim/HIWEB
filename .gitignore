@@ -1,0 +1,9 @@
+# Abaikan file sensitif
+.env
+*.pem
+certs/
+config/
+vendor/
+
+# Abaikan file konfigurasi server
+.htaccess
