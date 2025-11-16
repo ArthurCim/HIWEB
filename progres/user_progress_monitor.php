@@ -41,21 +41,20 @@ if ($search_user) {
 
 $whereClause = implode(" AND ", $whereConditions);
 
-// Main query - get user progress with details
 $sql = "SELECT 
             u.id_user,
-            u.nama as user_name,
+            u.nama AS user_name,
             u.email,
             u.role,
             c.id_courses,
             c.nama_courses,
             l.id_lesson,
             l.nama_lesson,
-            COUNT(DISTINCT s.id_stage) as total_stages,
-            COUNT(DISTINCT usp.id_stage) as completed_stages,
-            ROUND((COUNT(DISTINCT usp.id_stage) / COUNT(DISTINCT s.id_stage)) * 100, 2) as progress_percentage,
-            MAX(usp.completion_date) as last_activity,
-            SUM(usp.score) as total_score
+            COUNT(DISTINCT s.id_stage) AS total_stages,
+            COUNT(DISTINCT usp.id_stage) AS completed_stages,
+            ROUND((COUNT(DISTINCT usp.id_stage) / COUNT(DISTINCT s.id_stage)) * 100, 2) AS progress_percentage,
+            MAX(usp.completion_date) AS last_activity,
+            SUM(usp.score) AS total_score
         FROM users u
         CROSS JOIN courses c
         LEFT JOIN lesson l ON l.id_courses = c.id_courses
@@ -64,8 +63,18 @@ $sql = "SELECT
             AND usp.id_stage = s.id_stage
         WHERE {$whereClause}
             AND u.role = 'user'
+            AND EXISTS (
+                SELECT 1 
+                FROM user_stage_progress up2
+                INNER JOIN stage s2 ON up2.id_stage = s2.id_stage
+                INNER JOIN lesson l2 ON s2.id_lesson = l2.id_lesson
+                WHERE up2.id_user = u.id_user 
+                  AND l2.id_courses = c.id_courses
+            )
         GROUP BY u.id_user, c.id_courses, l.id_lesson
         HAVING total_stages > 0";
+
+
 
 if ($filter_status === 'completed') {
     $sql .= " AND progress_percentage = 100";
@@ -184,16 +193,37 @@ include "../includes/navbar.php";
         font-weight: 500;
     }
 
+
     .progress-table {
         background: #fff;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        position: relative;
     }
 
-    .progress-table thead {
+    /* --- Scrollable body --- */
+    .progress-table-wrapper {
+        max-height: 500px;
+        /* tinggi maksimal area scroll */
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: block;
+    }
+
+    /* --- Fix header tetap di atas --- */
+    .progress-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: #fff;
+    }
+
+    /* --- Table styling --- */
+    .progress-table table {
+        width: 100%;
+        border-collapse: collapse;
     }
 
     .progress-table th {
@@ -213,6 +243,21 @@ include "../includes/navbar.php";
     .progress-table tbody tr:hover {
         background: #f7fafc;
     }
+
+    /* --- Optional: biar tampilan scrollbar lebih halus --- */
+    .progress-table-wrapper::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .progress-table-wrapper::-webkit-scrollbar-thumb {
+        background: #c3c7d0;
+        border-radius: 4px;
+    }
+
+    .progress-table-wrapper::-webkit-scrollbar-thumb:hover {
+        background: #a0a5b3;
+    }
+
 
     .user-info {
         display: flex;
@@ -478,85 +523,80 @@ include "../includes/navbar.php";
 
             <!-- Progress Table -->
             <div class="progress-table">
-                <table class="table mb-0">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Course</th>
-                            <th>Lesson</th>
-                            <th>Progress</th>
-                            <th>Stages</th>
-                            <th>Score</th>
-                            <th>Last Activity</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($progressData)): ?>
+                <div class="progress-table-wrapper">
+                    <table class="table mb-0">
+                        <thead>
                             <tr>
-                                <td colspan="9">
-                                    <div class="empty-state">
-                                        <i class="fas fa-inbox"></i>
-                                        <p class="mb-0">No progress data found</p>
-                                    </div>
-                                </td>
+                                <th>User</th>
+                                <th>Course</th>
+                                <th>Lesson</th>
+                                <th>Progress</th>
+                                <th>Stages</th>
+                                <th>Score</th>
+                                <th>Last Activity</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
-                        <?php else: ?>
-                            <?php foreach ($progressData as $data):
-                                $progress = $data['progress_percentage'];
-                                $progressClass = $progress == 100 ? 'complete' : ($progress >= 50 ? 'high' : ($progress > 0 ? 'medium' : 'low'));
-                                $statusClass = $progress == 100 ? 'completed' : ($progress > 0 ? 'in-progress' : 'not-started');
-                                $statusText = $progress == 100 ? 'Completed' : ($progress > 0 ? 'In Progress' : 'Not Started');
-                                $initials = strtoupper(substr($data['user_name'], 0, 2));
-                            ?>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($progressData)): ?>
                                 <tr>
-                                    <td>
-                                        <div class="user-info">
-                                            <div class="user-avatar"><?= $initials ?></div>
-                                            <div class="user-details">
-                                                <h6><?= htmlspecialchars($data['user_name']) ?></h6>
-                                                <small><?= htmlspecialchars($data['email']) ?></small>
-                                            </div>
+                                    <td colspan="9">
+                                        <div class="empty-state">
+                                            <i class="fas fa-inbox"></i>
+                                            <p class="mb-0">No progress data found</p>
                                         </div>
-                                    </td>
-                                    <td><?= htmlspecialchars($data['nama_courses']) ?></td>
-                                    <td>
-                                        <span class="lesson-badge"><?= htmlspecialchars($data['nama_lesson']) ?></span>
-                                    </td>
-                                    <td style="min-width: 180px;">
-                                        <div class="progress-bar-wrapper">
-                                            <div class="progress-bar-fill <?= $progressClass ?>" style="width: <?= $progress ?>%"></div>
-                                        </div>
-                                        <div class="progress-text"><?= number_format($progress, 1) ?>%</div>
-                                    </td>
-                                    <td>
-                                        <strong><?= $data['completed_stages'] ?></strong> / <?= $data['total_stages'] ?>
-                                    </td>
-                                    <td>
-                                        <strong><?= $data['total_score'] ?? 0 ?></strong>
-                                    </td>
-                                    <td>
-                                        <?php if ($data['last_activity']): ?>
-                                            <small><?= date('d M Y', strtotime($data['last_activity'])) ?></small>
-                                        <?php else: ?>
-                                            <small class="text-muted">-</small>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <span class="badge-status <?= $statusClass ?>"><?= $statusText ?></span>
-                                    </td>
-                                    <td>
-                                        <button class="btn-detail" onclick="viewDetail('<?= $data['id_user'] ?>', '<?= $data['id_lesson'] ?>')">
-                                            View Detail
-                                        </button>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                            <?php else: ?>
+                                <?php foreach ($progressData as $data):
+                                    $progress = $data['progress_percentage'];
+                                    $progressClass = $progress == 100 ? 'complete' : ($progress >= 50 ? 'high' : ($progress > 0 ? 'medium' : 'low'));
+                                    $statusClass = $progress == 100 ? 'completed' : ($progress > 0 ? 'in-progress' : 'not-started');
+                                    $statusText = $progress == 100 ? 'Completed' : ($progress > 0 ? 'In Progress' : 'Not Started');
+                                    $initials = strtoupper(substr($data['user_name'], 0, 2));
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <div class="user-info">
+                                                <div class="user-avatar"><?= $initials ?></div>
+                                                <div class="user-details">
+                                                    <h6><?= htmlspecialchars($data['user_name']) ?></h6>
+                                                    <small><?= htmlspecialchars($data['email']) ?></small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><?= htmlspecialchars($data['nama_courses']) ?></td>
+                                        <td><span class="lesson-badge"><?= htmlspecialchars($data['nama_lesson']) ?></span></td>
+                                        <td style="min-width: 180px;">
+                                            <div class="progress-bar-wrapper">
+                                                <div class="progress-bar-fill <?= $progressClass ?>" style="width: <?= $progress ?>%"></div>
+                                            </div>
+                                            <div class="progress-text"><?= number_format($progress, 1) ?>%</div>
+                                        </td>
+                                        <td><strong><?= $data['completed_stages'] ?></strong> / <?= $data['total_stages'] ?></td>
+                                        <td><strong><?= $data['total_score'] ?? 0 ?></strong></td>
+                                        <td>
+                                            <?php if ($data['last_activity']): ?>
+                                                <small><?= date('d M Y', strtotime($data['last_activity'])) ?></small>
+                                            <?php else: ?>
+                                                <small class="text-muted">-</small>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><span class="badge-status <?= $statusClass ?>"><?= $statusText ?></span></td>
+                                        <td>
+                                            <button class="btn-detail" onclick="viewDetail('<?= $data['id_user'] ?>', '<?= $data['id_lesson'] ?>')">
+                                                View Detail
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
         </main>
     </div>
 </div>

@@ -1,92 +1,68 @@
 <?php
-header("Content-Type: application/json");
+session_start();
 include __DIR__ . '/../db.php';
 
-// Pastikan request adalah POST
+function generateUUIDv4() {
+    return sprintf(
+        '%08s-%04s-%04x-%04x-%12s',
+        bin2hex(random_bytes(4)),
+        bin2hex(random_bytes(2)),
+        random_int(0, 0x0fff) | 0x4000,
+        random_int(0, 0x3fff) | 0x8000,
+        bin2hex(random_bytes(6))
+    );
+}
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    echo json_encode([
-        "status" => "error",
-        "message" => "Metode tidak diizinkan. Gunakan POST."
-    ]);
+    $_SESSION['register_error'] = "Metode tidak valid.";
+    header("Location: register.php");
     exit();
 }
 
-// Ambil input JSON atau form-data
-$input = json_decode(file_get_contents("php://input"), true);
-$username = trim($input['username'] ?? $_POST['username'] ?? '');
-$email = trim($input['email'] ?? $_POST['email'] ?? '');
-$password = $input['password'] ?? $_POST['password'] ?? '';
-$confirm = $input['confirm_password'] ?? $_POST['confirm_password'] ?? '';
+$username = trim($_POST['username'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$password = $_POST['password'] ?? '';
+$confirm = $_POST['confirm_password'] ?? '';
 
-// Validasi input
 if ($username === '' || $email === '' || $password === '' || $confirm === '') {
-    echo json_encode([
-        "status" => "error",
-        "message" => "Semua field harus diisi."
-    ]);
+    $_SESSION['register_error'] = "Semua field wajib diisi.";
+    header("Location: register.php");
     exit();
 }
 
 if ($password !== $confirm) {
-    echo json_encode([
-        "status" => "error",
-        "message" => "Password tidak sama."
-    ]);
+    $_SESSION['register_error'] = "Password tidak sama.";
+    header("Location: register.php");
     exit();
 }
 
-// Cek apakah email sudah terdaftar
+// Check email exist
 $stmt = $conn->prepare("SELECT id_user FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $stmt->store_result();
 
 if ($stmt->num_rows > 0) {
-    $stmt->close();
-    echo json_encode([
-        "status" => "error",
-        "message" => "Email sudah digunakan."
-    ]);
+    $_SESSION['register_error'] = "Email sudah terdaftar.";
+    header("Location: register.php");
     exit();
 }
 $stmt->close();
 
-// Ambil ID terakhir
-$result = $conn->query("SELECT id_user FROM users ORDER BY id_user DESC LIMIT 1");
-$lastId = $result->fetch_assoc();
-
-if ($lastId) {
-    $num = (int) substr($lastId['id_user'], 6);
-    $num++;
-    $newId = "users_" . str_pad($num, 3, "0", STR_PAD_LEFT);
-} else {
-    $newId = "users_001";
-}
-
-// Hash password
+$newId = generateUUIDv4();
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+$role = "user";
 
-// Simpan user baru
-$stmt = $conn->prepare("INSERT INTO users (id_user, nama, email, password) VALUES (?, ?, ?, ?)");
-$stmt->bind_param("ssss", $newId, $username, $email, $hashedPassword);
+$stmt = $conn->prepare("INSERT INTO users (id_user, nama, email, password, role) VALUES (?, ?, ?, ?, ?)");
+$stmt->bind_param("sssss", $newId, $username, $email, $hashedPassword, $role);
 
 if ($stmt->execute()) {
-    echo json_encode([
-        "status" => "success",
-        "message" => "Registrasi berhasil!",
-        "data" => [
-            "id_user" => $newId,
-            "username" => $username,
-            "email" => $email
-        ]
-    ]);
+    $_SESSION['register_success'] = "Registrasi berhasil! Silakan login.";
+    header("Location: register.php");
+    exit();
 } else {
-    echo json_encode([
-        "status" => "error",
-        "message" => "Gagal menyimpan data: " . $stmt->error
-    ]);
+    $_SESSION['register_error'] = "Gagal menyimpan data.";
+    header("Location: register.php");
+    exit();
 }
-
-$stmt->close();
-$conn->close();
 ?>

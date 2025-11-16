@@ -1,12 +1,13 @@
 <?php
 session_start();
 if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
-    header('Location: index.php');
-    exit();
+  header('Location: index.php');
+  exit();
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +16,7 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
   <div class="right-side">
     <div class="form-box">
@@ -41,13 +43,13 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
           <button type="button" class="pw-toggle" data-target="password">
             <!-- Eye open -->
             <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
-              <circle cx="12" cy="12" r="3"/>
+              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
+              <circle cx="12" cy="12" r="3" />
             </svg>
             <!-- Eye off -->
             <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none">
-              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.65 21.65 0 0 1 5.1-6.36M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.65 21.65 0 0 1-4.21 5.64"/>
-              <line x1="1" y1="1" x2="23" y2="23"/>
+              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.65 21.65 0 0 1 5.1-6.36M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.65 21.65 0 0 1-4.21 5.64" />
+              <line x1="1" y1="1" x2="23" y2="23" />
             </svg>
           </button>
         </div>
@@ -59,13 +61,13 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
           <button type="button" class="pw-toggle" data-target="confirm_password">
             <!-- Eye open -->
             <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
-              <circle cx="12" cy="12" r="3"/>
+              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
+              <circle cx="12" cy="12" r="3" />
             </svg>
             <!-- Eye off -->
             <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none">
-              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.65 21.65 0 0 1 5.1-6.36M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.65 21.65 0 0 1-4.21 5.64"/>
-              <line x1="1" y1="1" x2="23" y2="23"/>
+              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.65 21.65 0 0 1 5.1-6.36M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.65 21.65 0 0 1-4.21 5.64" />
+              <line x1="1" y1="1" x2="23" y2="23" />
             </svg>
           </button>
         </div>
@@ -88,6 +90,20 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
     </script>
     <?php unset($_SESSION['register_error']); ?>
   <?php endif; ?>
+  <?php if (isset($_SESSION['register_success'])): ?>
+    <script>
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '<?php echo $_SESSION['register_success']; ?>',
+        timer: 2000,
+        showConfirmButton: false
+      }).then(() => {
+        window.location.href = "login.php";
+      });
+    </script>
+    <?php unset($_SESSION['register_success']); ?>
+  <?php endif; ?>
 
   <script>
     document.querySelectorAll('.pw-toggle').forEach(btn => {
@@ -108,5 +124,5 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
     });
   </script>
 </body>
+
 </html>
-    

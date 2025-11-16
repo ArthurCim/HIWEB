@@ -40,7 +40,6 @@ if ($sslcert && file_exists($sslcert)) {
     ]));
 }
 
-// ✅ Gunakan koneksi SSL
 if (!mysqli_real_connect($conn, $servername, $username, $password, $dbname, $port, NULL, $flags)) {
     die(json_encode([
         "status" => "error",
@@ -48,7 +47,6 @@ if (!mysqli_real_connect($conn, $servername, $username, $password, $dbname, $por
     ]));
 }
 
-// Tes koneksi
 // echo "✅ Koneksi ke Azure MySQL berhasil (SSL aktif)";
 ?>
 

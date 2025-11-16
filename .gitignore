@@ -3,7 +3,6 @@
 *.pem
 certs/
 config/
-vendor/
 
 # Abaikan file konfigurasi server
 .htaccess
