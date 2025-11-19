@@ -1,0 +1,320 @@
+ 
+
+    .container-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .stage-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+
+    @media (max-width:1100px) {
+        .stage-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width:800px) {
+        .stage-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width:520px) {
+        .stage-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .card-stage {
+        position: relative;
+        background: #fff;
+        padding: 16px;
+        border-radius: 10px;
+        box-shadow: 0 8px 22px rgba(28, 30, 37, 0.06);
+        transition: transform .12s
+    }
+
+    .card-stage:hover {
+        transform: translateY(-6px)
+    }
+
+    .card-stage .accent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        border-radius: 10px 0 0 10px;
+        background: linear-gradient(180deg, var(--accent-1), var(--accent-2))
+    }
+
+    .card-stage .title {
+        font-weight: 700;
+        font-size: 1.05rem;
+        margin-bottom: 6px
+    }
+
+    .card-stage .meta {
+        font-size: .9rem;
+        color: #556;
+        margin-bottom: 8px
+    }
+
+    .card-stage .desc {
+        font-size: .9rem;
+        color: #666;
+        min-height: 46px
+    }
+
+    .card-stage .actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 10px
+    }
+
+    .btn-small {
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: .85rem;
+        cursor: pointer;
+        border: none
+    }
+
+    .btn-edit {
+        background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+        color: #fff
+    }
+
+    .btn-delete {
+        background: #fff;
+        border: 1px solid #f3c6c9;
+        color: #842029
+    }
+
+    .badge-type {
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: .78rem;
+        font-weight: 600;
+        color: #fff
+    }
+
+    .badge-materi {
+        background: linear-gradient(90deg, var(--accent-1), var(--accent-2))
+    }
+
+    .badge-quiz {
+        background: #ff7b7b
+    }
+
+    .filter-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+        align-items: center
+    }
+
+    .filter-row .form-control {
+        min-width: 200px;
+        max-width: 420px
+    }
+
+    .empty-ill {
+        text-align: center;
+        padding: 28px;
+        color: #888;
+        border: 2px dashed #eee;
+        border-radius: 8px
+    }
+
+    .lesson-block {
+        margin-bottom: 18px;
+        padding: 12px;
+        border-radius: 10px;
+        background: #fbfbff
+    }
+
+    /* Container horizontal scroll */
+    .stage-scroll {
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        padding-bottom: 10px;
+    }
+
+    /* Grid diubah jadi flex supaya bisa di-scroll horizontal */
+    .stage-grid.flex-nowrap {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .card-stage {
+        flex: 0 0 260px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        padding: 12px 16px;
+        transition: transform 0.2s;
+    }
+
+    .card-stage:hover {
+        transform: translateY(-4px);
+    }
+
+    /* Scrollbar styling */
+    .stage-scroll::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .stage-scroll::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+
+    .stage-scroll::-webkit-scrollbar-thumb:hover {
+        background: #aaa;
+    }
+
+    /* Modal Builder Fixes */
+    #builderModal .modal-dialog {
+        max-width: 90vw !important;
+        margin: 1.75rem auto;
+    }
+
+    #builderModal .modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 1.5rem;
+    }
+
+    #builderModal .modal-body::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #builderModal .modal-body::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    #builderModal .modal-body::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+    #builderModal .modal-body::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    #builderWrap {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .builder-stage {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .builder-stage textarea,
+    .builder-stage input[type="text"],
+    .builder-stage select {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .builder-stage .form-control {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Quiz Builder Styles */
+    .option-item {
+        transition: all 0.3s ease;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+    }
+
+    .option-item.border-success {
+        border: 2px solid #198754 !important;
+    }
+
+    .option-item .input-group-text {
+        font-weight: bold;
+        min-width: 40px;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .is-correct {
+        transform: scale(1.2);
+        margin-right: 8px;
+    }
+
+    .quiz-isi.is-invalid,
+    .option-text.is-invalid {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    /* Visual feedback untuk jawaban benar */
+    .option-item:has(.is-correct:checked) {
+        background-color: rgba(25, 135, 84, 0.05);
+        border-color: #198754;
+    }
+
+    .option-item:has(.is-correct:checked) .input-group-text {
+        background-color: #198754 !important;
+        color: white !important;
+    }
+
+    /* Hover effects */
+    .option-item:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    /* Required field indicators */
+    .quiz-isi:required,
+    .options-wrap label:has(+ .alert) {
+        font-weight: 600;
+    }
+
+    /* Alert styling */
+    .alert-info {
+        background-color: #e7f3ff;
+        border-color: #b6d4fe;
+        color: #084298;
+    }
+
+    .correct-answer-badge {
+        background: #198754;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .option-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+    .quiz-validation-feedback {
+        font-size: 0.875rem;
+        margin-top: 4px;
+    }
+
+    .text-required {
+        color: #dc3545;
+    }

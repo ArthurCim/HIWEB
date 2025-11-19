@@ -6,7 +6,7 @@
         $currentPage = basename($_SERVER['PHP_SELF']);
 
         // Tentukan base URL dinamis dari root HIWEB
-        $baseUrl = 'http://' . $_SERVER['HTTP_HOST'] . '/Semester_3/HIWEB/';
+        $baseUrl = 'http://' . $_SERVER['HTTP_HOST'] . '/HIWEB/';
 
         // Daftar halaman dalam folder master
         $masterPages = ['management_user.php', 'course.php', 'lesson.php'];

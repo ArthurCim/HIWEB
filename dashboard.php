@@ -1,17 +1,8 @@
 <?php
 $page_title = "Dashboard";
-$page_css   = "dashboard.css";  // otomatis load CSS ini
+$page_css   = "includes/css/dashboard.css";
 include "includes/header.php";
 ?>
-<nav class="navbar">
-    <div class="brand">
-        <img src="assets/logo putih.svg" alt="Logo">
-        <h1>MIMO</h1>
-    </div>
-    <div class="nav-actions">
-        <a href="#" id="logoutBtn" class="logout">Logout</a>
-    </div>
-</nav>
 
 <div class="container-fluid">
   <div class="row">
@@ -91,7 +82,6 @@ include "includes/header.php";
 
 <?php include "includes/footer.php"; ?>
 
-<!-- Script khusus dashboard -->
 <script>
 document.getElementById("logoutBtn").addEventListener("click", function(e) {
   e.preventDefault();
