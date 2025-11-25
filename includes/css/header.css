@@ -5,7 +5,7 @@
             left: 0;
             width: 100%;
             height: 72px;
-            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            background: linear-gradient(90deg,#142761ff, #40305eff);
             color: #fff;
             display: flex;
             align-items: center;
