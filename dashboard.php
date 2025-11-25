@@ -117,6 +117,19 @@ $page_css   = "includes/css/dashboard.css";
   <!-- end container -->
 
   <?php include "includes/footer.php"; ?>
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const toggles = document.querySelectorAll('.dropdown-toggle');
 
+  toggles.forEach(toggle => {
+      toggle.addEventListener('click', () => {
+          const submenu = toggle.nextElementSibling;
+
+          submenu.classList.toggle('show');
+          toggle.classList.toggle('active');
+      });
+  });
+});
+</script>
 </body>
 </html>

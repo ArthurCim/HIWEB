@@ -2,13 +2,10 @@
     <h3>Menu</h3>
     <ul class="nav-list">
         <?php
-        // Ambil nama file aktif
         $currentPage = basename($_SERVER['PHP_SELF']);
 
-        // Tentukan base URL dinamis dari root HIWEB
         $baseUrl = 'http://' . $_SERVER['HTTP_HOST'] . '/HIWEB/';
 
-        // Daftar halaman dalam folder master
         $masterPages = ['management_user.php', 'course.php', 'lesson.php'];
         $isMasterActive = in_array($currentPage, $masterPages);
         ?>
@@ -23,12 +20,10 @@
 
         <!-- Dropdown Master -->
         <li>
-            <a href="#masterMenu" data-bs-toggle="collapse" role="button"
-               aria-expanded="<?php echo $isMasterActive ? 'true' : 'false'; ?>"
-               aria-controls="masterMenu">
-               Master ▾
+            <a href="javascript:void(0)" class="dropdown-toggle">
+               Master
             </a>
-            <ul class="collapse <?php echo $isMasterActive ? 'show' : ''; ?>" id="masterMenu">
+            <ul class="submenu <?php echo $isMasterActive ? 'show' : ''; ?>">
                 <li>
                     <a href="<?php echo $baseUrl; ?>master/management_user.php"
                        class="<?php echo $currentPage == 'management_user.php' ? 'active' : ''; ?>">
