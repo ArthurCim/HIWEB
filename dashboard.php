@@ -18,9 +18,6 @@ $page_css   = "includes/css/dashboard.css";
   <?php include "includes/header.php"; ?>
   <?php include "includes/navbar.php"; ?>
 
-  <!-- ===================== -->
-  <!--   LAYOUT UTAMA PURE CSS -->
-  <!-- ===================== -->
   <div class="container">
 
     <!-- Sidebar -->
