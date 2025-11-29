@@ -45,15 +45,15 @@ body{
 
 .card{
   background: rgba(255,255,255,0.25);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255,255,255,0.25);
-  box-shadow:0 8px 20px rgba(0,0,0,0.12);
-  display:flex;
-  border-radius: 12px;
-  flex-direction:column;
-  gap:8px;
-  padding: 12px;
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    border-radius: 12px;
+    padding: 16px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;  
 }
 .card .title{font-size:13px;color:var(--muted);}
 .card .value{font-size:20px;font-weight:700;color:#fff;}
@@ -61,39 +61,43 @@ body{
 
 /* Konten + Widget */
 .content{
-  display:grid;
-  grid-template-columns: 1fr 360px;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: var(--gap);
 }
 
-.table-panel{
-  overflow:auto;
-  background: rgba(255,255,255,0.25);
-  backdrop-filter: blur(18px);
-  border: 1px solid rgba(255,255,255,0.25);
-  box-shadow:0 8px 20px rgba(0,0,0,0.12);
-  border-radius: 12px;
-  padding: 12px;
+.circular-progress {
+    --size: 70px;
+    --stroke: 7px;
+
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: conic-gradient(
+        #10b981 calc(var(--percentage) * 1%),
+        rgba(255,255,255,0.1) 0
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
-.table-panel table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:14px;
+
+.circular-progress::before {
+    content: "";
+    position: absolute;
+    width: calc(var(--size) - var(--stroke) * 2);
+    height: calc(var(--size) - var(--stroke) * 2);
+    background: rgba(10,10,30,0.6);
+    border-radius: 50%;
 }
 
-.table-panel th,
-.table-panel td{
-  text-align:left;
-  padding:10px 12px;
-  border-bottom:1px solid rgba(255,255,255,0.15);
-}
-
-.table-panel th{
-  font-size:12px;
-  color:var(--muted);
-  text-transform:uppercase;
-  letter-spacing:0.6px;
+.progress-value {
+    position: relative;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
 }
 
 .widget{

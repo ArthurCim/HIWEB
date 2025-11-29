@@ -1,217 +1,185 @@
 <?php
-// stage_manager.php
 include "../db.php";
 session_start();
+
 if (!isset($_SESSION['login'])) {
-    header('Location:../login/login.php');
+    header("Location: ../login/login.php");
     exit();
 }
-$page_title = "Lesson Builder";
 
-// ambil courses
+$page_title = "Lesson Builder";
+$page_css   = "lesson_builder.css"; 
+
 $courses_q = $conn->query("SELECT id_courses, nama_courses FROM courses ORDER BY nama_courses ASC");
 
-// ambil all lessons + courses + stage, nanti kita group per lesson
 $sql = "SELECT 
-            l.id_lesson, l.nama_lesson, 
+            l.id_lesson, l.nama_lesson,
             c.id_courses, c.nama_courses,
             s.id_stage, s.nama_stage, s.deskripsi, s.type
         FROM lesson l
         LEFT JOIN courses c ON l.id_courses = c.id_courses
         LEFT JOIN stage s ON s.id_lesson = l.id_lesson
-        ORDER BY c.nama_courses ASC, l.nama_lesson ASC, 
-                CAST(REGEXP_REPLACE(s.nama_stage, '[^0-9]', '') AS UNSIGNED) ASC";
+        ORDER BY c.nama_courses ASC, l.nama_lesson ASC,
+                 CAST(REGEXP_REPLACE(s.nama_stage, '[^0-9]', '') AS UNSIGNED) ASC";
+
 $res = $conn->query($sql);
 
-// build groups
 $groups = [];
 if ($res && $res->num_rows) {
     while ($r = $res->fetch_assoc()) {
         $lid = $r['id_lesson'];
+
         if (!isset($groups[$lid])) {
             $groups[$lid] = [
-                'id_lesson' => $lid,
-                'nama_lesson' => $r['nama_lesson'],
-                'id_courses' => $r['id_courses'],
-                'nama_courses' => $r['nama_courses'],
-                'stages' => []
+                "id_lesson"   => $lid,
+                "nama_lesson" => $r["nama_lesson"],
+                "id_courses"  => $r["id_courses"],
+                "nama_courses"=> $r["nama_courses"],
+                "stages"      => []
             ];
         }
-        if (!empty($r['id_stage'])) {
-            $groups[$lid]['stages'][] = [
-                'id_stage' => $r['id_stage'],
-                'nama_stage' => $r['nama_stage'],
-                'deskripsi' => $r['deskripsi'],
-                'type' => $r['type']
+
+        if (!empty($r["id_stage"])) {
+            $groups[$lid]["stages"][] = [
+                "id_stage"   => $r["id_stage"],
+                "nama_stage" => $r["nama_stage"],
+                "deskripsi"  => $r["deskripsi"],
+                "type"       => $r["type"]
             ];
         }
     }
 }
-
-include "../includes/header.php";
-include "../includes/navbar.php";
 ?>
-<link rel="stylesheet" href="lesson.css">
 
-<div class="container-fluid">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $page_title; ?></title>
+
+    <link rel="stylesheet" href="<?= $page_css; ?>">
+    
+</head>
+
+<body>
+<?php include "../includes/header.php"; ?> 
+
+<div class="container">
     <div class="row">
+
+        <!-- Sidebar -->
         <?php include "../includes/sidebar.php"; ?>
-        <main class="main col-10">
+
+        <!-- Main Content -->
+        <main class="main col">
+
             <div class="d-flex justify-content-between align-items-start mb-3">
                 <div>
                     <h2>Stage Manager</h2>
-                    <p class="text-muted">Stage dibuat & dikelompokkan per <strong>Lesson</strong>. Gunakan Generate untuk membuat stage untuk lesson tertentu.</p>
+                    <p class="text-muted">
+                        Stage dibuat & dikelompokkan per <strong>Lesson</strong>.
+                        Gunakan Generate untuk membuat stage baru.
+                    </p>
                 </div>
-                <div class="container-actions">
-                    <button class="mimo-btn mimo-btn-primary" data-bs-toggle="modal" data-bs-target="#generateModal">+ Generate Stage</button>
+                <div>
+                    <button class="mimo-btn mimo-btn-primary" data-bs-toggle="modal" data-bs-target="#generateModal">
+                        + Generate Stage
+                    </button>
                 </div>
             </div>
 
+            <!-- Filter -->
             <div class="filter-row mb-3">
                 <select id="filterCourse" class="form-control">
                     <option value="">Semua Course</option>
-                    <?php if ($courses_q && $courses_q->num_rows) {
+                    <?php 
+                    if ($courses_q && $courses_q->num_rows) {
                         $courses_q->data_seek(0);
                         while ($c = $courses_q->fetch_assoc()) {
-                            echo '<option value="' . htmlspecialchars($c['id_courses']) . '">' . htmlspecialchars($c['nama_courses']) . '</option>';
+                            echo '<option value="'.$c["id_courses"].'">'.htmlspecialchars($c["nama_courses"]).'</option>';
                         }
-                        $courses_q->data_seek(0);
-                    } ?>
+                    }
+                    ?>
                 </select>
 
                 <select id="filterLesson" class="form-control">
                     <option value="">Semua Lesson</option>
                 </select>
 
-                <input id="searchStage" class="form-control" placeholder="Cari nama atau deskripsi stage..." style="min-width:260px;">
+                <input id="searchStage" class="form-control" placeholder="Cari nama/deskripsi stage..." style="min-width:260px;">
             </div>
 
+            <!-- Cards -->
             <div id="cardsWrap">
-                <?php if (!empty($groups)): ?>
-                    <?php foreach ($groups as $lesson): ?>
-                        <div class="lesson-block mb-4" data-course="<?= htmlspecialchars($lesson['id_courses']) ?>" data-lesson="<?= htmlspecialchars($lesson['id_lesson']) ?>">
-                            <div class="mb-2 d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong><?= htmlspecialchars($lesson['nama_lesson']) ?></strong>
-                                    <div class="text-muted small"><?= htmlspecialchars($lesson['nama_courses']) ?></div>
-                                </div>
-                                <div>
-                                    <button class="mimo-btn mimo-btn-sm me-2" onclick="reorderStages('<?= htmlspecialchars($lesson['id_lesson']) ?>')">Reorder Stages</button>
-                                    <button class="mimo-btn mimo-btn-sm" onclick="openGenerateForLesson('<?= htmlspecialchars($lesson['id_lesson']) ?>')">Generate untuk lesson</button>
+            <?php if (!empty($groups)): ?>
+                <?php foreach ($groups as $lesson): ?>
+                    <div class="lesson-block mb-4"
+                         data-course="<?= htmlspecialchars($lesson['id_courses']) ?>"
+                         data-lesson="<?= htmlspecialchars($lesson['id_lesson']) ?>">
+
+                        <div class="mb-2 d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong><?= htmlspecialchars($lesson['nama_lesson']) ?></strong>
+                                <div class="text-muted small"><?= htmlspecialchars($lesson['nama_courses']) ?></div>
+                            </div>
+                            <div>
+                                <button class="mimo-btn mimo-btn-sm me-2" onclick="reorderStages('<?= $lesson['id_lesson'] ?>')">Reorder</button>
+                                <button class="mimo-btn mimo-btn-sm" onclick="openGenerateForLesson('<?= $lesson['id_lesson'] ?>')">Generate</button>
+                            </div>
+                        </div>
+
+                        <?php if (!empty($lesson['stages'])): ?>
+                            <div class="stage-scroll">
+                                <div class="stage-grid flex-nowrap">
+
+                                <?php foreach ($lesson['stages'] as $s): ?>
+                                    <?php
+                                        $escName = htmlspecialchars($s['nama_stage']);
+                                        $escDesc = htmlspecialchars($s['deskripsi']);
+                                    ?>
+                                    <div class="card-stage me-3"
+                                         data-course="<?= $lesson['id_courses'] ?>"
+                                         data-lesson="<?= $lesson['id_lesson'] ?>"
+                                         data-title="<?= strtolower($escName) ?>"
+                                         data-desc="<?= strtolower($escDesc) ?>">
+
+                                        <div class="accent"></div>
+                                        <div class="title"><?= $escName ?></div>
+                                        <div class="meta">
+                                            <strong><?= htmlspecialchars($lesson['nama_lesson']) ?></strong> • 
+                                            <?= htmlspecialchars($lesson['nama_courses']) ?>
+                                            <span class="badge-type <?= $s['type']==='materi' ? 'badge-materi' : 'badge-quiz' ?>">
+                                                <?= strtoupper($s['type']) ?>
+                                            </span>
+                                        </div>
+                                        <div class="desc"><?= nl2br($escDesc ?: "-") ?></div>
+                                    </div>
+                                <?php endforeach; ?>
+
                                 </div>
                             </div>
+                        <?php else: ?>
+                            <div class="empty-ill">Belum ada stage. Gunakan tombol <strong>Generate</strong>.</div>
+                        <?php endif; ?>
 
-                            <?php if (!empty($lesson['stages'])): ?>
-                                <div class="stage-scroll">
-                                    <div class="stage-grid flex-nowrap">
-                                        <?php foreach ($lesson['stages'] as $s):
-                                            $escName = htmlspecialchars($s['nama_stage']);
-                                            $escDesc = htmlspecialchars($s['deskripsi']);
-                                            $type = $s['type'];
-                                            $idStage = $s['id_stage'];
-                                        ?>
-                                            <div class="card-stage me-3" data-course="<?= htmlspecialchars($lesson['id_courses']) ?>" data-lesson="<?= htmlspecialchars($lesson['id_lesson']) ?>" data-title="<?= strtolower($escName) ?>" data-desc="<?= strtolower($escDesc) ?>">
-                                                <div class="accent"></div>
-                                                <div class="title"><?= $escName ?></div>
-                                                <div class="meta">
-                                                    <strong><?= htmlspecialchars($lesson['nama_lesson']) ?></strong> • <?= htmlspecialchars($lesson['nama_courses']) ?>
-                                                    &nbsp;<span class="badge-type <?= $type === 'materi' ? 'badge-materi' : 'badge-quiz' ?>"><?= strtoupper($type) ?></span>
-                                                </div>
-                                                <div class="desc"><?= nl2br($escDesc ?: '-') ?></div>
-                                                <div class="actions"></div>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            <?php else: ?>
-                                <div class="empty-ill">Belum ada stage untuk lesson ini. Gunakan tombol <strong>Generate</strong>.</div>
-                            <?php endif; ?>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="empty-ill">Belum ada lesson / stage. Buat lesson terlebih dahulu atau gunakan Generate.</div>
-                <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+
+            <?php else: ?>
+                <div class="empty-ill">Belum ada lesson / stage.</div>
+            <?php endif; ?>
             </div>
+
         </main>
     </div>
 </div>
 
-<!-- Modal Generate Step 1 -->
-<div class="modal fade" id="generateModal" tabindex="-1">
-    <div class="modal-dialog">
-        <form id="generateStep1" class="modal-content" novalidate>
-            <div class="modal-header">
-                <h5 class="modal-title">Generate Stage — Step 1</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label>Pilih Course <span class="text-danger">*</span></label>
-                    <select id="genCourse" name="id_courses" class="form-control" required>
-                        <option value="">-- Pilih Course Terlebih Dahulu --</option>
-                        <?php if ($courses_q && $courses_q->num_rows) {
-                            mysqli_data_seek($courses_q, 0);
-                            while ($c = $courses_q->fetch_assoc()) {
-                                echo '<option value="' . htmlspecialchars($c['id_courses']) . '">' . htmlspecialchars($c['nama_courses']) . '</option>';
-                            }
-                            mysqli_data_seek($courses_q, 0);
-                        } ?>
-                    </select>
-                    <div class="form-text">Pilih course terlebih dahulu untuk melihat daftar lesson</div>
-                </div>
-
-                <div class="mb-3">
-                    <label>Pilih Lesson <span class="text-danger">*</span></label>
-                    <select id="genLesson" name="id_lesson" class="form-control" disabled required>
-                        <option value="">Pilih course terlebih dahulu...</option>
-                    </select>
-                    <div class="form-text" id="lessonHelpText" style="display:none;">Pilih lesson yang akan dibuatkan stage</div>
-                </div>
-
-                <div class="mb-3">
-                    <label>Jumlah Stage <span class="text-danger">*</span></label>
-                    <input type="number" id="genCount" name="count" min="1" max="200" class="form-control" value="5" required>
-                    <div class="form-text">Contoh: 5 → akan membuat form builder untuk Stage 1 sampai Stage 5</div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Lanjutkan ke Builder</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Modal Builder Step 2 -->
-<div class="modal fade" id="builderModal" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-        <form id="builderForm" class="modal-content" enctype="multipart/form-data">
-            <div class="modal-header">
-                <h5 class="modal-title">Stage Builder — Isi detail tiap Stage</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div>
-                            <strong id="builderInfo"></strong>
-                        </div>
-                        <div>
-                            <button type="button" id="addStageBtn" class="btn btn-sm btn-outline-secondary">Tambah Stage</button>
-                            <button type="button" id="resetBuilderBtn" class="btn btn-sm btn-outline-danger">Reset</button>
-                        </div>
-                    </div>
-                </div>
-                <div id="builderWrap"></div>
-            </div>
-            <div class="modal-footer">
-                <input type="hidden" name="id_lesson" id="builder_lesson">
-                <button type="submit" class="btn btn-success">Generate & Simpan Semua</button>
-            </div>
-        </form>
-    </div>
-</div>
-
 <?php include "../includes/footer.php"; ?>
+
+</body>
+</html>
+
 
 <script>
     // Global variables

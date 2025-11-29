@@ -1,0 +1,208 @@
+/* maus.css - Management User styles (no Bootstrap) */
+:root{
+  --bg: #0f1d4d; /* base from dashboard gradient start */
+  --panel-bg: rgba(255,255,255,0.12);
+  --panel-border: rgba(255,255,255,0.18);
+  --glass: rgba(255,255,255,0.18);
+  --text-on-dark: #ffffff;
+  --muted: rgba(255,255,255,0.75);
+  --accent: #0D6EFD; /* blue accent kept */
+  --success: #10b981;
+  --danger: #ef4444;
+  --warn: #f59e0b;
+  --radius: 12px;
+  --shadow: 0 8px 20px rgba(0,0,0,0.25);
+  --gap: 14px;
+}
+
+/* Reset essentials */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  background: linear-gradient(135deg, #0f1d4d 0%, #2f264a 100%);
+  color:var(--text-on-dark);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.4;
+  padding-top:72px; /* preserve header area like dashboard */
+}
+
+/* Container override to match dashboard layout */
+.container{
+  width: calc(100% - 40px);
+  margin: 20px 20px 40px 20px;
+  display:grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--gap);
+  
+}
+
+/* Main column */
+.main.col{ /* matches <main class="main col"> in page */
+  padding: 0 6px;
+  
+}
+
+
+
+.page-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom: 18px;
+}
+.page-header h2{font-size:20px;color:var(--text-on-dark);font-weight:700}
+
+/* ===================== HEADER SECTION ===================== */
+.d-flex h2 {
+    margin-bottom: 4px;
+}
+
+/* ===================== FILTER ROW ===================== */
+.filter-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.filter-row .form-control {
+    min-width: 200px;
+}
+
+/* ===================== LESSON BLOCK ===================== */
+.lesson-block {
+    background: rgba(255,255,255,0.25);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.lesson-block strong {
+    font-size: 1.1rem;
+}
+
+.lesson-block .text-muted {
+    color: #666 !important;
+}
+
+/* ===================== SCROLL AREA ===================== */
+.stage-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 12px;
+}
+
+.stage-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.stage-scroll::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.stage-scroll::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+/* ===================== GRID: FLEX WRAP ===================== */
+.stage-grid.flex-nowrap {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 5px;
+}
+
+/* ===================== CARD STAGE ===================== */
+.card-stage {
+    flex: 0 0 260px;
+    background: #fff;
+    color: #000;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    transition: transform .15s ease;
+}
+
+.card-stage:hover {
+    transform: translateY(-4px);
+}
+
+.card-stage .accent {
+    width: 6px;
+    height: 100%;
+    background: var(--accent);
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+/* TITLE */
+.card-stage .title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+}
+
+/* META */
+.card-stage .meta {
+    font-size: .9rem;
+    color: #444;
+    margin-bottom: 6px;
+}
+
+/* DESCRIPTION */
+.card-stage .desc {
+    font-size: .9rem;
+    color: #555;
+    min-height: 46px;
+    margin-top: 6px;
+}
+
+/* BADGE */
+.badge-type {
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 700;
+    margin-left: 8px;
+    color: #fff;
+}
+
+.badge-materi {
+    background: var(--accent);
+}
+
+.badge-quiz {
+    background: #ff6b6b;
+}
+
+/* ===================== EMPTY STATE ===================== */
+.empty-ill {
+    text-align: center;
+    padding: 24px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 12px;
+    color: #333;
+    border: 2px dashed #ddd;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 768px) {
+    .main.col {
+        padding: 10px;
+    }
+
+    .card-stage {
+        flex: 0 0 220px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-stage {
+        flex: 0 0 180px;
+    }
+}

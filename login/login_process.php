@@ -36,6 +36,16 @@ $_SESSION['id_user'] = $id_user;
 $_SESSION['nama'] = $nama;
 $_SESSION['role'] = $role;
 
+if ($role === 'admin') {
+    header("Location: ../index.php");
+    exit();
+}
+
+if ($role === 'user') {
+    header("Location: ../dashboard_user.php");
+    exit();
+}
+
 header("Location: ../index.php");
 exit();
 ?>

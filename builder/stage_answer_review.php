@@ -7,6 +7,7 @@ if (!isset($_SESSION['login'])) {
     exit();
 }
 $page_title = "Stage Answer Review";
+$page_css = "stage_answer.css";
 
 // Get filter parameters
 $filter_course = $_GET['course'] ?? '';
@@ -130,205 +131,280 @@ $total_answers = count($answers);
 $correct_answers = count(array_filter($answers, fn($a) => $a['is_correct'] == 1));
 $incorrect_answers = count(array_filter($answers, fn($a) => $a['is_correct'] == 0));
 $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
-
-include "../includes/header.php";
-include "../includes/navbar.php";
 ?>
 
-<link rel="stylesheet" href="answer.css">
-<div class="container-fluid">
-    <div class="row">
-        <?php include "../includes/sidebar.php"; ?>
-        
-        <main class="main col-10">
-            <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="mb-2">✍️ Stage Answer Review</h2>
-                    <p class="text-muted mb-0">Review semua jawaban quiz dari users</p>
-                </div>
-                <button class="export-btn" onclick="exportAnswers()">
-                    📥 Export Answers
-                </button>
-            </div>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $page_title; ?></title>
 
-            <!-- Statistics -->
-            <div class="row mb-4">
-                <div class="col-md-3 mb-3">
-                    <div class="stats-card total">
-                        <div class="stats-icon">📝</div>
-                        <div class="stats-value"><?= $total_answers ?></div>
-                        <div class="stats-label">Total Answers</div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="stats-card correct">
-                        <div class="stats-icon">✅</div>
-                        <div class="stats-value"><?= $correct_answers ?></div>
-                        <div class="stats-label">Correct</div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="stats-card incorrect">
-                        <div class="stats-icon">❌</div>
-                        <div class="stats-value"><?= $incorrect_answers ?></div>
-                        <div class="stats-label">Incorrect</div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="stats-card accuracy">
-                        <div class="stats-icon">🎯</div>
-                        <div class="stats-value"><?= number_format($accuracy, 1) ?>%</div>
-                        <div class="stats-label">Accuracy</div>
-                    </div>
-                </div>
-            </div>
+    <link rel="stylesheet" href="<?= $page_css; ?>">
+</head>
 
-            <!-- Filters -->
-            <div class="filter-card">
-                <form method="GET" class="row g-3">
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold">Course</label>
-                        <select name="course" class="form-select" id="filterCourse">
-                            <option value="">All Courses</option>
-                            <?php mysqli_data_seek($courses, 0); while($course = $courses->fetch_assoc()): ?>
-                                <option value="<?= $course['id_courses'] ?>" <?= $filter_course == $course['id_courses'] ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($course['nama_courses']) ?>
-                                </option>
-                            <?php endwhile; ?>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold">Lesson</label>
-                        <select name="lesson" class="form-select" id="filterLesson">
-                            <option value="">All Lessons</option>
-                            <?php if(isset($lessons) && $lessons): mysqli_data_seek($lessons, 0); while($lesson = $lessons->fetch_assoc()): ?>
-                                <option value="<?= $lesson['id_lesson'] ?>" <?= $filter_lesson == $lesson['id_lesson'] ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($lesson['nama_lesson']) ?>
-                                </option>
-                            <?php endwhile; endif; ?>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold">Stage</label>
-                        <select name="stage" class="form-select" id="filterStage">
-                            <option value="">All Stages</option>
-                            <?php if(isset($stages) && $stages): mysqli_data_seek($stages, 0); while($stage = $stages->fetch_assoc()): ?>
-                                <option value="<?= $stage['id_stage'] ?>" <?= $filter_stage == $stage['id_stage'] ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($stage['nama_stage']) ?>
-                                </option>
-                            <?php endwhile; endif; ?>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold">Correctness</label>
-                        <select name="correct" class="form-select">
-                            <option value="">All</option>
-                            <option value="1" <?= $filter_correct === '1' ? 'selected' : '' ?>>Correct Only</option>
-                            <option value="0" <?= $filter_correct === '0' ? 'selected' : '' ?>>Incorrect Only</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold">Search User</label>
-                        <input type="text" name="user" class="form-control" placeholder="Name or email..." value="<?= htmlspecialchars($filter_user) ?>">
-                    </div>
-                    <div class="col-md-1 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100">Filter</button>
-                    </div>
-                </form>
-            </div>
+<body>
 
-            <!-- Answers List -->
-            <div class="answers-container">
-                <?php if (empty($answers)): ?>
-                    <div class="empty-state">
-                        <i class="fas fa-clipboard-list"></i>
-                        <h4>No Answers Found</h4>
-                        <p>Belum ada jawaban quiz yang disubmit atau tidak ada yang sesuai filter</p>
+    <!-- Header -->
+    <?php include "../includes/header.php"; ?> 
+
+    <div class="container">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <?php include "../includes/sidebar.php"; ?>
+
+            <!-- Main Content -->
+            <main class="main col">
+
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="mb-2">✍️ Stage Answer Review</h2>
+                        <p class="text-muted mb-0">Review semua jawaban quiz dari users</p>
                     </div>
-                <?php else: ?>
-                    <?php foreach ($answers as $answer): 
-                        $isCorrect = $answer['is_correct'] == 1;
-                        $statusClass = $isCorrect ? 'correct' : 'incorrect';
-                        $statusIcon = $isCorrect ? '✅' : '❌';
-                        $statusText = $isCorrect ? 'Correct' : 'Incorrect';
-                        $initials = strtoupper(substr($answer['user_name'], 0, 2));
-                    ?>
-                    <div class="answer-card <?= $statusClass ?>">
-                        <div class="answer-header">
-                            <div class="user-info-card">
-                                <div class="user-avatar-large"><?= $initials ?></div>
-                                <div class="user-details-card">
-                                    <h5><?= htmlspecialchars($answer['user_name']) ?></h5>
-                                    <small><?= htmlspecialchars($answer['user_email']) ?></small>
+
+                    <button class="export-btn" onclick="exportAnswers()">
+                        📥 Export Answers
+                    </button>
+                </div>
+
+                <!-- Statistics Section -->
+                <div class="row mb-4">
+
+                    <div class="col-md-3 mb-3">
+                        <div class="stats-card total">
+                            <div class="stats-icon">📝</div>
+                            <div class="stats-value"><?= $total_answers ?></div>
+                            <div class="stats-label">Total Answers</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="stats-card correct">
+                            <div class="stats-icon">✅</div>
+                            <div class="stats-value"><?= $correct_answers ?></div>
+                            <div class="stats-label">Correct</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="stats-card incorrect">
+                            <div class="stats-icon">❌</div>
+                            <div class="stats-value"><?= $incorrect_answers ?></div>
+                            <div class="stats-label">Incorrect</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="stats-card accuracy">
+                            <div class="stats-icon">🎯</div>
+                            <div class="stats-value"><?= number_format($accuracy, 1) ?>%</div>
+                            <div class="stats-label">Accuracy</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-card">
+                    <form method="GET" class="row g-3">
+
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold">Course</label>
+                            <select name="course" class="form-select" id="filterCourse">
+                                <option value="">All Courses</option>
+                                <?php mysqli_data_seek($courses, 0); while($course = $courses->fetch_assoc()): ?>
+                                    <option value="<?= $course['id_courses'] ?>" 
+                                        <?= $filter_course == $course['id_courses'] ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($course['nama_courses']) ?>
+                                    </option>
+                                <?php endwhile; ?>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold">Lesson</label>
+                            <select name="lesson" class="form-select" id="filterLesson">
+                                <option value="">All Lessons</option>
+                                <?php if(isset($lessons) && $lessons): 
+                                    mysqli_data_seek($lessons, 0); 
+                                    while($lesson = $lessons->fetch_assoc()): ?>
+                                        <option value="<?= $lesson['id_lesson'] ?>" 
+                                            <?= $filter_lesson == $lesson['id_lesson'] ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($lesson['nama_lesson']) ?>
+                                        </option>
+                                <?php endwhile; endif; ?>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold">Stage</label>
+                            <select name="stage" class="form-select" id="filterStage">
+                                <option value="">All Stages</option>
+                                <?php if(isset($stages) && $stages): 
+                                    mysqli_data_seek($stages, 0); 
+                                    while($stage = $stages->fetch_assoc()): ?>
+                                        <option value="<?= $stage['id_stage'] ?>" 
+                                            <?= $filter_stage == $stage['id_stage'] ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($stage['nama_stage']) ?>
+                                        </option>
+                                <?php endwhile; endif; ?>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold">Correctness</label>
+                            <select name="correct" class="form-select">
+                                <option value="">All</option>
+                                <option value="1" <?= $filter_correct === '1' ? 'selected' : '' ?>>Correct Only</option>
+                                <option value="0" <?= $filter_correct === '0' ? 'selected' : '' ?>>Incorrect Only</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Search User</label>
+                            <input type="text" name="user" class="form-control" 
+                                   placeholder="Name or email..." 
+                                   value="<?= htmlspecialchars($filter_user) ?>">
+                        </div>
+
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Filter</button>
+                        </div>
+
+                    </form>
+                </div>
+
+                <!-- Answers List -->
+                <div class="answers-container">
+
+                    <?php if (empty($answers)): ?>
+                        
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h4>No Answers Found</h4>
+                            <p>Belum ada jawaban quiz atau tidak ada yg sesuai filter</p>
+                        </div>
+
+                    <?php else: ?>
+
+                        <?php foreach ($answers as $answer): 
+                            $isCorrect = $answer['is_correct'] == 1;
+                            $statusClass = $isCorrect ? 'correct' : 'incorrect';
+                            $statusIcon = $isCorrect ? '✅' : '❌';
+                            $statusText = $isCorrect ? 'Correct' : 'Incorrect';
+                            $initials = strtoupper(substr($answer['user_name'], 0, 2));
+                        ?>
+
+                            <div class="answer-card <?= $statusClass ?>">
+
+                                <div class="answer-header">
+                                    <div class="user-info-card">
+                                        <div class="user-avatar-large"><?= $initials ?></div>
+                                        <div class="user-details-card">
+                                            <h5><?= htmlspecialchars($answer['user_name']) ?></h5>
+                                            <small><?= htmlspecialchars($answer['user_email']) ?></small>
+                                        </div>
+                                    </div>
+
+                                    <div class="answer-status">
+                                        <span class="status-badge <?= $statusClass ?>">
+                                            <?= $statusIcon ?> <?= $statusText ?>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="answer-status">
-                                <span class="status-badge <?= $statusClass ?>">
-                                    <?= $statusIcon ?> <?= $statusText ?>
-                                </span>
-                            </div>
-                        </div>
 
-                        <div class="question-section">
-                            <div class="question-label">❓ Question</div>
-                            <div class="question-text"><?= nl2br(htmlspecialchars($answer['question_text'])) ?></div>
-                        </div>
+                                <div class="question-section">
+                                    <div class="question-label">❓ Question</div>
+                                    <div class="question-text">
+                                        <?= nl2br(htmlspecialchars($answer['question_text'])) ?>
+                                    </div>
+                                </div>
 
-                        <div class="answer-section <?= $statusClass ?>">
-                            <div class="answer-label">💡 User Answer</div>
-                            <div class="answer-text"><?= nl2br(htmlspecialchars($answer['answer'])) ?></div>
-                        </div>
+                                <div class="answer-section <?= $statusClass ?>">
+                                    <div class="answer-label">💡 User Answer</div>
+                                    <div class="answer-text">
+                                        <?= nl2br(htmlspecialchars($answer['answer'])) ?>
+                                    </div>
+                                </div>
 
-                        <div class="meta-info">
-                            <div class="meta-item">
-                                <i class="fas fa-book"></i>
-                                <span class="course-badge"><?= htmlspecialchars($answer['nama_courses']) ?></span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-bookmark"></i>
-                                <span><?= htmlspecialchars($answer['nama_lesson']) ?></span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-layer-group"></i>
-                                <span class="stage-badge"><?= htmlspecialchars($answer['nama_stage']) ?></span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-clock"></i>
-                                <span><?= date('d M Y, H:i', strtotime($answer['submitted_at'])) ?></span>
-                            </div>
-                            <div class="meta-item">
-                                <button class="btn-view-detail" onclick="viewAnswerDetail('<?= $answer['id_answer'] ?>')">
-                                    View Detail
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </main>
-    </div>
-</div>
+                                <div class="meta-info">
 
-<!-- Detail Modal -->
-<div class="modal fade" id="answerDetailModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Answer Detail</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="answerDetailContent">
-                <div class="text-center py-5">
-                    <div class="spinner-border text-primary"></div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-book"></i>
+                                        <span class="course-badge">
+                                            <?= htmlspecialchars($answer['nama_courses']) ?>
+                                        </span>
+                                    </div>
+
+                                    <div class="meta-item">
+                                        <i class="fas fa-bookmark"></i>
+                                        <span><?= htmlspecialchars($answer['nama_lesson']) ?></span>
+                                    </div>
+
+                                    <div class="meta-item">
+                                        <i class="fas fa-layer-group"></i>
+                                        <span class="stage-badge">
+                                            <?= htmlspecialchars($answer['nama_stage']) ?>
+                                        </span>
+                                    </div>
+
+                                    <div class="meta-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span><?= date('d M Y, H:i', strtotime($answer['submitted_at'])) ?></span>
+                                    </div>
+
+                                    <div class="meta-item">
+                                        <button class="btn-view-detail" 
+                                                onclick="viewAnswerDetail('<?= $answer['id_answer'] ?>')">
+                                            View Detail
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        <?php endforeach; ?>
+
+                    <?php endif; ?>
+
                 </div>
-            </div>
+
+            </main>
+
         </div>
     </div>
-</div>
 
-<?php include "../includes/footer.php"; ?>
+    <!-- Detail Modal -->
+    <div class="modal fade" id="answerDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Answer Detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body" id="answerDetailContent">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <?php include "../includes/footer.php"; ?>
+
+</body>
+</html>
+
 
 <script>
 // Dynamic filters

@@ -16,7 +16,6 @@ $page_css   = "includes/css/dashboard.css";
 <body>
 
   <?php include "includes/header.php"; ?>
-  <?php include "includes/navbar.php"; ?>
 
   <div class="container">
 
@@ -26,7 +25,7 @@ $page_css   = "includes/css/dashboard.css";
     <!-- MAIN -->
     <main class="main">
       
-      <h2>Selamat datang di kelas!</h2>
+      <h2>Selamat datang dikelas!</h2>
       <p>Halo rek!</p>
 
       <!-- Stats -->
