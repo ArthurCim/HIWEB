@@ -1,4 +1,4 @@
-/* maus.css - Management User styles (no Bootstrap) */
+
 :root{
   --bg: #0f1d4d; /* base from dashboard gradient start */
   --panel-bg: rgba(255,255,255,0.12);
@@ -25,23 +25,21 @@ body{
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   line-height:1.4;
-  padding-top:72px; /* preserve header area like dashboard */
+  padding-top:72px; 
 }
 
-/* Container override to match dashboard layout */
 .container{
   width: calc(100% - 40px);
   margin: 20px 20px 40px 20px;
   display:grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 1fr;
   gap: var(--gap);
   
 }
 
 /* Main column */
-.main.col{ /* matches <main class="main col"> in page */
+.main.col{ 
   padding: 0 6px;
-  
 }
 
 
@@ -57,7 +55,7 @@ body{
 
 /* ===================== HEADER SECTION ===================== */
 .d-flex h2 {
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 /* ===================== FILTER ROW ===================== */
@@ -110,21 +108,22 @@ body{
 }
 
 /* ===================== GRID: FLEX WRAP ===================== */
-.stage-grid.flex-nowrap {
+.stage-grid {
     display: flex;
+    flex-wrap: wrap;   
     gap: 16px;
-    padding-bottom: 5px;
 }
 
 /* ===================== CARD STAGE ===================== */
 .card-stage {
-    flex: 0 0 260px;
+    flex: 0 0 255px;
     background: #fff;
     color: #000;
     border-radius: 12px;
     padding: 16px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.12);
     transition: transform .15s ease;
+    margin-top: 10px;
 }
 
 .card-stage:hover {
@@ -144,14 +143,14 @@ body{
 .card-stage .title {
     font-weight: 700;
     font-size: 1.05rem;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
 }
 
 /* META */
 .card-stage .meta {
     font-size: .9rem;
     color: #444;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
 }
 
 /* DESCRIPTION */
@@ -188,6 +187,7 @@ body{
     border-radius: 12px;
     color: #333;
     border: 2px dashed #ddd;
+    margin-top: 10px;
 }
 
 /* ===================== RESPONSIVE ===================== */
