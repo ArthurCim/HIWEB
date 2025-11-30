@@ -33,15 +33,14 @@ $page_css = "../includes/css/course.css";
 
 <?php include "../includes/header.php"; ?>
 
-<div class="container d-flex">
+<div class="container">
+    <div class="row">
 
-    <!-- Sidebar -->
-    <div class="col-2 p-0">
+        <!-- Sidebar -->
         <?php include "../includes/sidebar.php"; ?>
-    </div>
 
-    <!-- Main content -->
-    <div class="col-10">
+        <!-- Main Content -->
+        <main class="main col">
         <main class="main">
             <div class="page-header d-flex justify-content-between align-items-center">
                 <h2>Data Course</h2>
@@ -92,7 +91,7 @@ $page_css = "../includes/css/course.css";
     </div>
 
     <!-- Modal Tambah Course -->
-    <div class="modal-fade" id="addCourseModal" tabindex="-100">
+    <div class="modal fade" id="addCourseModal" tabindex="-1">
         <div class="modal-dialog">
             <form id="addCourseForm" class="modal-content">
                 <div class="modal-header">
@@ -119,7 +118,7 @@ $page_css = "../includes/css/course.css";
     </div>
 
     <!-- Modal Edit Course -->
-    <div class="modal-fade" id="editCourseModal" tabindex="-1">
+    <div class="modal fade" id="editCourseModal" tabindex="-1">
         <div class="modal-dialog">
             <form id="editCourseForm" class="modal-content">
                 <div class="modal-header">
