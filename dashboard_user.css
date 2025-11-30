@@ -1,0 +1,350 @@
+:root {
+  --bg: #f5f7fb;
+  --panel: rgba(255, 255, 255, 0.18);
+  --panel-border: rgba(255, 255, 255, 0.25);
+  --accent-1: #cad4ff;
+  --accent-2: #a0a9ff;
+  --muted: #d6dae8;
+  --success: #4ade80;
+  --warn: #fbbf24;
+  --danger: #ef4444;
+  --radius: 14px;
+  --gap: 18px;
+  --glass: rgba(255, 255, 255, 0.22);
+}
+
+body {
+  margin: 20px;
+  font-family: Inter, system-ui;
+
+  background: #000;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  transition: all 0.3s ease;
+}
+
+.header.scrolled {
+  background: rgba(0, 0, 0, 0.95);
+  height: 70px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nav-actions a.logout {
+  color: #fff;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.nav-actions a.logout:hover {
+  opacity: 0.95
+}
+
+
+.container {
+  margin-top: 110px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.logo-container:hover {
+  transform: translateY(-2px);
+}
+
+.logo {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo img {
+  width: 124%;
+  height: 124%;
+}
+
+.logo-text {
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.main-menu {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.menu-item {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 0;
+}
+
+.menu-item:hover {
+  color: white;
+  transform: translateY(-2px);
+}
+
+.menu-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s ease;
+}
+
+.menu-item:hover::after {
+  width: 100%;
+}
+
+.menu-item.active {
+  color: white;
+}
+
+.menu-item.active::after {
+  width: 100%;
+}
+
+.menu-item.external::before {
+  content: '↗';
+  margin-right: 5px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+
+/* Mobile menu toggle */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.menu-toggle span {
+  width: 25px;
+  height: 3px;
+  background: white;
+  margin: 3px 0;
+  transition: 0.3s;
+  border-radius: 2px;
+}
+
+.widget.clean {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  border-radius: var(--radius);
+  padding: 18px;
+  color: #fff;
+  backdrop-filter: blur(16px);
+}
+
+.profile-pic {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  transition: .3s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+  /* ← FIX PALING PENTING */
+}
+
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+.profile-pic.clean-hover {
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  transition: .3s ease;
+}
+
+.profile-pic.clean-hover:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.5);
+}
+
+.section-title {
+  margin-top: 12px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #fff;
+  opacity: 0.9;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 10px 0 16px 0;
+}
+
+/* --- Full width Key Value (Your Activities) --- */
+.kv.full {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 2px;
+  margin: 2px 0;
+}
+
+
+.clean-premium {
+  margin-top: 18px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.premium-badge {
+  background: linear-gradient(135deg, #ffe68a, #ffd54a);
+  padding: 4px 10px;
+  border-radius: 8px;
+  color: #5a4300;
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+.premium-btn {
+  background: rgba(255, 255, 255, 0.25);
+  border: none;
+  padding: 7px 14px;
+  font-size: 13px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.premium-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.premium-text {
+  margin-top: 10px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 25px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.20);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+
+  border-radius: 16px;
+  padding: 18px 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  transition: 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.card .info .title {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.card .info .value {
+  margin-top: 4px;
+  font-size: 22px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.circular-progress {
+  --size: 65px;
+  --stroke: 6px;
+
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: conic-gradient(#10b981 calc(var(--percentage) * 1%),
+      rgba(255, 255, 255, 0.10) 0);
+  position: relative;
+}
+
+.circular-progress::before {
+  content: "";
+  position: absolute;
+  width: calc(var(--size) - var(--stroke) * 2);
+  height: calc(var(--size) - var(--stroke) * 2);
+  background: rgba(15, 15, 40, 0.55);
+  border-radius: 50%;
+}
+
+.progress-value {
+  position: relative;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+
+.stats {
+  margin-top: 20px;
+}

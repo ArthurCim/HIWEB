@@ -47,50 +47,36 @@ $page_css   = "../includes/css/maus.css";
         </thead>
 
         <tbody>
-          <tr>
-            <td>Aslan</td>
-            <td>aslan@example.com</td>
-            <td>Admin</td>
-            <td>
-              <button class="mimo-btn small open-modal"
-                      data-target="#modalEdit"
-                      data-nama="Aslan"
-                      data-email="aslan@example.com"
-                      data-role="Admin">
-                Edit
-              </button>
+            <?php
+            $no = 1;
+            $result = mysqli_query($conn, "SELECT * FROM users ORDER BY id_user DESC");
 
-              <button class="mimo-btn danger small open-modal"
-                      data-target="#modalDelete"
-                      data-user="Aslan">
-                Hapus
-              </button>
-            </td>
-          </tr>
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>
+                    <td>" . $no++ . "</td>
+                    <td>" . htmlspecialchars($row['nama']) . "</td>
+                    <td>" . htmlspecialchars($row['email']) . "</td>
+                    <td>" . htmlspecialchars($row['role']) . "</td> 
+                    <td>
+                      <button class='mimo-btn mimo-btn-secondary edit-btn'
+                        data-id='" . $row['id_user'] . "'
+                        data-nama='" . htmlspecialchars($row['nama']) . "'
+                        data-email='" . htmlspecialchars($row['email']) . "'
+                        data-role='" . htmlspecialchars($row['role']) . "'   
+                      >
+                      Edit
+                      </button>
 
-          <tr>
-            <td>Cis</td>
-            <td>cis@example.com</td>
-            <td>User</td>
-            <td>
-              <button class="mimo-btn small open-modal"
-                      data-target="#modalEdit"
-                      data-nama="Cis"
-                      data-email="cis@example.com"
-                      data-role="User">
-                Edit
-              </button>
-
-              <button class="mimo-btn danger small open-modal"
-                      data-target="#modalDelete"
-                      data-user="Cis">
-                Hapus
-              </button>
-            </td>
-          </tr>
-
+                      <button class='mimo-btn mimo-btn-danger delete-btn'
+                        data-id='" . $row['id_user'] . "'
+                      >
+                      Hapus
+                      </button>
+                    </td>
+                </tr>";
+            }
+            ?>
         </tbody>
-      </table>
     </div>
 
   </main>
