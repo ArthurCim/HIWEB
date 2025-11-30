@@ -1,6 +1,6 @@
 <?php
 $page_title = "Dashboard_user";
-$page_css   = "includes/css/dashboard.css";
+$page_css   = "includes/css/dashboard_user.css";
 ?>
 
 <!DOCTYPE html>
@@ -26,11 +26,55 @@ $page_css   = "includes/css/dashboard.css";
 
         <!-- MAIN -->
         <main class="main">
+            <div class="widget user-widget">
+                <div class="profile-area">
+                    <div class="profile-pic">
+                        <img src="<?php echo $user['foto'] ?? 'includes/assets/hiyaa.jpg'; ?>" alt="Foto Profil">
+                    </div>
 
-            <h2>Selamat datang di kelas!</h2>
-            <p>Halo rek!</p>
+                    <div class="profile-info">
+                        <h3><?php echo $user['nama'] ?? 'User'; ?></h3>
+                        <p><?php echo $user['email'] ?? 'email@example.com'; ?></p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Activities -->
+                <h3>Your Activities</h3>
+
+                <div class="kv">
+                    <span>Learning coding for</span>
+                    <span class="badge success">8 days</span>
+                </div>
+
+                <div class="kv">
+                    <span>Active Streak</span>
+                    <span class="badge success">2 days</span>
+                </div>
+
+                <div class="kv">
+                    <span>Energy</span>
+                    <span class="badge warn">8</span>
+                </div>
+
+                <!-- PREMIUM BOX -->
+                <div class="premium-box">
+                    <div class="premium-left">
+                        <span class="premium-badge">Premium</span>
+                        <div class="premium-text">
+                            <div>Status: <strong>Aktif</strong></div>
+                            <div class="expire">Expire: 12 Feb 2026</div>
+                        </div>
+                    </div>
+
+                    <button class="premium-btn">Manage</button>
+                </div>
+
+            </div>
 
             <div class="stats">
+
 
                 <div class="card">
                     <div class="info">
@@ -64,36 +108,9 @@ $page_css   = "includes/css/dashboard.css";
 
             </div>
 
-            <!-- Content Grid -->
-            <div class="content">
-
-                <!-- Widget -->
-                <div class="widget">
-                    <h3>Your Activities</h3>
-
-                    <div class="kv">
-                        <span>Learning coding for</span>
-                        <span class="badge success">8 days</span>
-                    </div>
-
-                    <div class="kv">
-                        <span>Active Streak</span>
-                        <span class="badge success">2 days</span>
-                    </div>
-
-                    <div class="kv">
-                        <span>Energy</span>
-                        <span class="badge warn">8</span>
-                    </div>
-                </div>
-
-            </div>
-            <!-- end content -->
 
         </main>
-        <!-- end main -->
     </div>
-    <!-- end container -->
 
     <?php include "includes/footer.php"; ?>
     <script>
