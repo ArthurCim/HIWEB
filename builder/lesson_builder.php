@@ -68,8 +68,6 @@ if ($res && $res->num_rows) {
 
     <div class="container">
         <div class="row">
-
-            <!-- Sidebar -->
             <?php include "../includes/sidebar.php"; ?>
 
             <!-- Main Content -->

@@ -209,12 +209,12 @@ $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
 
                 <!-- Filters -->
                 <div class="filter-card">
-                    <form method="GET" class="row g-3">
-                        <div class="stage-dropdown">
-                            <div class="col-md-2">
+                    <form method="GET">
+                        <div class="filter-row-top">
+                            <div class="filter-item">
                                 <label class="form-label fw-bold">Course</label>
-                                <select name="course" class="form-select" id="filterCourse">
-                                    <option value="">All Courses</option>
+                                <select name="course" class="form-select">
+                                    <option>All Courses</option>
                                     <?php mysqli_data_seek($courses, 0);
                                     while ($course = $courses->fetch_assoc()): ?>
                                         <option value="<?= $course['id_courses'] ?>"
@@ -225,28 +225,11 @@ $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
                                 </select>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="filter-item">
                                 <label class="form-label fw-bold">Lesson</label>
-                                <select name="lesson" class="form-select" id="filterLesson">
-                                    <option value="">All Lessons</option>
-                                    <?php if (isset($lessons) && $lessons):
-                                        mysqli_data_seek($lessons, 0);
-                                        while ($lesson = $lessons->fetch_assoc()): ?>
-                                            <option value="<?= $lesson['id_lesson'] ?>"
-                                                <?= $filter_lesson == $lesson['id_lesson'] ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($lesson['nama_lesson']) ?>
-                                            </option>
-                                    <?php endwhile;
-                                    endif; ?>
-                                </select>
-                            </div>
-
-                            <div class="col-md-2">
-                                <label class="form-label fw-bold">Stage</label>
-                                <select name="stage" class="form-select" id="filterStage">
-                                    <option value="">All Stages</option>
-                                    <?php if (isset($stages) && $stages):
-                                        mysqli_data_seek($stages, 0);
+                                <select name="lesson" class="form-select">
+                                    <option>All Lessons</option>
+                                    <?php if (isset($stages)): mysqli_data_seek($stages, 0);
                                         while ($stage = $stages->fetch_assoc()): ?>
                                             <option value="<?= $stage['id_stage'] ?>"
                                                 <?= $filter_stage == $stage['id_stage'] ? 'selected' : '' ?>>
@@ -257,29 +240,44 @@ $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
                                 </select>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="filter-item">
+                                <label class="form-label fw-bold">Stage</label>
+                                <select name="stage" class="form-select">
+                                    <option>All Stages</option>
+                                    <?php if (isset($stages)): mysqli_data_seek($stages, 0);
+                                        while ($stage = $stages->fetch_assoc()): ?>
+                                            <option value="<?= $stage['id_stage'] ?>"
+                                                <?= $filter_stage == $stage['id_stage'] ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($stage['nama_stage']) ?>
+                                            </option>
+                                    <?php endwhile;
+                                    endif; ?>
+                                </select>
+                            </div>
+
+                            <div class="filter-item">
                                 <label class="form-label fw-bold">Correctness</label>
                                 <select name="correct" class="form-select">
-                                    <option value="">All</option>
+                                    <option>All</option>
                                     <option value="1" <?= $filter_correct === '1' ? 'selected' : '' ?>>Correct Only</option>
                                     <option value="0" <?= $filter_correct === '0' ? 'selected' : '' ?>>Incorrect Only</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="stage-search">
-                            <div class="col-md-3">
-                                <label class="form-label fw-bold">Search User</label>
-                                <input type="text" name="user" class="form-control"
-                                    placeholder="Name or email..."
-                                    value="<?= htmlspecialchars($filter_user) ?>">
-                            </div>
-                        </div>
-                        <div class="col-md-1 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary w-100">Filter</button>
+                        <div class="filter-row-bottom">
+                            <input type="text" name="user" class="form-control search-input"
+                                placeholder="Search user by name or email...">
+
+                            <button type="submit" class="btn btn-primary filter-btn">
+                                🔍 Filter
+                            </button>
                         </div>
 
                     </form>
                 </div>
+
+
+
 
                 <!-- Answers List -->
                 <div class="answers-container">
@@ -408,6 +406,7 @@ $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
     <?php include "../includes/footer.php"; ?>
 
 </body>
+
 </html>
 
 

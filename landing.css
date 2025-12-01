@@ -75,6 +75,15 @@ body {
     transform: scale(1.1);
 }
 
+.login-btn {
+    color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+}
+
 /* Foto profil bulat */
 .nav-profile {
     width: 38px !important;
