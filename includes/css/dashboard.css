@@ -23,9 +23,8 @@ body{
   
 }
 
-/* Layout utama */
 .container {
-  margin-left: 260px; /* ruang agar tidak tertutup sidebar */
+  margin-left: 260px; 
   padding: 20px;
   width: calc(100% - 260px);
 }
@@ -33,6 +32,12 @@ body{
 .main{
   min-height: 60vh;
   width: 100%;
+}
+
+.main h2{
+  font-size:20px;
+  font-weight:1000;
+  color:#fff;
 }
 
 /* Stats */

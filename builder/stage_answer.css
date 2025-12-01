@@ -1,13 +1,11 @@
     :root {
         --bg: #0f1d4d;
-        /* base from dashboard gradient start */
         --panel-bg: rgba(255, 255, 255, 0.12);
         --panel-border: rgba(255, 255, 255, 0.18);
         --glass: rgba(255, 255, 255, 0.18);
         --text-on-dark: #ffffff;
         --muted: rgba(255, 255, 255, 0.75);
         --accent: #0D6EFD;
-        /* blue accent kept */
         --success: #10b981;
         --danger: #ef4444;
         --warn: #f59e0b;
@@ -36,10 +34,8 @@
         -moz-osx-font-smoothing: grayscale;
         line-height: 1.4;
         padding-top: 72px;
-        /* preserve header area like dashboard */
     }
 
-    /* Container override to match dashboard layout */
     .container {
         width: calc(100% - 40px);
         margin: 20px 20px 40px 20px;
@@ -49,9 +45,7 @@
 
     }
 
-    /* Main column */
     .main.col {
-        /* matches <main class="main col"> in page */
         padding: 0 6px;
 
     }
@@ -74,7 +68,8 @@
 
 
     .stats-card {
-        background: rgba(255,255,255,0.25);;
+        background: rgba(255, 255, 255, 0.25);
+        ;
         border-radius: 12px;
         padding: 24px;
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
@@ -301,12 +296,20 @@
         color: #a0aec0;
     }
 
-    .filter-card {
-        background: rgba(255, 255, 255, 0.25);
-        border-radius: 12px;
-        padding: 24px;
-        margin-bottom: 24px;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    .filter-card form {
+        display: flex;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .filter-card button {
+        white-space: nowrap;
+    }
+
+    .filter-card .col-md-2,
+    .filter-card .col-md-3 {
+        min-width: 160px;
     }
 
     .filter-card .form-control,
@@ -320,6 +323,20 @@
     .filter-card .form-select:focus {
         border-color: #667eea;
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .stage-dropdown {
+        display: flex;
+        gap: 16px;
+        flex-wrap: nowrap;
+    }
+
+    .stage-search {
+        flex: 1;
+    }
+
+    .stage-search .col-md-3 {
+        width: 100%;
     }
 
     .empty-state {

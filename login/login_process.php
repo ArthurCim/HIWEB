@@ -36,6 +36,15 @@ $_SESSION['id_user'] = $id_user;
 $_SESSION['nama'] = $nama;
 $_SESSION['role'] = $role;
 
-header("Location: ../index.php");
-exit();
+if ($role === "admin") {
+    header("Location: ../index.php"); // halaman admin
+    exit();
+} elseif ($role === "user") {
+    header("Location: ../landing.php"); // halaman landing user
+    exit();
+} else {
+    $_SESSION['login_error'] = "Role tidak dikenali.";
+    header("Location: login.php");
+    exit();
+}
 ?>

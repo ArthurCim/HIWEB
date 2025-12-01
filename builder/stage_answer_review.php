@@ -135,6 +135,7 @@ $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -146,7 +147,7 @@ $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
 <body>
 
     <!-- Header -->
-    <?php include "../includes/header.php"; ?> 
+    <?php include "../includes/header.php"; ?>
 
     <div class="container">
         <div class="row">
@@ -209,66 +210,70 @@ $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
                 <!-- Filters -->
                 <div class="filter-card">
                     <form method="GET" class="row g-3">
-
-                        <div class="col-md-2">
-                            <label class="form-label fw-bold">Course</label>
-                            <select name="course" class="form-select" id="filterCourse">
-                                <option value="">All Courses</option>
-                                <?php mysqli_data_seek($courses, 0); while($course = $courses->fetch_assoc()): ?>
-                                    <option value="<?= $course['id_courses'] ?>" 
-                                        <?= $filter_course == $course['id_courses'] ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($course['nama_courses']) ?>
-                                    </option>
-                                <?php endwhile; ?>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2">
-                            <label class="form-label fw-bold">Lesson</label>
-                            <select name="lesson" class="form-select" id="filterLesson">
-                                <option value="">All Lessons</option>
-                                <?php if(isset($lessons) && $lessons): 
-                                    mysqli_data_seek($lessons, 0); 
-                                    while($lesson = $lessons->fetch_assoc()): ?>
-                                        <option value="<?= $lesson['id_lesson'] ?>" 
-                                            <?= $filter_lesson == $lesson['id_lesson'] ? 'selected' : '' ?>>
-                                            <?= htmlspecialchars($lesson['nama_lesson']) ?>
+                        <div class="stage-dropdown">
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold">Course</label>
+                                <select name="course" class="form-select" id="filterCourse">
+                                    <option value="">All Courses</option>
+                                    <?php mysqli_data_seek($courses, 0);
+                                    while ($course = $courses->fetch_assoc()): ?>
+                                        <option value="<?= $course['id_courses'] ?>"
+                                            <?= $filter_course == $course['id_courses'] ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($course['nama_courses']) ?>
                                         </option>
-                                <?php endwhile; endif; ?>
-                            </select>
-                        </div>
+                                    <?php endwhile; ?>
+                                </select>
+                            </div>
 
-                        <div class="col-md-2">
-                            <label class="form-label fw-bold">Stage</label>
-                            <select name="stage" class="form-select" id="filterStage">
-                                <option value="">All Stages</option>
-                                <?php if(isset($stages) && $stages): 
-                                    mysqli_data_seek($stages, 0); 
-                                    while($stage = $stages->fetch_assoc()): ?>
-                                        <option value="<?= $stage['id_stage'] ?>" 
-                                            <?= $filter_stage == $stage['id_stage'] ? 'selected' : '' ?>>
-                                            <?= htmlspecialchars($stage['nama_stage']) ?>
-                                        </option>
-                                <?php endwhile; endif; ?>
-                            </select>
-                        </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold">Lesson</label>
+                                <select name="lesson" class="form-select" id="filterLesson">
+                                    <option value="">All Lessons</option>
+                                    <?php if (isset($lessons) && $lessons):
+                                        mysqli_data_seek($lessons, 0);
+                                        while ($lesson = $lessons->fetch_assoc()): ?>
+                                            <option value="<?= $lesson['id_lesson'] ?>"
+                                                <?= $filter_lesson == $lesson['id_lesson'] ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($lesson['nama_lesson']) ?>
+                                            </option>
+                                    <?php endwhile;
+                                    endif; ?>
+                                </select>
+                            </div>
 
-                        <div class="col-md-2">
-                            <label class="form-label fw-bold">Correctness</label>
-                            <select name="correct" class="form-select">
-                                <option value="">All</option>
-                                <option value="1" <?= $filter_correct === '1' ? 'selected' : '' ?>>Correct Only</option>
-                                <option value="0" <?= $filter_correct === '0' ? 'selected' : '' ?>>Incorrect Only</option>
-                            </select>
-                        </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold">Stage</label>
+                                <select name="stage" class="form-select" id="filterStage">
+                                    <option value="">All Stages</option>
+                                    <?php if (isset($stages) && $stages):
+                                        mysqli_data_seek($stages, 0);
+                                        while ($stage = $stages->fetch_assoc()): ?>
+                                            <option value="<?= $stage['id_stage'] ?>"
+                                                <?= $filter_stage == $stage['id_stage'] ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($stage['nama_stage']) ?>
+                                            </option>
+                                    <?php endwhile;
+                                    endif; ?>
+                                </select>
+                            </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold">Search User</label>
-                            <input type="text" name="user" class="form-control" 
-                                   placeholder="Name or email..." 
-                                   value="<?= htmlspecialchars($filter_user) ?>">
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold">Correctness</label>
+                                <select name="correct" class="form-select">
+                                    <option value="">All</option>
+                                    <option value="1" <?= $filter_correct === '1' ? 'selected' : '' ?>>Correct Only</option>
+                                    <option value="0" <?= $filter_correct === '0' ? 'selected' : '' ?>>Incorrect Only</option>
+                                </select>
+                            </div>
                         </div>
-
+                        <div class="stage-search">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Search User</label>
+                                <input type="text" name="user" class="form-control"
+                                    placeholder="Name or email..."
+                                    value="<?= htmlspecialchars($filter_user) ?>">
+                            </div>
+                        </div>
                         <div class="col-md-1 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary w-100">Filter</button>
                         </div>
@@ -280,7 +285,7 @@ $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
                 <div class="answers-container">
 
                     <?php if (empty($answers)): ?>
-                        
+
                         <div class="empty-state">
                             <i class="fas fa-clipboard-list"></i>
                             <h4>No Answers Found</h4>
@@ -289,7 +294,7 @@ $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
 
                     <?php else: ?>
 
-                        <?php foreach ($answers as $answer): 
+                        <?php foreach ($answers as $answer):
                             $isCorrect = $answer['is_correct'] == 1;
                             $statusClass = $isCorrect ? 'correct' : 'incorrect';
                             $statusIcon = $isCorrect ? '✅' : '❌';
@@ -356,8 +361,8 @@ $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
                                     </div>
 
                                     <div class="meta-item">
-                                        <button class="btn-view-detail" 
-                                                onclick="viewAnswerDetail('<?= $answer['id_answer'] ?>')">
+                                        <button class="btn-view-detail"
+                                            onclick="viewAnswerDetail('<?= $answer['id_answer'] ?>')">
                                             View Detail
                                         </button>
                                     </div>
@@ -407,63 +412,70 @@ $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
 
 
 <script>
-// Dynamic filters
-$('#filterCourse').on('change', function() {
-    const courseId = $(this).val();
-    
-    // Update lessons
-    $.get('../ajax/get_lessons.php', { id_courses: courseId }, function(data) {
-        let html = '<option value="">All Lessons</option>';
-        data.forEach(lesson => {
-            html += `<option value="${lesson.id_lesson}">${lesson.nama_lesson}</option>`;
-        });
-        $('#filterLesson').html(html);
-    });
-    
-    // Clear stages
-    $('#filterStage').html('<option value="">All Stages</option>');
-});
+    // Dynamic filters
+    $('#filterCourse').on('change', function() {
+        const courseId = $(this).val();
 
-$('#filterLesson').on('change', function() {
-    const lessonId = $(this).val();
-    
-    if (!lessonId) {
+        // Update lessons
+        $.get('../ajax/get_lessons.php', {
+            id_courses: courseId
+        }, function(data) {
+            let html = '<option value="">All Lessons</option>';
+            data.forEach(lesson => {
+                html += `<option value="${lesson.id_lesson}">${lesson.nama_lesson}</option>`;
+            });
+            $('#filterLesson').html(html);
+        });
+
+        // Clear stages
         $('#filterStage').html('<option value="">All Stages</option>');
-        return;
-    }
-    
-    $.get('../ajax/get_stages.php', { id_lesson: lessonId, type: 'quiz' }, function(data) {
-        let html = '<option value="">All Stages</option>';
-        data.forEach(stage => {
-            html += `<option value="${stage.id_stage}">${stage.nama_stage}</option>`;
-        });
-        $('#filterStage').html(html);
     });
-});
 
-// View answer detail with correct answer
-function viewAnswerDetail(answerId) {
-    $('#answerDetailModal').modal('show');
-    $('#answerDetailContent').html('<div class="text-center py-5"><div class="spinner-border text-primary"></div></div>');
-    
-    $.get('../ajax/get_answer_detail.php', { id_answer: answerId }, function(response) {
-        if (response.status === 'success') {
-            renderAnswerDetail(response.data);
-        } else {
-            $('#answerDetailContent').html(`<div class="alert alert-danger">${response.message}</div>`);
+    $('#filterLesson').on('change', function() {
+        const lessonId = $(this).val();
+
+        if (!lessonId) {
+            $('#filterStage').html('<option value="">All Stages</option>');
+            return;
         }
-    }).fail(function() {
-        $('#answerDetailContent').html('<div class="alert alert-danger">Failed to load data</div>');
-    });
-}
 
-function renderAnswerDetail(data) {
-    const isCorrect = data.is_correct == 1;
-    const statusBadge = isCorrect ? 
-        '<span class="badge bg-success fs-5">✅ Correct Answer</span>' : 
-        '<span class="badge bg-danger fs-5">❌ Incorrect Answer</span>';
-    
-    let html = `
+        $.get('../ajax/get_stages.php', {
+            id_lesson: lessonId,
+            type: 'quiz'
+        }, function(data) {
+            let html = '<option value="">All Stages</option>';
+            data.forEach(stage => {
+                html += `<option value="${stage.id_stage}">${stage.nama_stage}</option>`;
+            });
+            $('#filterStage').html(html);
+        });
+    });
+
+    // View answer detail with correct answer
+    function viewAnswerDetail(answerId) {
+        $('#answerDetailModal').modal('show');
+        $('#answerDetailContent').html('<div class="text-center py-5"><div class="spinner-border text-primary"></div></div>');
+
+        $.get('../ajax/get_answer_detail.php', {
+            id_answer: answerId
+        }, function(response) {
+            if (response.status === 'success') {
+                renderAnswerDetail(response.data);
+            } else {
+                $('#answerDetailContent').html(`<div class="alert alert-danger">${response.message}</div>`);
+            }
+        }).fail(function() {
+            $('#answerDetailContent').html('<div class="alert alert-danger">Failed to load data</div>');
+        });
+    }
+
+    function renderAnswerDetail(data) {
+        const isCorrect = data.is_correct == 1;
+        const statusBadge = isCorrect ?
+            '<span class="badge bg-success fs-5">✅ Correct Answer</span>' :
+            '<span class="badge bg-danger fs-5">❌ Incorrect Answer</span>';
+
+        let html = `
         <div class="text-center mb-4">
             ${statusBadge}
         </div>
@@ -487,84 +499,86 @@ function renderAnswerDetail(data) {
                 <strong>${data.user_answer}</strong>
             </div>
         </div>`;
-    
-    if (data.correct_answer) {
-        html += `
+
+        if (data.correct_answer) {
+            html += `
         <div class="mb-4">
             <h6 class="text-muted mb-2">✅ Correct Answer</h6>
             <div class="p-3 bg-success bg-opacity-10 rounded">
                 <strong>${data.correct_answer}</strong>
             </div>
         </div>`;
-    }
-    
-    if (data.all_options && data.all_options.length > 0) {
-        html += `
+        }
+
+        if (data.all_options && data.all_options.length > 0) {
+            html += `
         <div class="mb-4">
             <h6 class="text-muted mb-2">All Options</h6>
             <div class="list-group">`;
-        
-        data.all_options.forEach(opt => {
-            const isUserAnswer = opt.option_text === data.user_answer;
-            const isCorrectOption = opt.is_correct == 1;
-            
-            let badgeClass = '';
-            let badge = '';
-            
-            if (isCorrectOption) {
-                badgeClass = 'list-group-item-success';
-                badge = '<span class="badge bg-success">✓ Correct</span>';
-            }
-            
-            if (isUserAnswer && !isCorrectOption) {
-                badgeClass = 'list-group-item-danger';
-                badge = '<span class="badge bg-danger">User chose this</span>';
-            }
-            
-            html += `
+
+            data.all_options.forEach(opt => {
+                const isUserAnswer = opt.option_text === data.user_answer;
+                const isCorrectOption = opt.is_correct == 1;
+
+                let badgeClass = '';
+                let badge = '';
+
+                if (isCorrectOption) {
+                    badgeClass = 'list-group-item-success';
+                    badge = '<span class="badge bg-success">✓ Correct</span>';
+                }
+
+                if (isUserAnswer && !isCorrectOption) {
+                    badgeClass = 'list-group-item-danger';
+                    badge = '<span class="badge bg-danger">User chose this</span>';
+                }
+
+                html += `
                 <div class="list-group-item ${badgeClass}">
                     ${opt.option_text} ${badge}
                 </div>`;
-        });
-        
-        html += `
+            });
+
+            html += `
             </div>
         </div>`;
-    }
-    
-    html += `
+        }
+
+        html += `
         <div class="text-muted small">
             <i class="fas fa-clock"></i> Submitted at: ${new Date(data.submitted_at).toLocaleString()}
         </div>`;
-    
-    $('#answerDetailContent').html(html);
-}
 
-// Export function
-function exportAnswers() {
-    const rows = [];
-    rows.push(['User', 'Email', 'Course', 'Lesson', 'Stage', 'Question', 'Answer', 'Correct', 'Submitted At']);
-    
-    $('.answer-card').each(function() {
-        const row = [];
-        row.push($(this).find('.user-details-card h5').text());
-        row.push($(this).find('.user-details-card small').text());
-        row.push($(this).find('.course-badge').text());
-        row.push($(this).find('.meta-item:eq(1) span').text());
-        row.push($(this).find('.stage-badge').text());
-        row.push($(this).find('.question-text').text().trim());
-        row.push($(this).find('.answer-text').text().trim());
-        row.push($(this).find('.status-badge').text().includes('Correct') ? 'Yes' : 'No');
-        row.push($(this).find('.meta-item:has(.fa-clock) span').text());
-        rows.push(row);
-    });
-    
-    const csv = rows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `stage_answers_${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-}
+        $('#answerDetailContent').html(html);
+    }
+
+    // Export function
+    function exportAnswers() {
+        const rows = [];
+        rows.push(['User', 'Email', 'Course', 'Lesson', 'Stage', 'Question', 'Answer', 'Correct', 'Submitted At']);
+
+        $('.answer-card').each(function() {
+            const row = [];
+            row.push($(this).find('.user-details-card h5').text());
+            row.push($(this).find('.user-details-card small').text());
+            row.push($(this).find('.course-badge').text());
+            row.push($(this).find('.meta-item:eq(1) span').text());
+            row.push($(this).find('.stage-badge').text());
+            row.push($(this).find('.question-text').text().trim());
+            row.push($(this).find('.answer-text').text().trim());
+            row.push($(this).find('.status-badge').text().includes('Correct') ? 'Yes' : 'No');
+            row.push($(this).find('.meta-item:has(.fa-clock) span').text());
+            rows.push(row);
+        });
+
+        const csv = rows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+        const blob = new Blob([csv], {
+            type: 'text/csv'
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `stage_answers_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+    }
 </script>
