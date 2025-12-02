@@ -53,8 +53,8 @@ include "../includes/navbar.php";
 ?>
 <style>
     :root {
-        --accent-1: #4e73df;
-        --accent-2: #6f42c1;
+        --accent-1: #17153B;
+        --accent-2: #2E236C;
     }
 
     .container-actions {
@@ -384,7 +384,7 @@ include "../includes/navbar.php";
             <div class="d-flex justify-content-between align-items-start mb-3">
                 <div>
                     <h2>Stage Manager</h2>
-                    <p class="text-muted">Stage dibuat & dikelompokkan per <strong>Lesson</strong>. Gunakan Generate untuk membuat stage untuk lesson tertentu.</p>
+                    <p>Stage dibuat & dikelompokkan per <strong>Lesson</strong>. Gunakan Generate untuk membuat stage untuk lesson tertentu.</p>
                 </div>
                 <div class="container-actions">
                     <button class="mimo-btn mimo-btn-primary" data-bs-toggle="modal" data-bs-target="#generateModal">+ Generate Stage</button>

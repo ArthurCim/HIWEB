@@ -21,8 +21,8 @@
         :root {
             --bg: #f5f7fb;
             --panel: #ffffff;
-            --accent-1: #4e73df;
-            --accent-2: #6f42c1;
+            --accent-1: #17153B;
+            --accent-2: #2E236C;
             --muted: #6b7280;
             --success: #10b981;
             --danger: #ef4444;
@@ -44,7 +44,7 @@
         body {
             margin: 0;
             font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-            background: var(--bg);
+            background: linear-gradient(180deg, var(--accent-1), var(--accent-2));
             color: #111827;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -113,13 +113,17 @@
             border-radius: var(--radius);
             padding: 16px;
             box-shadow: 0 6px 18px rgba(16, 24, 40, 0.04);
-            height: fit-content;
+            height: 730px;
+            width: 240px;
+            margin-left: 20px;
+            margin-right: 20px;
+            background-color: rgba(255,255,255,0.25);
         }
 
         .sidebar h3 {
             margin: 0 0 8px 0;
             font-size: 14px;
-            color: var(--muted);
+            color: #fff;
         }
 
         .nav-list {
@@ -136,14 +140,14 @@
             gap: 10px;
             align-items: center;
             padding: 8px 10px;
-            color: #374151;
+            color: #ffffffff;
             text-decoration: none;
             border-radius: 8px;
             font-size: 14px;
         }
 
         .nav-list a:hover {
-            background: #f3f4f6
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .nav-list a.active {
@@ -154,7 +158,33 @@
 
         .main {
             min-height: 60vh;
+            margin-right: 20px;
         }
+
+        .main h2 {
+            color: #fff;
+        }
+
+        .main p {
+            color: #fff;
+        }
+
+        .card {
+            background-color: rgba(255,255,255,0.25);
+        }
+
+        .card .title {
+            color: #fff;
+        }
+
+        .card .value {
+            color: #fff;
+        }
+
+        .card .meta {
+            color: #fff;
+        }
+
 
         .page-header {
             margin-bottom: 16px;
@@ -164,8 +194,30 @@
             overflow: auto;
             background: var(--panel);
             border-radius: 12px;
-            padding: 12px;
+            padding: 12PX;
             box-shadow: 0 6px 18px rgba(16, 24, 40, 0.04);
+            background-color: rgba(255,255,255,0.25);
+
+        }
+
+        .table-panel th {
+            color: #fff;
+        }
+
+        .table-panel td {
+            color: #fff;
+        }
+
+        .widget {
+            background-color: rgba(255,255,255,0.25);
+        }
+
+        .widget h3 {
+            color: #fff;
+        }
+
+        .widget span {
+            color: #fff;
         }
 
         .mimo-btn {
