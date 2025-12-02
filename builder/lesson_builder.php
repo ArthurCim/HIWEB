@@ -1,185 +1,541 @@
 <?php
+// stage_manager.php
 include "../db.php";
 session_start();
-
 if (!isset($_SESSION['login'])) {
-    header("Location: ../login/login.php");
+    header('Location:../login/login.php');
     exit();
 }
-
 $page_title = "Lesson Builder";
-$page_css   = "lesson_builder.css";
 
+// ambil courses
 $courses_q = $conn->query("SELECT id_courses, nama_courses FROM courses ORDER BY nama_courses ASC");
 
+// ambil all lessons + courses + stage, nanti kita group per lesson
 $sql = "SELECT 
-            l.id_lesson, l.nama_lesson,
+            l.id_lesson, l.nama_lesson, 
             c.id_courses, c.nama_courses,
             s.id_stage, s.nama_stage, s.deskripsi, s.type
         FROM lesson l
         LEFT JOIN courses c ON l.id_courses = c.id_courses
         LEFT JOIN stage s ON s.id_lesson = l.id_lesson
-        ORDER BY c.nama_courses ASC, l.nama_lesson ASC,
-                 CAST(REGEXP_REPLACE(s.nama_stage, '[^0-9]', '') AS UNSIGNED) ASC";
-
+        ORDER BY c.nama_courses ASC, l.nama_lesson ASC, 
+                CAST(REGEXP_REPLACE(s.nama_stage, '[^0-9]', '') AS UNSIGNED) ASC";
 $res = $conn->query($sql);
 
+// build groups
 $groups = [];
 if ($res && $res->num_rows) {
     while ($r = $res->fetch_assoc()) {
         $lid = $r['id_lesson'];
-
         if (!isset($groups[$lid])) {
             $groups[$lid] = [
-                "id_lesson"   => $lid,
-                "nama_lesson" => $r["nama_lesson"],
-                "id_courses"  => $r["id_courses"],
-                "nama_courses" => $r["nama_courses"],
-                "stages"      => []
+                'id_lesson' => $lid,
+                'nama_lesson' => $r['nama_lesson'],
+                'id_courses' => $r['id_courses'],
+                'nama_courses' => $r['nama_courses'],
+                'stages' => []
             ];
         }
-
-        if (!empty($r["id_stage"])) {
-            $groups[$lid]["stages"][] = [
-                "id_stage"   => $r["id_stage"],
-                "nama_stage" => $r["nama_stage"],
-                "deskripsi"  => $r["deskripsi"],
-                "type"       => $r["type"]
+        if (!empty($r['id_stage'])) {
+            $groups[$lid]['stages'][] = [
+                'id_stage' => $r['id_stage'],
+                'nama_stage' => $r['nama_stage'],
+                'deskripsi' => $r['deskripsi'],
+                'type' => $r['type']
             ];
         }
     }
 }
+
+include "../includes/header.php";
+include "../includes/navbar.php";
 ?>
+<style>
+    :root {
+        --accent-1: #4e73df;
+        --accent-2: #6f42c1;
+    }
 
-<!DOCTYPE html>
-<html lang="id">
+    .container-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: flex-end;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $page_title; ?></title>
+    .stage-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
 
-    <link rel="stylesheet" href="<?= $page_css; ?>">
+    @media (max-width:1100px) {
+        .stage-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
 
-</head>
-    
-<body>
-    <?php include "../includes/header.php"; ?>
+    @media (max-width:800px) {
+        .stage-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
 
-    <div class="container">
-        <div class="row">
-            <?php include "../includes/sidebar.php"; ?>
+    @media (max-width:520px) {
+        .stage-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 
-            <!-- Main Content -->
-            <main class="main col">
+    .card-stage {
+        position: relative;
+        background: #fff;
+        padding: 16px;
+        border-radius: 10px;
+        box-shadow: 0 8px 22px rgba(28, 30, 37, 0.06);
+        transition: transform .12s
+    }
 
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <h2>Stage Manager</h2>
-                        <p class="text-muted">
-                            Stage dibuat & dikelompokkan per <strong>Lesson</strong>.
-                            Gunakan Generate untuk membuat stage baru.
-                        </p>
-                    </div>
-                    <div>
-                        <button class="mimo-btn mimo-btn-primary" data-bs-toggle="modal" data-bs-target="#generateModal">
-                            + Generate Stage
-                        </button>
-                    </div>
+    .card-stage:hover {
+        transform: translateY(-6px)
+    }
+
+    .card-stage .accent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        border-radius: 10px 0 0 10px;
+        background: linear-gradient(180deg, var(--accent-1), var(--accent-2))
+    }
+
+    .card-stage .title {
+        font-weight: 700;
+        font-size: 1.05rem;
+        margin-bottom: 6px
+    }
+
+    .card-stage .meta {
+        font-size: .9rem;
+        color: #556;
+        margin-bottom: 8px
+    }
+
+    .card-stage .desc {
+        font-size: .9rem;
+        color: #666;
+        min-height: 46px
+    }
+
+    .card-stage .actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 10px
+    }
+
+    .btn-small {
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: .85rem;
+        cursor: pointer;
+        border: none
+    }
+
+    .btn-edit {
+        background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+        color: #fff
+    }
+
+    .btn-delete {
+        background: #fff;
+        border: 1px solid #f3c6c9;
+        color: #842029
+    }
+
+    .badge-type {
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: .78rem;
+        font-weight: 600;
+        color: #fff
+    }
+
+    .badge-materi {
+        background: linear-gradient(90deg, var(--accent-1), var(--accent-2))
+    }
+
+    .badge-quiz {
+        background: #ff7b7b
+    }
+
+    .filter-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+        align-items: center
+    }
+
+    .filter-row .form-control {
+        min-width: 200px;
+        max-width: 420px
+    }
+
+    .empty-ill {
+        text-align: center;
+        padding: 28px;
+        color: #888;
+        border: 2px dashed #eee;
+        border-radius: 8px
+    }
+
+    .lesson-block {
+        margin-bottom: 18px;
+        padding: 12px;
+        border-radius: 10px;
+        background: #fbfbff
+    }
+
+    /* Container horizontal scroll */
+    .stage-scroll {
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        padding-bottom: 10px;
+    }
+
+    /* Grid diubah jadi flex supaya bisa di-scroll horizontal */
+    .stage-grid.flex-nowrap {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .card-stage {
+        flex: 0 0 260px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        padding: 12px 16px;
+        transition: transform 0.2s;
+    }
+
+    .card-stage:hover {
+        transform: translateY(-4px);
+    }
+
+    /* Scrollbar styling */
+    .stage-scroll::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .stage-scroll::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+
+    .stage-scroll::-webkit-scrollbar-thumb:hover {
+        background: #aaa;
+    }
+
+    /* Modal Builder Fixes */
+    #builderModal .modal-dialog {
+        max-width: 90vw !important;
+        margin: 1.75rem auto;
+    }
+
+    #builderModal .modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 1.5rem;
+    }
+
+    #builderModal .modal-body::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #builderModal .modal-body::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    #builderModal .modal-body::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+    #builderModal .modal-body::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    #builderWrap {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .builder-stage {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .builder-stage textarea,
+    .builder-stage input[type="text"],
+    .builder-stage select {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .builder-stage .form-control {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Quiz Builder Styles */
+    .option-item {
+        transition: all 0.3s ease;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+    }
+
+    .option-item.border-success {
+        border: 2px solid #198754 !important;
+    }
+
+    .option-item .input-group-text {
+        font-weight: bold;
+        min-width: 40px;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .is-correct {
+        transform: scale(1.2);
+        margin-right: 8px;
+    }
+
+    .quiz-isi.is-invalid,
+    .option-text.is-invalid {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    /* Visual feedback untuk jawaban benar */
+    .option-item:has(.is-correct:checked) {
+        background-color: rgba(25, 135, 84, 0.05);
+        border-color: #198754;
+    }
+
+    .option-item:has(.is-correct:checked) .input-group-text {
+        background-color: #198754 !important;
+        color: white !important;
+    }
+
+    /* Hover effects */
+    .option-item:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    /* Required field indicators */
+    .quiz-isi:required,
+    .options-wrap label:has(+ .alert) {
+        font-weight: 600;
+    }
+
+    /* Alert styling */
+    .alert-info {
+        background-color: #e7f3ff;
+        border-color: #b6d4fe;
+        color: #084298;
+    }
+
+    .correct-answer-badge {
+        background: #198754;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .option-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+    .quiz-validation-feedback {
+        font-size: 0.875rem;
+        margin-top: 4px;
+    }
+
+    .text-required {
+        color: #dc3545;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <?php include "../includes/sidebar.php"; ?>
+        <main class="main col-10">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h2>Stage Manager</h2>
+                    <p class="text-muted">Stage dibuat & dikelompokkan per <strong>Lesson</strong>. Gunakan Generate untuk membuat stage untuk lesson tertentu.</p>
                 </div>
+                <div class="container-actions">
+                    <button class="mimo-btn mimo-btn-primary" data-bs-toggle="modal" data-bs-target="#generateModal">+ Generate Stage</button>
+                </div>
+            </div>
 
-                <!-- Filter -->
-                <div class="filter-row mb-3">
-                    <select id="filterCourse" class="form-control">
-                        <option value="">Semua Course</option>
-                        <?php
-                        if ($courses_q && $courses_q->num_rows) {
-                            $courses_q->data_seek(0);
-                            while ($c = $courses_q->fetch_assoc()) {
-                                echo '<option value="' . $c["id_courses"] . '">' . htmlspecialchars($c["nama_courses"]) . '</option>';
-                            }
+            <div class="filter-row mb-3">
+                <select id="filterCourse" class="form-control">
+                    <option value="">Semua Course</option>
+                    <?php if ($courses_q && $courses_q->num_rows) {
+                        $courses_q->data_seek(0);
+                        while ($c = $courses_q->fetch_assoc()) {
+                            echo '<option value="' . htmlspecialchars($c['id_courses']) . '">' . htmlspecialchars($c['nama_courses']) . '</option>';
                         }
-                        ?>
-                    </select>
+                        $courses_q->data_seek(0);
+                    } ?>
+                </select>
 
-                    <select id="filterLesson" class="form-control">
-                        <option value="">Semua Lesson</option>
-                    </select>
+                <select id="filterLesson" class="form-control">
+                    <option value="">Semua Lesson</option>
+                </select>
 
-                    <input id="searchStage" class="form-control" placeholder="Cari nama/deskripsi stage..." style="min-width:260px;">
-                </div>
+                <input id="searchStage" class="form-control" placeholder="Cari nama atau deskripsi stage..." style="min-width:260px;">
+            </div>
 
-                <!-- Cards -->
-                <div id="cardsWrap">
-                    <?php if (!empty($groups)): ?>
-                        <?php foreach ($groups as $lesson): ?>
-                            <div class="lesson-block mb-4"
-                                data-course="<?= htmlspecialchars($lesson['id_courses']) ?>"
-                                data-lesson="<?= htmlspecialchars($lesson['id_lesson']) ?>">
+            <div id="cardsWrap">
+                <?php if (!empty($groups)): ?>
+                    <?php foreach ($groups as $lesson): ?>
+                        <div class="lesson-block mb-4" data-course="<?= htmlspecialchars($lesson['id_courses']) ?>" data-lesson="<?= htmlspecialchars($lesson['id_lesson']) ?>">
+                            <div class="mb-2 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong><?= htmlspecialchars($lesson['nama_lesson']) ?></strong>
+                                    <div class="text-muted small"><?= htmlspecialchars($lesson['nama_courses']) ?></div>
+                                </div>
+                                <div>
+                                    <button class="mimo-btn mimo-btn-sm me-2" onclick="reorderStages('<?= htmlspecialchars($lesson['id_lesson']) ?>')">Reorder Stages</button>
+                                    <button class="mimo-btn mimo-btn-sm" onclick="openGenerateForLesson('<?= htmlspecialchars($lesson['id_lesson']) ?>')">Generate untuk lesson</button>
+                                </div>
+                            </div>
 
-                                <div class="mb-2 d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <strong><?= htmlspecialchars($lesson['nama_lesson']) ?></strong>
-                                        <div class="text-muted small"><?= htmlspecialchars($lesson['nama_courses']) ?></div>
-                                    </div>
-                                    <div>
-                                        <button class="mimo-btn mimo-btn-sm me-2" onclick="reorderStages('<?= $lesson['id_lesson'] ?>')">Reorder</button>
-                                        <button class="mimo-btn mimo-btn-sm" onclick="openGenerateForLesson('<?= $lesson['id_lesson'] ?>')">Generate</button>
+                            <?php if (!empty($lesson['stages'])): ?>
+                                <div class="stage-scroll">
+                                    <div class="stage-grid flex-nowrap">
+                                        <?php foreach ($lesson['stages'] as $s):
+                                            $escName = htmlspecialchars($s['nama_stage']);
+                                            $escDesc = htmlspecialchars($s['deskripsi']);
+                                            $type = $s['type'];
+                                            $idStage = $s['id_stage'];
+                                        ?>
+                                            <div class="card-stage me-3" data-course="<?= htmlspecialchars($lesson['id_courses']) ?>" data-lesson="<?= htmlspecialchars($lesson['id_lesson']) ?>" data-title="<?= strtolower($escName) ?>" data-desc="<?= strtolower($escDesc) ?>">
+                                                <div class="accent"></div>
+                                                <div class="title"><?= $escName ?></div>
+                                                <div class="meta">
+                                                    <strong><?= htmlspecialchars($lesson['nama_lesson']) ?></strong> • <?= htmlspecialchars($lesson['nama_courses']) ?>
+                                                    &nbsp;<span class="badge-type <?= $type === 'materi' ? 'badge-materi' : 'badge-quiz' ?>"><?= strtoupper($type) ?></span>
+                                                </div>
+                                                <div class="desc"><?= nl2br($escDesc ?: '-') ?></div>
+                                                <div class="actions"></div>
+                                            </div>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
+                            <?php else: ?>
+                                <div class="empty-ill">Belum ada stage untuk lesson ini. Gunakan tombol <strong>Generate</strong>.</div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="empty-ill">Belum ada lesson / stage. Buat lesson terlebih dahulu atau gunakan Generate.</div>
+                <?php endif; ?>
+            </div>
+        </main>
+    </div>
+</div>
 
-                                <?php if (!empty($lesson['stages'])): ?>
-                                    <div class="stage-scroll">
-                                        <div class="stage-grid">
-
-                                            <?php foreach ($lesson['stages'] as $s): ?>
-                                                <?php
-                                                $escName = htmlspecialchars($s['nama_stage']);
-                                                $escDesc = htmlspecialchars($s['deskripsi']);
-                                                ?>
-                                                <div class="card-stage me-3"
-                                                    data-course="<?= $lesson['id_courses'] ?>"
-                                                    data-lesson="<?= $lesson['id_lesson'] ?>"
-                                                    data-title="<?= strtolower($escName) ?>"
-                                                    data-desc="<?= strtolower($escDesc) ?>">
-
-                                                    <div class="accent"></div>
-                                                    <div class="title"><?= $escName ?></div>
-                                                    <div class="meta">
-                                                        <strong><?= htmlspecialchars($lesson['nama_lesson']) ?></strong> •
-                                                        <?= htmlspecialchars($lesson['nama_courses']) ?>
-                                                        <span class="badge-type <?= $s['type'] === 'materi' ? 'badge-materi' : 'badge-quiz' ?>">
-                                                            <?= strtoupper($s['type']) ?>
-                                                        </span>
-                                                    </div>
-                                                    <div class="desc"><?= nl2br($escDesc ?: "-") ?></div>
-                                                </div>
-                                            <?php endforeach; ?>
-
-                                        </div>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="empty-ill">Belum ada stage. Gunakan tombol <strong>Generate</strong>.</div>
-                                <?php endif; ?>
-
-                            </div>
-                        <?php endforeach; ?>
-
-                    <?php else: ?>
-                        <div class="empty-ill">Belum ada lesson / stage.</div>
-                    <?php endif; ?>
+<!-- Modal Generate Step 1 -->
+<div class="modal fade" id="generateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="generateStep1" class="modal-content" novalidate>
+            <div class="modal-header">
+                <h5 class="modal-title">Generate Stage — Step 1</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label>Pilih Course <span class="text-danger">*</span></label>
+                    <select id="genCourse" name="id_courses" class="form-control" required>
+                        <option value="">-- Pilih Course Terlebih Dahulu --</option>
+                        <?php if ($courses_q && $courses_q->num_rows) {
+                            mysqli_data_seek($courses_q, 0);
+                            while ($c = $courses_q->fetch_assoc()) {
+                                echo '<option value="' . htmlspecialchars($c['id_courses']) . '">' . htmlspecialchars($c['nama_courses']) . '</option>';
+                            }
+                            mysqli_data_seek($courses_q, 0);
+                        } ?>
+                    </select>
+                    <div class="form-text">Pilih course terlebih dahulu untuk melihat daftar lesson</div>
                 </div>
 
-            </main>
-        </div>
+                <div class="mb-3">
+                    <label>Pilih Lesson <span class="text-danger">*</span></label>
+                    <select id="genLesson" name="id_lesson" class="form-control" disabled required>
+                        <option value="">Pilih course terlebih dahulu...</option>
+                    </select>
+                    <div class="form-text" id="lessonHelpText" style="display:none;">Pilih lesson yang akan dibuatkan stage</div>
+                </div>
+
+                <div class="mb-3">
+                    <label>Jumlah Stage <span class="text-danger">*</span></label>
+                    <input type="number" id="genCount" name="count" min="1" max="200" class="form-control" value="5" required>
+                    <div class="form-text">Contoh: 5 → akan membuat form builder untuk Stage 1 sampai Stage 5</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Lanjutkan ke Builder</button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <?php include "../includes/footer.php"; ?>
+<!-- Modal Builder Step 2 -->
+<div class="modal fade" id="builderModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <form id="builderForm" class="modal-content" enctype="multipart/form-data">
+            <div class="modal-header">
+                <h5 class="modal-title">Stage Builder — Isi detail tiap Stage</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <div>
+                            <strong id="builderInfo"></strong>
+                        </div>
+                        <div>
+                            <button type="button" id="addStageBtn" class="btn btn-sm btn-outline-secondary">Tambah Stage</button>
+                            <button type="button" id="resetBuilderBtn" class="btn btn-sm btn-outline-danger">Reset</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="builderWrap"></div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="id_lesson" id="builder_lesson">
+                <button type="submit" class="btn btn-success">Generate & Simpan Semua</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-</body>
-
-</html>
-
+<?php include "../includes/footer.php"; ?>
 
 <script>
     // Global variables

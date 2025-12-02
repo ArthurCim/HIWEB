@@ -1,9 +1,3 @@
-<?
-$_SESSION['user_id'] = $user['id'];
-$_SESSION['username'] = $user['username'];
-$_SESSION['profile_pic'] = $user['profile_pic']; // nama file foto user
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +8,8 @@ $_SESSION['profile_pic'] = $user['profile_pic']; // nama file foto user
     <link href="landing.css" rel="stylesheet">
 
 </head>
+
+
 
 <body>
     <!-- Header -->
@@ -51,8 +47,86 @@ $_SESSION['profile_pic'] = $user['profile_pic']; // nama file foto user
 
 
     </header>
-
     <!-- Home Section -->
+     <?php if (isset($_SESSION['login']) && $_SESSION['role'] === 'user'): ?>
+     <section id="dashboard_user" class="section_user">
+        <div class="container">
+            <main class="main">
+                <div class="widget user-widget clean">
+
+                    <div class="profile-area">
+                        <div class="profile-pic clean-hover">
+                            <img src="<?= $user['foto'] ?? 'includes/assets/hiyaa.jpg'; ?>" alt="Foto Profil">
+                        </div>
+
+                        <div class="profile-info">
+                            <h3><?= $user['nama'] ?? 'User'; ?></h3>
+                            <p><?= $user['email'] ?? 'email@example.com'; ?></p>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <h3 class="section-title">Your Activities</h3>
+
+                    <div class="kv full">
+                        <span>Learning coding for</span>
+                        <span class="badge success">8 days</span>
+                    </div>
+
+                    <div class="kv full">
+                        <span>Active Streak</span>
+                        <span class="badge success">2 days</span>
+                    </div>
+
+                    <div class="kv full">
+                        <span>Energy</span>
+                        <span class="badge warn">8</span>
+                    </div>
+
+                    <!-- PREMIUM CLEAN BOX -->
+                    <div class="premium-box clean-premium">
+                        <div class="premium-left">
+                            <span class="premium-badge">Premium</span>
+
+                            <div class="premium-text">
+                                <div>Status: <strong>Aktif</strong></div>
+                                <div class="expire">Expire: 12 Feb 2026</div>
+                            </div>
+                        </div>
+
+                        <button class="premium-btn">Manage</button>
+                    </div>
+
+                </div>
+
+                <!-- STAT CARDS CLEAN MODE -->
+                <div class="stats">
+                    <?php
+                    $cards = [
+                        ["Total Course", "2", 100],
+                        ["Last Course", "Pemrograman Web", 8],
+                        ["Last Stage", "Mantap Bro Bisa", 15],
+                    ];
+
+                    foreach ($cards as $c): ?>
+                        <div class="card clean">
+                            <div class="infoo">
+                                <div class="titlee"><?= $c[0]; ?></div>
+                                <div class="valuee"><?= $c[1]; ?></div>
+                            </div>
+
+                            <div class="circular-progress" data-percentage="<?= $c[2]; ?>">
+                                <span class="progress-value"><?= $c[2]; ?>%</span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+            </main>
+        </div>
+     </section>
+     <?php endif; ?>
     <section id="home" class="section">
         <div class="coverflow-wrapper">
             <div class="info">
@@ -317,6 +391,31 @@ $_SESSION['profile_pic'] = $user['profile_pic']; // nama file foto user
     </div>
 
     <script src="landing.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Dropdown script
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggles = document.querySelectorAll('.dropdown-toggle');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    toggle.nextElementSibling.classList.toggle('show');
+                    toggle.classList.toggle('active');
+                });
+            });
+        });
+
+        // Circular progress animation
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".circular-progress").forEach(el => {
+                const val = el.getAttribute("data-percentage");
+                el.style.setProperty("--percentage", val);
+                el.querySelector(".progress-value").innerText = val + "%";
+            });
+        });
+    </script>
+    
 
 </body>
 

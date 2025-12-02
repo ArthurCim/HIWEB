@@ -50,3 +50,5 @@ if ($conn->connect_error) {
 
 // echo "✅ Koneksi ke Azure MySQL berhasil (SSL aktif)";
 ?>
+
+
