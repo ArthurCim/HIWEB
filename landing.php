@@ -29,17 +29,25 @@
             <a href="#home" class="menu-item active">Home</a>
             <a href="#about" class="menu-item">About</a>
             <a href="#contact" class="menu-item">Contact</a>
-            <a href="#contact" class="menu-item">Contact</a>
+
             <?php if (isset($_SESSION['login']) && $_SESSION['role'] === 'user'): ?>
-                <div class="nav-actions">
-                    <a href="dashboard_user.php"  class="profile-pic">Logout</a>
+
+                <div class="profile-wrapper">
+                    <img src="<?php echo $_SESSION['foto'] ?? 'assets/hiyaa.jpg'; ?>"
+                        class="profile-pic" id="profileBtn">
+
+                    <div class="dropdown-menu" id="profileDropdown">
+                        <a href="dashboard_user.php">👤 Profile</a>
+                        <a href="#" id="logoutBtn" class="logout">🚪 Logout</a>
+                    </div>
                 </div>
+
             <?php else: ?>
-                <a href="../HIWEB/login/login.php" class="login-btn">Login</a>
+                <div class="nav-actions">
+                    <a href="login/login.php" id="loginBtn" class="login">Login</a>
+                </div>
             <?php endif; ?>
-
         </nav>
-
         <div class="menu-toggle" id="menuToggle">
             <span></span>
             <span></span>
@@ -337,6 +345,23 @@
             });
         });
     </script>
+
+    <script>
+        const profileBtn = document.getElementById("profileBtn");
+        const dropdown = document.getElementById("profileDropdown");
+
+        profileBtn.addEventListener("click", () => {
+            dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+        });
+
+        // klik di luar dropdown → tutup
+        document.addEventListener("click", function(e) {
+            if (!profileBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+    </script>
+
 
     <script>
         document.getElementById("logoutBtn").addEventListener("click", function(e) {

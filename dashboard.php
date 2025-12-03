@@ -1,6 +1,18 @@
 <?php
+include "db.php";
+
+$result = $conn->query("SELECT COUNT(*) AS total_user FROM users");
+$data = $result->fetch_assoc();
+$total_user = $data['total_user'];
+
+$course = $conn->query("SELECT COUNT(*) AS total_course FROM courses");
+$total_course = $course->fetch_assoc()['total_course'];
+
+
+
+
 $page_title = "Dashboard";
-$page_css   = "dashboard.css";  // otomatis load CSS ini
+$page_css   = "dashboard.css";  
 include "includes/header.php";
 ?>
   
@@ -10,24 +22,24 @@ include "includes/header.php";
     <?php include "includes/sidebar.php"; ?>
 
     <main class="main col">
-      <h2>Selamat datang di kelas!</h2>
-      <p>Halo rek!</p>
+        <h2>Selamat datang di kelas!</h2>
+        <p>Halo rek!</p>
 
       <div class="stats">
         <div class="card">
           <div class="title">Total User</div>
-          <div class="value">1,240</div>
+          <div class="value"><?php echo $total_user; ?></div>
           <div class="meta">+12% dari bulan lalu</div>
         </div>
         <div class="card">
-          <div class="title">Transaksi</div>
-          <div class="value">3,560</div>
+          <div class="title">Total Course</div>
+          <div class="value"><?php echo $total_course; ?></div>
           <div class="meta">+8% dari bulan lalu</div>
         </div>
         <div class="card">
-          <div class="title">Revenue</div>
-          <div class="value">Rp 12.500.000</div>
-          <div class="meta">+15% dari bulan lalu</div>
+          <div class="title">Total User Premium</div>
+          <div class="value">200</div>
+          <div class="meta">Revenue : </div>
         </div>
       </div>
 
@@ -38,7 +50,7 @@ include "includes/header.php";
               <tr>
                 <th>Nama</th>
                 <th>Status</th>
-                <th>Tanggal</th>
+                <th>Premium</th>
               </tr>
             </thead>
             <tbody>
