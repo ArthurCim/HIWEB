@@ -63,6 +63,10 @@
             padding-top: 72px;
             /* space for fixed navbar */
         }
+        .main {
+            margin-left: 295px;
+            margin-right: 20px;
+        }
 
         .navbar {
             position: fixed;
@@ -129,6 +133,7 @@
             margin-left: 20px;
             margin-right: 20px;
             background-color: rgba(255,255,255,0.25);
+            position: fixed;
         }
 
         .sidebar h3 {
