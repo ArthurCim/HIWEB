@@ -118,8 +118,7 @@ $avg_progress = $progressData ? array_sum(array_column($progressData, 'progress_
 $completed_count = count(array_filter($progressData, fn($d) => $d['progress_percentage'] == 100));
 $in_progress_count = count(array_filter($progressData, fn($d) => $d['progress_percentage'] > 0 && $d['progress_percentage'] < 100));
 
-include "../includes/header.php";
-include "../includes/navbar.php";
+include "../includes/headpog.php";
 ?>
 
 <style>
@@ -751,5 +750,21 @@ include "../includes/navbar.php";
         a.href = url;
         a.download = `user_progress_${new Date().toISOString().split('T')[0]}.csv`;
         a.click();
-    }
+    }$('#logoutBtn').on('click', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Yakin ingin logout?',
+                text: "Anda akan keluar dari sesi ini.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, logout!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../login/logout.php";
+                }
+            });
+        });
 </script>

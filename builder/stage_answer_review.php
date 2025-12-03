@@ -131,8 +131,7 @@ $correct_answers = count(array_filter($answers, fn($a) => $a['is_correct'] == 1)
 $incorrect_answers = count(array_filter($answers, fn($a) => $a['is_correct'] == 0));
 $accuracy = $total_answers > 0 ? ($correct_answers / $total_answers) * 100 : 0;
 
-include "../includes/header.php";
-include "../includes/navbar.php";
+include "../includes/headpog.php";
 ?>
 
 <style>
@@ -805,5 +804,21 @@ function exportAnswers() {
     a.href = url;
     a.download = `stage_answers_${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
-}
+}$('#logoutBtn').on('click', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Yakin ingin logout?',
+                text: "Anda akan keluar dari sesi ini.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, logout!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../login/logout.php";
+                }
+            });
+        });
 </script>
