@@ -48,8 +48,7 @@ if ($res && $res->num_rows) {
     }
 }
 
-include "../includes/header.php";
-include "../includes/navbar.php";
+include "../includes/headpog.php";
 ?>
 <style>
     :root {
@@ -1640,5 +1639,21 @@ include "../includes/navbar.php";
                 Swal.fire('Error', 'Terjadi kesalahan server', 'error');
             }
         });
-    }
+    }$('#logoutBtn').on('click', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Yakin ingin logout?',
+                text: "Anda akan keluar dari sesi ini.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, logout!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../login/logout.php";
+                }
+            });
+        });
 </script>

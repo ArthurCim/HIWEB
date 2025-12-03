@@ -10,7 +10,7 @@
     <?php endif; ?>
     <nav class="navbar">
     <div class="brand">
-        <img src="assets/locoput.svg" alt="Logo">
+        <img src="../assets/locoput.svg" alt="Logo">
         <h1>CodePlay</h1>
     </div>
     <div class="nav-actions">
@@ -27,6 +27,7 @@
 
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
         :root {
             --bg: #f5f7fb;

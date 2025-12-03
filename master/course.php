@@ -10,8 +10,8 @@ $page_title = "Data Course";
 $result = mysqli_query($conn, "SELECT * FROM courses ORDER BY id_courses ASC");
 
 // include template
-include "../includes/header.php";
-include "../includes/navbar.php";
+include "../includes/headpog.php";
+
 ?>
 <div class="container-fluid">
     <div class="row">
@@ -219,7 +219,7 @@ include "../includes/navbar.php";
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "login/logout.php";
+                    window.location.href = "../login/logout.php";
                 }
             });
         });

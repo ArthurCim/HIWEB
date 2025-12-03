@@ -8,8 +8,7 @@ if (!isset($_SESSION['login'])) {
 $page_title = "Management User";
 $result = mysqli_query($conn, "SELECT * FROM users ORDER BY id_user ASC");
 
-include "../includes/header.php";
-include "../includes/navbar.php";
+include "../includes/headpog.php";
 ?>
 <div class="container-fluid">
     <div class="row">
@@ -209,7 +208,7 @@ include "../includes/navbar.php";
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = "login/logout.php";
+                        window.location.href = "../login/logout.php";
                     }
                 });
             });
