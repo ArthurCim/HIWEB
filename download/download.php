@@ -9,25 +9,19 @@
 </head>
 
 <body>
-
-    <!-- ===========================
-         HEADER — ONLY BACK BUTTON
-    ============================ -->
     <header class="header" id="header">
         <a href="../landing.php" class="back-btn">← Back</a>
     </header>
 
-
-     <!-- About Section -->
-    <section id="about" class="section">
-        <div class="about-content">
-            <div class="about-header">
+    <section id="download" class="section">
+        <div class="downcon">
+            <div class="downhead">
                 <h2>CodePlay</h2>
                 <p>Get the latest version of CodePlay for Android now!</p>
             </div>
 
-            <div class="about-main">
-                <div class="about-visual">
+            <div class="downma">
+                <div class="downvis">
                     <div class="showcase-display">
                         <div class="showcase-main">
                             <div class="corner-decoration top-left"></div>
@@ -49,7 +43,7 @@
                     </div>
                 </div>
 
-                <div class="about-info">
+                <div class="downin">
                     <h3>CodePlay</h3>
                     <p>Learning to code doesn't have to be complicated! Download CodePlay now and learn HTML, CSS, JavaScript, and many other technologies through interactive exercises, real projects, and a fun and friendly learning system.</p>
                     <p>Be one of those who help us develop this application. Leave your comments or suggestions in the chat box provided above.</p>
@@ -70,9 +64,7 @@
             </div>
         </div>
     </section>
-    <!-- ===========================
-         FOOTER
-    ============================ -->
+
     <footer class="footer">
         <div class="footer-content">
             <div>© 2025 CodePlay. All rights reserved.</div>

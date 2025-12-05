@@ -6,16 +6,12 @@
 }
 
 body {
-    background: #000;
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     color: #fff;
     overflow-x: hidden;
 }
 
-
-/* ===========================
-   HEADER
-=========================== */
 .header {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -45,57 +41,19 @@ body {
     background: rgba(255,255,255,0.25);
 }
 
-/* PROFILE */
-.profile-wrapper {
-    position: relative;
-}
-
-.profile-pic {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.3);
-    cursor: pointer;
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 60px;
-    right: 0;
-    background: rgba(20,20,20,0.95);
-    padding: 8px 0;
-    width: 160px;
-    border-radius: 12px;
-    display: none;
-    flex-direction: column;
-}
-
-.dropdown-menu a {
-    padding: 10px 20px;
-    display: block;
-    color: #fff;
-    text-decoration: none;
-}
-
-.dropdown-menu a:hover {
-    background: rgba(255,255,255,0.1);
-}
-
-
-
-.about-content {
+.downcon {
     max-width: 1400px;
     margin: 0 auto;
     padding: 40px;
     color: white;
 }
 
-.about-header {
+.downhead {
     text-align: center;
     margin-bottom: 80px;
 }
 
-.about-header h2 {
+.downhead h2 {
     font-size: 48px;
     margin-top: 60px;
     margin-bottom: 20px;
@@ -105,7 +63,7 @@ body {
     background-clip: text;
 }
 
-.about-header p {
+.downhead p {
     font-size: 20px;
     color: rgba(255, 255, 255, 0.8);
     max-width: 600px;
@@ -113,7 +71,7 @@ body {
     line-height: 1.8;
 }
 
-.about-main {
+.downma {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 80px;
@@ -121,7 +79,7 @@ body {
     margin-bottom: 80px;
 }
 
-.about-visual {
+.downvis {
     position: relative;
     height: 600px;
     display: flex;
@@ -222,7 +180,6 @@ body {
     box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
-/* Decorative corner elements */
 .corner-decoration {
     position: absolute;
     width: 80px;
@@ -246,17 +203,17 @@ body {
     border-radius: 0 0 20px 0;
 }
 
-.about-info {
+.downin {
     padding-left: 40px;
 }
 
-.about-info h3 {
+.downin h3 {
     font-size: 36px;
     margin-bottom: 30px;
     line-height: 1.3;
 }
 
-.about-info p {
+.downin p {
     font-size: 18px;
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.8;
@@ -347,11 +304,6 @@ body {
     color: rgba(255, 255, 255, 0.7);
 }
 
-
-
-/* ===========================
-   FOOTER
-=========================== */
 .footer {
     background: rgba(0,0,0,0.95);
     padding: 40px 20px;
