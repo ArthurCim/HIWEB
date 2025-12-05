@@ -13,6 +13,10 @@ $total_course = $course->fetch_assoc()['total_course'];
 $premium = $conn->query("SELECT COUNT(*) AS total_premium FROM users WHERE is_premium = '1'");
 $total_premium = $premium->fetch_assoc()['total_premium'];
 
+$free = $conn->query("SELECT COUNT(*) AS total_free FROM users WHERE is_premium = '0'");
+$total_free = $free->fetch_assoc()['total_free'];
+
+
 $page_title = "Dashboard";
 $page_css   = "dashboard.css";
 include "includes/header.php";
@@ -51,21 +55,14 @@ include "includes/header.php";
             <thead>
               <tr>
                 <th>Nama</th>
-                <th>Premium</th>
                 <th>Aksi</th>
+                <th>Premium</th>
               </tr>
             </thead>
             <tbody>
               <?php while ($row = mysqli_fetch_assoc($userQuery)): ?>
                 <tr>
                   <td><?= htmlspecialchars($row['nama']); ?></td>
-                  <td>
-                    <?php if ($row['is_premium'] == 1): ?>
-                      <span class="badge warn">Premium</span>
-                    <?php else: ?>
-                      <span class="badge success">Free</span>
-                    <?php endif; ?>
-                  </td>
                   <td>
                     <button class="mimo-btn mimo-btn-secondary edit-btn"
                       data-id="<?= $row['id_user']; ?>"
@@ -80,6 +77,13 @@ include "includes/header.php";
                       Hapus
                     </button>
                   </td>
+                  <td>
+                    <?php if ($row['is_premium'] == 1): ?>
+                      <span class="badge warn">Premium</span>
+                    <?php else: ?>
+                      <span class="badge success">Free</span>
+                    <?php endif; ?>
+                  </td>
                 </tr>
               <?php endwhile; ?>
             </tbody>
@@ -88,9 +92,8 @@ include "includes/header.php";
         </div>
 
         <div class="widget">
-          <div class="gambar_kucing">
-            <img src="assets/Screenshot (528).png" alt="">
-          </div>
+          <div id="chartdiv" style="width: 100%;
+  height: 500px; "></div>
         </div>
       </div>
     </main>
@@ -118,4 +121,63 @@ include "includes/header.php";
       }
     });
   });
+</script>
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<script>
+  const totalPremium = <?= json_encode($total_premium); ?>;
+  const totalFree = <?= json_encode($total_free); ?>;
+</script>
+
+
+<script>
+am5.ready(function() {
+
+// Create root element
+// https://www.amcharts.com/docs/v5/getting-started/#Root_element
+var root = am5.Root.new("chartdiv");
+
+// Set themes
+// https://www.amcharts.com/docs/v5/concepts/themes/
+root.setThemes([
+  am5themes_Animated.new(root)
+]);
+
+// Create chart
+// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+var chart = root.container.children.push(
+  am5percent.PieChart.new(root, {
+    endAngle: 270
+  })
+);
+
+// Create series
+// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+var series = chart.series.push(
+  am5percent.PieSeries.new(root, {
+    valueField: "value",
+    categoryField: "category",
+    endAngle: 270
+  })
+);
+
+series.states.create("hidden", {
+  endAngle: -90
+});
+
+// Set data
+// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+series.data.setAll([{
+  category: "Premium",
+  value: totalPremium
+}, {
+  category: "Free",
+  value: totalFree
+}]);
+
+series.appear(1000, 100);
+
+}); // end am5.ready()
 </script>

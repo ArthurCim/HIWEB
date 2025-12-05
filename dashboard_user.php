@@ -64,7 +64,7 @@ $page_css   = "dashboard_user.css";
             <?php if (isset($_SESSION['login']) && $_SESSION['role'] === 'user'): ?>
 
                 <div class="profile-wrapper">
-                    <img src="<?php echo $_SESSION['foto'] ?? 'assets/hiyaa.jpg'; ?>"
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect fill='%23DDD' width='100' height='100'/%3E%3Ccircle cx='50' cy='35' r='15' fill='%23999'/%3E%3Cellipse cx='50' cy='70' rx='25' ry='20' fill='%23999'/%3E%3C/svg%3E" alt="Foto Profil" style="background: #f0f0f0; border-radius: 50%; object-fit: cover;"
                         class="profile-pic" id="profileBtn">
 
                     <div class="dropdown-menu" id="profileDropdown">
