@@ -1116,24 +1116,35 @@ include "../includes/headpog.php";
         $('#filterCourse').on('change', function() {
             const idCourse = $(this).val();
             $('#filterLesson').html('<option value="">Semua Lesson</option>');
+            $('#filterLesson').prop('disabled', false);
 
             if (idCourse) {
                 $.getJSON('../ajax/get_lessons.php', {
                     id_courses: idCourse
                 }, function(data) {
-                    data.forEach(function(lesson) {
-                        $('#filterLesson').append(
-                            `<option value="${lesson.id_lesson}">${lesson.nama_lesson}</option>`
-                        );
-                    });
+                    if (Array.isArray(data) && data.length > 0) {
+                        data.forEach(function(lesson) {
+                            $('#filterLesson').append(
+                                `<option value="${lesson.id_lesson}">${lesson.nama_lesson}</option>`
+                            );
+                        });
+                    } else {
+                        $('#filterLesson').html('<option value="">Tidak ada lesson untuk course ini</option>');
+                    }
+                }).fail(function() {
+                    $('#filterLesson').html('<option value="">Gagal memuat lesson</option>');
                 });
             } else {
                 $.getJSON('../ajax/get_lessons.php', function(data) {
-                    data.forEach(function(lesson) {
-                        $('#filterLesson').append(
-                            `<option value="${lesson.id_lesson}">${lesson.nama_lesson}</option>`
-                        );
-                    });
+                    if (Array.isArray(data) && data.length > 0) {
+                        data.forEach(function(lesson) {
+                            $('#filterLesson').append(
+                                `<option value="${lesson.id_lesson}">${lesson.nama_lesson}</option>`
+                            );
+                        });
+                    }
+                }).fail(function() {
+                    $('#filterLesson').html('<option value="">Gagal memload lesson</option>');
                 });
             }
 
@@ -1639,21 +1650,22 @@ include "../includes/headpog.php";
                 Swal.fire('Error', 'Terjadi kesalahan server', 'error');
             }
         });
-    }$('#logoutBtn').on('click', function(e) {
-            e.preventDefault();
-            Swal.fire({
-                title: 'Yakin ingin logout?',
-                text: "Anda akan keluar dari sesi ini.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, logout!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "../login/logout.php";
-                }
-            });
+    }
+    $('#logoutBtn').on('click', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Yakin ingin logout?',
+            text: "Anda akan keluar dari sesi ini.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, logout!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "../login/logout.php";
+            }
         });
+    });
 </script>

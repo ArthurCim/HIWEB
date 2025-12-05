@@ -1,0 +1,80 @@
+2025-10-24 01:56:10 ERROR:
+Message: Tidak ada stage yang dikirim
+POST: Array
+(
+    [id_lesson] => lesson_001
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------
+2025-12-04 02:25:23 ERROR:
+Message: Duplicate entry 'st_rf7be5j' for key 'stage.PRIMARY'
+POST: Array
+(
+    [id_lesson] => lesson_005
+    [stages] => Array
+        (
+            [0] => Array
+                (
+                    [id_stage] => st_rf7be5j
+                    [deskripsi] => ini stage
+                    [type] => materi
+                    [isExisting] => 1
+                    [details] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [isi] => materi 1
+                                )
+
+                        )
+
+                )
+
+            [1] => Array
+                (
+                    [id_stage] => st_dbe3r4e
+                    [deskripsi] => quiz 2
+                    [type] => quiz
+                    [isExisting] => 0
+                    [details] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [isi] => apakah farel sehat?
+                                    [quiz_type] => pilihan_ganda
+                                    [options] => Array
+                                        (
+                                            [0] => Array
+                                                (
+                                                    [text] => belum tau
+                                                    [is_correct] => 0
+                                                )
+
+                                            [1] => Array
+                                                (
+                                                    [text] => iya
+                                                    [is_correct] => 1
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+        )
+
+    [stages_json] => [{"id_stage":"st_rf7be5j","deskripsi":"ini stage","type":"materi","isExisting":true,"details":[{"isi":"materi 1"}]},{"id_stage":"st_dbe3r4e","deskripsi":"quiz 2","type":"quiz","isExisting":false,"details":[{"isi":"apakah farel sehat?","quiz_type":"pilihan_ganda","options":[{"text":"belum tau","is_correct":"0"},{"text":"iya","is_correct":"1"}]}]}]
+)
+
+FILES: Array
+(
+)
+
+--------------------------------------------------------------------------------

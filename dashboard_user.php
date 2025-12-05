@@ -1,6 +1,10 @@
-
-
 <?php
+session_start();
+include __DIR__ . '/db.php';
+include __DIR__ . '/config/midtrans_config.php';
+include __DIR__ . '/includes/get_user_data.php';
+include __DIR__ . '/includes/midtrans_helper.php';
+
 $page_title = "Dashboard_user";
 $page_css   = "dashboard_user.css";
 ?>
@@ -42,12 +46,12 @@ $page_css   = "dashboard_user.css";
 
                 <div class="profile-area">
                     <div class="profile-pic clean-hover">
-                        <img src="<?= $user['foto'] ?? 'includes/assets/hiyaa.jpg'; ?>" alt="Foto Profil">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect fill='%23DDD' width='100' height='100'/%3E%3Ccircle cx='50' cy='35' r='15' fill='%23999'/%3E%3Cellipse cx='50' cy='70' rx='25' ry='20' fill='%23999'/%3E%3C/svg%3E" alt="Foto Profil" style="background: #f0f0f0; border-radius: 50%; object-fit: cover;">
                     </div>
 
                     <div class="profile-info">
-                        <h3><?= $user['nama'] ?? 'User'; ?></h3>
-                        <p><?= $user['email'] ?? 'email@example.com'; ?></p>
+                        <h3><?= htmlspecialchars($user['nama'] ?? 'User'); ?></h3>
+                        <p><?= htmlspecialchars($user['email'] ?? 'email@example.com'); ?></p>
                     </div>
                 </div>
 
@@ -57,31 +61,39 @@ $page_css   = "dashboard_user.css";
 
                 <div class="kv full">
                     <span>Learning coding for</span>
-                    <span class="badge success">8 days</span>
+                    <span class="badge success"><?= $stats['days_learning'] ?? 0; ?> days</span>
                 </div>
 
                 <div class="kv full">
-                    <span>Active Streak</span>
-                    <span class="badge success">2 days</span>
+                    <span>Stages Completed</span>
+                    <span class="badge success"><?= $stats['completed_stage'] ?? 0; ?>/<?= $stats['total_stage'] ?? 0; ?></span>
                 </div>
 
                 <div class="kv full">
-                    <span>Energy</span>
-                    <span class="badge warn">8</span>
+                    <span>Progress</span>
+                    <span class="badge warn"><?= $progress_percentage; ?>%</span>
                 </div>
 
                 <!-- PREMIUM CLEAN BOX -->
                 <div class="premium-box clean-premium">
                     <div class="premium-left">
-                        <span class="premium-badge">Premium</span>
+                        <span class="premium-badge"><?= $is_premium ? 'Premium' : 'Free'; ?></span>
 
                         <div class="premium-text">
-                            <div>Status: <strong>Aktif</strong></div>
-                            <div class="expire">Expire: 12 Feb 2026</div>
+                            <div>Status: <strong><?= $is_premium ? 'Aktif' : 'Tidak Aktif'; ?></strong></div>
+                            <div class="expire">
+                                <?php if ($is_premium): ?>
+                                    Expire: <?= date('d M Y', strtotime($premium_expire_date)); ?>
+                                <?php else: ?>
+                                    Upgrade untuk membuka fitur premium
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
 
-                    <button class="premium-btn">Manage</button>
+                    <button class="premium-btn" id="premiumBtn">
+                        <?= $is_premium ? 'Manage' : 'Upgrade'; ?>
+                    </button>
                 </div>
 
             </div>
@@ -90,9 +102,9 @@ $page_css   = "dashboard_user.css";
             <div class="stats">
                 <?php
                 $cards = [
-                    ["Total Course", "2", 100],
-                    ["Last Course", "Pemrograman Web", 8],
-                    ["Last Stage", "Mantap Bro Bisa", 15],
+                    ["Total Course", $stats['total_course'] ?? 0, 100],
+                    ["Last Course", !empty($last_course) ? $last_course : "Belum ada", 8],
+                    ["Completion", $progress_percentage . "%", 15],
                 ];
 
                 foreach ($cards as $c): ?>
@@ -102,8 +114,8 @@ $page_css   = "dashboard_user.css";
                             <div class="value"><?= $c[1]; ?></div>
                         </div>
 
-                        <div class="circular-progress" data-percentage="<?= $c[2]; ?>">
-                            <span class="progress-value"><?= $c[2]; ?>%</span>
+                        <div class="circular-progress" data-percentage="<?= is_numeric($c[2]) ? $c[2] : 0; ?>">
+                            <span class="progress-value"><?= is_numeric($c[2]) ? $c[2] : 0; ?>%</span>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -115,8 +127,12 @@ $page_css   = "dashboard_user.css";
     <?php include "includes/footer.php"; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="<?= MIDTRANS_CLIENT_KEY; ?>"></script>
 
     <script>
+        // Subscription plans dari server
+        window.subscriptionPlans = <?= json_encode($subscription_plans ?? []); ?>;
+
         // Dropdown script
         document.addEventListener('DOMContentLoaded', () => {
             const toggles = document.querySelectorAll('.dropdown-toggle');
@@ -138,6 +154,21 @@ $page_css   = "dashboard_user.css";
         });
     </script>
     <script>
+        // Premium Button - Midtrans Integration
+        document.getElementById("premiumBtn").addEventListener("click", function(e) {
+            e.preventDefault();
+
+            const isPremium = this.innerText.includes('Manage');
+
+            if (isPremium) {
+                // Jika sudah premium, tampilkan menu manage
+                showManagePremium();
+            } else {
+                // Jika belum premium, tampilkan pilihan paket
+                showUpgradeOptions();
+            }
+        });
+
         document.getElementById("logoutBtn").addEventListener("click", function(e) {
             e.preventDefault();
             Swal.fire({
@@ -155,6 +186,168 @@ $page_css   = "dashboard_user.css";
                 }
             });
         });
+
+        function showUpgradeOptions() {
+            // Compute monthly base price from server-provided plans (prefer 1-month), else fallback
+            const plans = window.subscriptionPlans || [];
+            let monthly = null;
+            if (plans.length > 0) {
+                // try to find 1-month plan
+                for (const p of plans) {
+                    if (Number(p.durasi_bulan) === 1) {
+                        monthly = Number(p.harga);
+                        break;
+                    }
+                }
+                if (monthly === null) {
+                    // derive from smallest duration plan
+                    plans.sort((a, b) => Number(a.durasi_bulan) - Number(b.durasi_bulan));
+                    const p = plans[0];
+                    monthly = Number(p.harga) / Math.max(1, Number(p.durasi_bulan));
+                }
+            }
+            if (monthly === null) monthly = 99000; // fallback
+
+            // Compute discounted package prices
+            const price1 = Math.round(monthly * 1);
+            const price3 = Math.round(monthly * 3 * (1 - 0.05));
+            const price12 = Math.round(monthly * 12 * (1 - 0.15));
+
+            const html = `
+                    <div style="text-align: left; padding: 20px;">
+                        <div style="margin: 15px 0;">
+                            <input type="radio" id="package_1month" name="package" value="1" checked>
+                            <label for="package_1month">1 Bulan - Rp ${price1.toLocaleString()}</label>
+                        </div>
+                        <div style="margin: 15px 0;">
+                            <input type="radio" id="package_3month" name="package" value="3">
+                            <label for="package_3month">3 Bulan - Rp ${price3.toLocaleString()} (Diskon 5%)</label>
+                        </div>
+                        <div style="margin: 15px 0;">
+                            <input type="radio" id="package_12month" name="package" value="12">
+                            <label for="package_12month">12 Bulan - Rp ${price12.toLocaleString()} (Diskon 15%)</label>
+                        </div>
+                    </div>`;
+
+            Swal.fire({
+                title: 'Pilih Paket Premium',
+                html: `<div style="text-align:left; padding:20px;">${html}</div>`,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjut Pembayaran',
+                cancelButtonText: 'Batal',
+                didOpen: () => {
+                    document.querySelectorAll('input[name="package"]').forEach(radio => {
+                        radio.addEventListener('change', (e) => {
+                            console.log('Selected:', e.target.value);
+                        });
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const selectedPackage = document.querySelector('input[name="package"]:checked').value;
+                    proceedToPayment(selectedPackage);
+                }
+            });
+        }
+
+        function proceedToPayment(months) {
+            // Show loading
+            Swal.fire({
+                title: 'Memproses...',
+                html: 'Sedang membuat transaksi pembayaran',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Send AJAX request
+            fetch('midtrans/create_payment.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        duration_months: months
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Close loading
+                        Swal.close();
+
+                        // Show Midtrans Snap
+                        snap.pay(data.token, {
+                            onSuccess: function(result) {
+                                handlePaymentSuccess(result);
+                            },
+                            onPending: function(result) {
+                                handlePaymentPending(result);
+                            },
+                            onError: function(result) {
+                                handlePaymentError(result);
+                            },
+                            onClose: function() {
+                                Swal.fire('Info', 'Pembayaran dibatalkan', 'info');
+                            }
+                        });
+                    } else {
+                        Swal.fire('Error', data.message || 'Gagal membuat transaksi', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error', 'Terjadi kesalahan: ' + error.message, 'error');
+                });
+        }
+
+        function handlePaymentSuccess(result) {
+            Swal.fire({
+                title: 'Pembayaran Berhasil!',
+                text: 'Premium Anda akan aktif sekarang juga',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                location.reload();
+            });
+        }
+
+        function handlePaymentPending(result) {
+            Swal.fire({
+                title: 'Pembayaran Tertunda',
+                text: 'Silakan selesaikan pembayaran Anda. Kami akan mengkonfirmasi status pembayaran.',
+                icon: 'info',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                location.reload();
+            });
+        }
+
+        function handlePaymentError(result) {
+            Swal.fire({
+                title: 'Pembayaran Gagal',
+                text: 'Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        function showManagePremium() {
+            Swal.fire({
+                title: 'Kelola Premium',
+                html: `
+                    <div style="text-align: center; padding: 20px;">
+                        <p>Status: <strong>Aktif</strong></p>
+                        <p style="margin: 20px 0;">Paket premium Anda masih aktif</p>
+                    </div>
+                `,
+                confirmButtonText: 'Kembali',
+                icon: 'info'
+            });
+        }
     </script>
 
 </body>
