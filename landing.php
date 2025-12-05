@@ -157,7 +157,7 @@
                         <li>Comprehensive documentation and tutorials</li>
                     </ul>
 
-                    <a href="download" class="cta-button">
+                    <a href="download/download.php" class="cta-button">
                         Start Your Project
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" />
