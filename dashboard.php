@@ -88,19 +88,8 @@ include "includes/header.php";
         </div>
 
         <div class="widget">
-          <h3>Notifikasi</h3>
-            <div class="kv">
-              <span>Update sistem</span>
-              <span class="badge success">Baru</span>
-            </div>
-            <div class="kv">
-              <span>Maintenance</span>
-              <span class="badge warn">Segera</span>
-            </div>
-            <div class="kv">
-              <span>Error login</span>
-              <span class="badge danger">Kritis</span>
-            </div>
+          <div class="gambar_kucing">
+            <img src="assets/Screenshot (528).png" alt="">
           </div>
         </div>
       </div>

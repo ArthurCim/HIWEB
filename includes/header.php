@@ -259,6 +259,7 @@
         .mimo-btn-danger:hover {
             opacity: 0.9;
         }
+
     </style>
 </head>
 <body>
