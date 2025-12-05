@@ -49,23 +49,44 @@ $page_css   = "dashboard_user.css";
     <link rel="stylesheet" href="<?= $page_css; ?>">
 </head>
 <header class="header" id="header">
-    <a href="#home" class="logo-container">
-        <div class="logo">
-            <img src="assets/locoput.svg" alt="Logo CodePlay" width="100" height="100">
+        <a href="#" class="logo-container">
+            <div class="logo">
+                <img src="assets/locoput.svg" alt="Logo CodePlay" width="100" height="100">
+            </div>
+            <div class="logo-text">CodePlay</div>
+        </a>
+
+        <nav class="main-menu" id="mainMenu">
+            <a href="landing.php#home" class="menu-item active">Home</a>
+            <a href="landing.php#about" class="menu-item">About</a>
+            <a href="landing.php#contact" class="menu-item">Contact</a>
+
+            <?php if (isset($_SESSION['login']) && $_SESSION['role'] === 'user'): ?>
+
+                <div class="profile-wrapper">
+                    <img src="<?php echo $_SESSION['foto'] ?? 'assets/hiyaa.jpg'; ?>"
+                        class="profile-pic" id="profileBtn">
+
+                    <div class="dropdown-menu" id="profileDropdown">
+                        <a href="dashboard_user.php">👤 Profile</a>
+                        <a href="#" id="logoutBtn" class="logout">🚪 Logout</a>
+                    </div>
+                </div>
+
+            <?php else: ?>
+                <div class="nav-actions">
+                    <a href="login/login.php" id="loginBtn" class="login">Login</a>
+                </div>
+            <?php endif; ?>
+        </nav>
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-        <div class="logo-text">CodePlay</div>
-    </a>
 
-    <div class="nav-actions">
-        <a href="#" id="logoutBtn" class="logout">Logout</a>
-    </div>
 
-    <div class="menu-toggle" id="menuToggle">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-</header>
+    </header>
 
 <body>
 
@@ -136,9 +157,9 @@ $page_css   = "dashboard_user.css";
             <div class="stats">
                 <?php
                 $cards = [
-                    ["Total Course", $stats['total_course'] ?? 0, 100],
-                    ["Last Course", !empty($last_course) ? $last_course : "Belum ada", 8],
-                    ["Completion", $progress_percentage . "%", 15],
+                    ["Total Course", $stats['total_course'] ?? 0, 0],
+                    ["Last Course", !empty($last_course) ? $last_course : "Belum ada", 0],
+                    ["Completion", $progress_percentage . "%",0],
                 ];
 
                 foreach ($cards as $c): ?>
@@ -444,6 +465,45 @@ $page_css   = "dashboard_user.css";
             });
         }
     </script>
+
+    <script>
+        // Dropdown script
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggles = document.querySelectorAll('.dropdown-toggle');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    toggle.nextElementSibling.classList.toggle('show');
+                    toggle.classList.toggle('active');
+                });
+            });
+        });
+
+        // Circular progress animation
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".circular-progress").forEach(el => {
+                const val = el.getAttribute("data-percentage");
+                el.style.setProperty("--percentage", val);
+                el.querySelector(".progress-value").innerText = val + "%";
+            });
+        });
+    </script>
+
+    <script>
+        const profileBtn = document.getElementById("profileBtn");
+        const dropdown = document.getElementById("profileDropdown");
+
+        profileBtn.addEventListener("click", () => {
+            dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+        });
+
+        // klik di luar dropdown → tutup
+        document.addEventListener("click", function(e) {
+            if (!profileBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+    </script>
+
 
 </body>
 
