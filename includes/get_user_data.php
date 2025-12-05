@@ -13,15 +13,17 @@ $id_user = $_SESSION['id_user'];
 $nama_user = $_SESSION['nama'];
 
 // Ambil data user lengkap dari database
-$user_query = $conn->prepare("SELECT id_user, nama, email FROM users WHERE id_user = ?");
+$user_query = $conn->prepare("SELECT id_user, nama, email, is_premium FROM users WHERE id_user = ?");
 $user_query->bind_param("s", $id_user);
 $user_query->execute();
 $user_result = $user_query->get_result();
 
+$user_is_premium_flag = false;
 if ($user_result->num_rows > 0) {
     $user = $user_result->fetch_assoc();
+    $user_is_premium_flag = (int)$user['is_premium'];
 } else {
-    $user = ['id_user' => $id_user, 'nama' => $nama_user, 'email' => ''];
+    $user = ['id_user' => $id_user, 'nama' => $nama_user, 'email' => '', 'is_premium' => 0];
 }
 
 $user_query->close();
@@ -45,6 +47,27 @@ if ($subscription_result->num_rows > 0) {
     $subscription = $subscription_result->fetch_assoc();
     $is_premium = true;
     $premium_expire_date = $subscription['end_date'];
+} elseif ($user_is_premium_flag) {
+    // Jika users.is_premium = 1 tapi subscription tidak valid, coba ambil data subscription terakhir untuk end_date
+    $sub_fallback = $conn->prepare(
+        "SELECT us.end_date FROM user_subscriptions us 
+         WHERE us.id_user = ? AND us.payment_status = 'PAID'
+         ORDER BY us.end_date DESC LIMIT 1"
+    );
+    $sub_fallback->bind_param("s", $id_user);
+    $sub_fallback->execute();
+    $sub_fallback_result = $sub_fallback->get_result();
+
+    if ($sub_fallback_result->num_rows > 0) {
+        $sub_data = $sub_fallback_result->fetch_assoc();
+        $is_premium = true;
+        $premium_expire_date = $sub_data['end_date'];
+    } else {
+        // is_premium = 1 tapi tidak ada subscription sama sekali (shouldn't happen)
+        $is_premium = true;
+        $premium_expire_date = date('Y-m-d', strtotime('+30 days')); // default 30 hari
+    }
+    $sub_fallback->close();
 }
 
 $subscription_query->close();

@@ -2,8 +2,37 @@
 session_start();
 include __DIR__ . '/db.php';
 include __DIR__ . '/config/midtrans_config.php';
-include __DIR__ . '/includes/get_user_data.php';
 include __DIR__ . '/includes/midtrans_helper.php';
+
+// Prevent caching
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+
+// Sync premium status with active subscriptions
+$id_user = $_SESSION['id_user'] ?? null;
+if ($id_user) {
+    // Check for active subscriptions
+    $active_sub = $conn->prepare(
+        "SELECT COUNT(*) as count FROM user_subscriptions 
+         WHERE id_user = ? AND payment_status = 'PAID' AND end_date > NOW()"
+    );
+    $active_sub->bind_param("s", $id_user);
+    $active_sub->execute();
+    $active_sub_result = $active_sub->get_result()->fetch_assoc();
+    $has_active_sub = $active_sub_result['count'] > 0;
+    $active_sub->close();
+
+    // Update is_premium flag based on active subscriptions
+    $target_premium = $has_active_sub ? 1 : 0;
+    $update_flag = $conn->prepare("UPDATE users SET is_premium = ? WHERE id_user = ?");
+    $update_flag->bind_param("is", $target_premium, $id_user);
+    $update_flag->execute();
+    $update_flag->close();
+}
+
+// Now include get_user_data which will fetch the updated is_premium value
+include __DIR__ . '/includes/get_user_data.php';
 
 $page_title = "Dashboard_user";
 $page_css   = "dashboard_user.css";
@@ -91,9 +120,14 @@ $page_css   = "dashboard_user.css";
                         </div>
                     </div>
 
-                    <button class="premium-btn" id="premiumBtn">
-                        <?= $is_premium ? 'Manage' : 'Upgrade'; ?>
-                    </button>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="premium-btn" id="premiumBtn" style="flex: 1;">
+                            <?= $is_premium ? 'Manage' : 'Upgrade'; ?>
+                        </button>
+                        <button class="premium-btn" id="refreshPremiumBtn" style="flex: 1; background: rgba(255,255,255,0.1);" title="Refresh status">
+                            ↻ Refresh
+                        </button>
+                    </div>
                 </div>
 
             </div>
@@ -142,6 +176,9 @@ $page_css   = "dashboard_user.css";
                     toggle.classList.toggle('active');
                 });
             });
+
+            // Auto-settle any pending payments on page load
+            autoSettlePendingPayments();
         });
 
         // Circular progress animation
@@ -151,6 +188,47 @@ $page_css   = "dashboard_user.css";
                 el.style.setProperty("--percentage", val);
                 el.querySelector(".progress-value").innerText = val + "%";
             });
+        });
+
+        // Auto-settle pending payments
+        function autoSettlePendingPayments() {
+            fetch('includes/auto_settle_payments.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success' && data.settled_count > 0) {
+                        console.log('Auto-settled ' + data.settled_count + ' payment(s)');
+                        // Reload to show updated premium status
+                        setTimeout(() => location.reload(), 1000);
+                    }
+                })
+                .catch(err => console.log('Auto-settle check completed'));
+        }
+
+        // Refresh button handler
+        document.getElementById('refreshPremiumBtn').addEventListener('click', function() {
+            this.disabled = true;
+            this.textContent = '⟳ Checking...';
+
+            fetch('includes/auto_settle_payments.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        Swal.fire({
+                            title: 'Status Diperbarui!',
+                            text: data.message,
+                            icon: 'success'
+                        }).then(() => location.reload());
+                    } else {
+                        Swal.fire('Info', data.message || 'Tidak ada perubahan', 'info');
+                        this.disabled = false;
+                        this.textContent = '↻ Refresh';
+                    }
+                })
+                .catch(err => {
+                    Swal.fire('Error', 'Gagal mengecek status', 'error');
+                    this.disabled = false;
+                    this.textContent = '↻ Refresh';
+                });
         });
     </script>
     <script>
@@ -305,14 +383,31 @@ $page_css   = "dashboard_user.css";
         }
 
         function handlePaymentSuccess(result) {
-            Swal.fire({
-                title: 'Pembayaran Berhasil!',
-                text: 'Premium Anda akan aktif sekarang juga',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                location.reload();
-            });
+            // Sync premium status immediately
+            fetch('includes/sync_premium_status.php')
+                .then(response => response.json())
+                .then(data => {
+                    Swal.fire({
+                        title: 'Pembayaran Berhasil!',
+                        text: 'Premium Anda akan aktif sekarang juga',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        location.reload();
+                    });
+                })
+                .catch(err => {
+                    console.error('Sync error:', err);
+                    // Still reload even if sync fails
+                    Swal.fire({
+                        title: 'Pembayaran Berhasil!',
+                        text: 'Premium Anda akan aktif sekarang juga',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        location.reload();
+                    });
+                });
         }
 
         function handlePaymentPending(result) {

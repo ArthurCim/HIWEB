@@ -195,7 +195,15 @@ function updateSubscriptionAfterPayment($conn, $id_user, $duration_months, $orde
         $update_result = $update_tx->execute();
         $update_tx->close();
 
-        return $insert_result && $update_result;
+        // Update users table to set is_premium = 1 (premium user after successful payment)
+        $update_user = $conn->prepare(
+            "UPDATE users SET is_premium = 1 WHERE id_user = ?"
+        );
+        $update_user->bind_param("s", $id_user);
+        $user_result = $update_user->execute();
+        $update_user->close();
+
+        return $insert_result && $update_result && $user_result;
     } catch (\Exception $e) {
         error_log("Update Subscription Error: " . $e->getMessage());
         return false;

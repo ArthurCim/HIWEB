@@ -9,7 +9,7 @@
         $baseUrl = 'http://' . $_SERVER['HTTP_HOST'] . '/HIWEB/';
 
         // Daftar halaman dalam folder master
-        $masterPages = ['management_user.php', 'course.php', 'lesson.php'];
+        $masterPages = ['management_user.php', 'course.php', 'lesson.php', 'pricing.php'];
         $isMasterActive = in_array($currentPage, $masterPages);
         ?>
 
@@ -45,6 +45,12 @@
                     <a href="<?php echo $baseUrl; ?>master/lesson.php"
                        class="<?php echo $currentPage == 'lesson.php' ? 'active' : ''; ?>">
                        Data Lesson
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo $baseUrl; ?>master/pricing.php"
+                       class="<?php echo $currentPage == 'pricing.php' ? 'active' : ''; ?>">
+                       Data Harga
                     </a>
                 </li>
             </ul>

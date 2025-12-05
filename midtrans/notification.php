@@ -52,13 +52,13 @@ try {
     // Jika ada id_plan, ambil durasi dari subscription_plans
     $duration_months = 1;
     if (!empty($id_plan)) {
-        $pstmt = $conn->prepare("SELECT duration_months FROM subscription_plans WHERE id_plan = ? LIMIT 1");
+        $pstmt = $conn->prepare("SELECT durasi_bulan FROM subscription_plans WHERE id_plan = ? LIMIT 1");
         $pstmt->bind_param("s", $id_plan);
         $pstmt->execute();
         $pres = $pstmt->get_result();
         if ($pres && $pres->num_rows > 0) {
             $prow = $pres->fetch_assoc();
-            $duration_months = (int)$prow['duration_months'];
+            $duration_months = (int)$prow['durasi_bulan'];
         }
         $pstmt->close();
     } else {
