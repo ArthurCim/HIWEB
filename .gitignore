@@ -6,3 +6,4 @@ config/
 
 # Abaikan file konfigurasi server
 .htaccess
+.env
